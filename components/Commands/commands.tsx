@@ -6,11 +6,11 @@ const buttonHandler = (e:MouseEvent):void=>{
     console.log("test")
 }
 
-export const Commands = ()=>{
+export const Commands = ({testCommand}:{testCommand:MouseEventHandler})=>{
     
     return(
         <div className={styles.container}>
-            <Button name={'Feed'} clickEvent={buttonHandler}/>
+            <Button name={'Feed'} clickEvent={testCommand}/>
             <Button name={'Pet'} clickEvent={buttonHandler}/>
         </div>
     )

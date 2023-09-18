@@ -37,4 +37,5 @@
 
 .infoboxhidden{
     opacity: 0;
+    user-select: none;
 }

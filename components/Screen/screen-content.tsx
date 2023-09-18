@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 
 
-export const Screen = ()=>{
+export const Screen = ({sprite}:{sprite:string})=>{
     const [isInfo, setInfo] = useState(false);
 
     const handleInfoButton = (e:MouseEvent):void =>{
@@ -15,7 +15,7 @@ export const Screen = ()=>{
     return(
         <div className={styles.screen}>
             <Image
-                src='/images/test.jpg'
+                src={`/images/sprites/${sprite}.gif`}
                 width={200}
                 height={200}
                 alt='Main screen sprites'
