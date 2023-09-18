@@ -1,0 +1,15 @@
+.button{
+    padding: 3px;
+    border:5px solid black;
+    border-top: 0px;
+    border-bottom: 0px;
+    width: 50%;
+    font-family: 'Minecraft';
+    color: black;
+    background-color: white;
+}
+
+.button:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}

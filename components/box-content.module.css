@@ -1,0 +1,28 @@
+@font-face {
+    font-family: "minecraft";
+    src: url('../public/fonts/Minecraft.ttf') format('truetype');
+}
+
+.box>*{
+    color: black;
+    text-align: center;
+    font-family: 'minecraft';
+}
+
+.box{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 0px;
+    border: solid 5px  black;
+}
+
+.title{
+    font-size: 25px;
+}
+
+.hr{
+    height: 5px;
+    background-color: black;
+    border: solid 0 gray;
+}

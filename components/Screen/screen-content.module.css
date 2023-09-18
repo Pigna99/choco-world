@@ -1,0 +1,40 @@
+.screen{
+    width: 200px;
+    height: 200px;
+}
+
+.infobtn{
+    width: 20px;
+    height: 20px;
+    position:relative;
+    top: -205px;
+    right: 0px;
+    border-bottom: solid 5px black;
+    border-right: solid 5px black;
+    user-select:none;
+    z-index: 2;
+}
+
+.infobtn:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.infobox{
+    width: 200px;
+    height: 200px;
+    position: relative;
+    z-index: 1;
+    top: -225px;
+    right: 0px;
+    background-color: rgba(211, 211, 211, 0.5);
+    transition: all 0.4s;
+}
+
+.infoboxvisible{
+    opacity: 1;
+}
+
+.infoboxhidden{
+    opacity: 0;
+}

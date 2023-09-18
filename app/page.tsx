@@ -1,9 +1,12 @@
+'use client'
+
+import { Box } from '@/components/box-content'
 import styles from './page.module.css'
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      app
+      <Box/>
     </main>
   )
 }
