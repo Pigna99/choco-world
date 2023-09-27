@@ -64,7 +64,7 @@ class CreatureClass {
             }
             
 
-            this.info.statictics.experience.actual= 1 * happiness_modifier[this.info.statictics.happiness.actual];//change exp gain from happiness and hunger, and add stats!
+            this.info.statictics.experience.actual+= 1 * happiness_modifier[this.info.statictics.happiness.actual];//change exp gain from happiness and hunger, and add stats!
             if(checkMinStat(this.info.statictics.stamina)){
                 this.changeState('sleeping');
             }
