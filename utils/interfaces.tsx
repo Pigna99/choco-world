@@ -1,3 +1,4 @@
+type State = 'sleep'|'walk'|'idle'
 
 interface Stat{
     max:number;
@@ -7,13 +8,13 @@ interface Stat{
 interface Creature {
     name: string;
     id: number;
-    state: string;
+    state: State;
     last_update: Date;
     statictics: {
         level: number;
         stamina: Stat;
-        happiness: Stat;
-        hunger: Stat;
+        //happiness: Stat;
+        //hunger: Stat;
         experience: Stat;
     }
 }
@@ -21,3 +22,6 @@ interface Creature {
 /**
  * Add more info like number of naps, pets, time feed etc
  */
+
+
+export type {Creature}
