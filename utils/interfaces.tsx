@@ -1,5 +1,5 @@
 type State = 'sleeping'|'walking'
-type VisualState = 'sleeping'|'walking'|'idle'|'eating'|'happy'
+type VisualState = State | 'idle'|'eating'|'happy'
 type HappinessStatus = 'depressed'|'sad'|'normal'|'happy'|'delighted' 
 
 interface Stat{
@@ -53,5 +53,5 @@ function tryRandom(n:number): boolean{
 
 
 
-export type {Creature, Stat, State}
+export type {Creature, Stat, State, VisualState}
 export{ checkMaxStat, checkMinStat, tryRandom, percentageStat}

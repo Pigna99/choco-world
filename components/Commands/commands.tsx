@@ -1,22 +1,13 @@
 
 import styles from './commands.module.css'
-import { MouseEventHandler, MouseEvent } from "react"
-import { creatureName } from '@/utils/settings'
+import { MouseEventHandler } from "react"
 
-
-const buttonHandler = async (e:MouseEvent)=>{
-    console.log("Button Pressed")
-    const res = await fetch(`/api/update?name=${creatureName}`)
-    const data = await res.json()
-    console.log("Data received from API:", data)
-}
-
-export const Commands = ({testCommand}:{testCommand:MouseEventHandler})=>{
+export const Commands = ({feedCommand, petCommand}:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler})=>{
     
     return(
         <div className={styles.container}>
-            <Button name={'Feed'} clickEvent={testCommand}/>
-            <Button name={'Pet'} clickEvent={buttonHandler}/>
+            <Button name={'Feed'} clickEvent={feedCommand}/>
+            <Button name={'Pet'} clickEvent={petCommand}/>
         </div>
     )
 }

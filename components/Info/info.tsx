@@ -1,7 +1,7 @@
 import styles from './info.module.css'
 
-export const Info = ()=>{
+export const Info = ({infoText}:{infoText:String})=>{
     return(
-        <h4>Info</h4>
+        <h4>{infoText}</h4>
     )
 }

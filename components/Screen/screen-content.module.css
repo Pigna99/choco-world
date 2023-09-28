@@ -39,3 +39,8 @@
     opacity: 0;
     user-select: none;
 }
+
+.reverse{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
