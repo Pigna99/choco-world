@@ -1,7 +1,6 @@
-import { NextResponse } from 'next/server'
 import { CreatureClass } from '@/utils/CreatureClass';
 import { getCreature, getRoutes, saveCreature } from '@/utils/utils';
-
+import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
@@ -22,5 +21,5 @@ export async function GET(request: Request) {
     }
 
     saveCreature(creature);//save creature info
-    return NextResponse.json(creature.getInfo());
+    return NextResponse.json({creature: creature.getInfo()});
 }
