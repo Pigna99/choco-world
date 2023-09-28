@@ -1,38 +1,47 @@
-import { Creature , Stat, State, happiness_modifier} from "./interfaces";
-import { TICK_DAY, TICK_VALUE } from './settings';
+import { Creature , State, checkMaxStat, checkMinStat, percentageStat, tryRandom} from "./interfaces";
+import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS } from './settings';
 
 class CreatureClass {
     private info: Creature;
     constructor(creature: Creature){
         this.info = creature;
     }
-    static newCreature(name:string): CreatureClass{
+    static newCreature(name:string): CreatureClass{//new creature generator
         let right_now = new Date;
         let baseCreature:Creature= {
-            name:name,
-            state:'walking',
+            name: name,
+            state: 'walking',
             last_update: right_now,
             last_time_pet: right_now,
+            last_time_pet_real: right_now,
             last_happiness_update: right_now,
-            statictics:{
+            last_time_feed: right_now,
+            statictics: {
                 level: 1,
                 stamina: {
-                    actual:10,
-                    max:10,
+                    actual: LEVEL1_STAMINA,
+                    max: LEVEL1_STAMINA,
                 },
                 happiness: {
-                    actual:5,
-                    max:10,
+                    actual: LEVEL1_HAPPINESS,
+                    max: 10,
                 },
                 hunger: {
-                    actual:5,
-                    max:10,
+                    actual: Math.floor(LEVEL1_HUNGER/2),
+                    max: LEVEL1_HUNGER,
                 },
                 experience: {
-                    actual:0,
-                    max:20,
+                    actual: 0,
+                    max: LEVEL1_EXPERIENCE,
                 }
-            }
+            },
+            informations: {
+                steps: 0,
+                pets: 0,
+                feeds: 0,
+                birthday: right_now
+            },
+            
         }
 
         return new CreatureClass(baseCreature);
@@ -50,7 +59,6 @@ class CreatureClass {
         }
         this.setUpdateTime(new_update); //update timer to the next tick
         console.log('new ticks(float): ' + new_ticks_float);
-        //console.log(this.info)
     }
 
     private getTicksFromDate(d:Date){//number of ticks from that Date to now
@@ -71,9 +79,11 @@ class CreatureClass {
             }else{
                 this.info.statictics.stamina.actual--;
             }
+            //experience based on happiness
+            const exp = BASE_EXPERIENCE * HAPPINESS_MODIFIER[this.info.statictics.happiness.actual];
+            this.info.statictics.experience.actual+= exp;
+            this.info.informations.steps+= exp;
             
-
-            this.info.statictics.experience.actual+= 1 * happiness_modifier[this.info.statictics.happiness.actual];//change exp gain from happiness and hunger, and add stats!
             if(checkMinStat(this.info.statictics.stamina)){
                 this.changeState('sleeping');
             }
@@ -83,6 +93,7 @@ class CreatureClass {
         }
 
         if (this.info.state === 'sleeping'){
+            //hunger check
             if(!checkMinStat(this.info.statictics.hunger) && tryRandom(30)){
                 this.info.statictics.hunger.actual--;
                 this.info.statictics.stamina.actual+=Math.ceil(this.info.statictics.stamina.max/10);
@@ -94,45 +105,79 @@ class CreatureClass {
                 this.changeState('walking');
             }
         }
-
+        //happiness check
         this.checkHappiness();
         
     }
     private levelUp(){
-        console.log('level up!');
+        console.log(`Level up! ${this.info.name} reached level ${this.info.statictics.level}!`);
         this.info.statictics.level++;
         this.info.statictics.experience.actual=0;
-        this.info.statictics.experience.max+= Math.floor(this.info.statictics.experience.max/2);//max_exp
-        this.info.statictics.stamina.max+= Math.floor(this.info.statictics.stamina.max/10);//stamina
-        //update other stats
-        this.info.statictics.hunger.max+= Math.floor(this.info.statictics.hunger.max/5);//hunger
+        this.info.statictics.experience.max+= Math.floor(this.info.statictics.experience.max * EXPERIENCE_SCALING);//max_exp
+        this.info.statictics.stamina.max+= Math.floor(this.info.statictics.stamina.max * STAMINA_SCALING);//stamina
+        this.info.statictics.hunger.max+= Math.floor(this.info.statictics.hunger.max * HUNGER_SCALING);//hunger
     }
 
     private checkHappiness(){
         /*
             1)check that 24h has passed (288 ticks) from last happiness update
-            2)if is passed, update happiness
+            2)if is passed, happiness--
+            3)add 24h to last_happiness_update (for simulation)
         */
-        let ticks = this.getTicksFromDate(this.info.last_happiness_update)
+        const last_happiness_update = new Date(this.info.last_happiness_update)
+
+        const ticks = this.getTicksFromDate(last_happiness_update)
         if(ticks<TICK_DAY) return;
         if(!checkMinStat(this.info.statictics.happiness)){
             this.info.statictics.happiness.actual--;
         }
-        this.info.last_happiness_update = this.addTicksToDate(this.info.last_happiness_update, TICK_DAY);//add 1 day of ticks
+        this.info.last_happiness_update = this.addTicksToDate(last_happiness_update, TICK_DAY);//add 1 day of ticks
     }
 
-    feed(){
+    feed():boolean{
+        this.tryWakeUp()
+        const last_time_feed = new Date(this.info.last_time_feed)
+
+        const ticks = this.getTicksFromDate(last_time_feed)
+        if(ticks<=1) return false;//at least 1 tick for feeding againg
         this.info.statictics.hunger.actual = this.info.statictics.hunger.max;
-        //if stamina is >30% and was sleeping, start walking
+        this.info.last_time_feed = new Date();
+        this.info.informations.feeds++;
+        return true;
     }
 
-    pet(){
+    pet():boolean{
         /*
             1)check that 12h has passed (144 ticks) from last pet
-            2)if is passed, update happiness
+            2)if is passed, happiness++
+            3)update last time pet and last happiness update time to now
         */
+        this.tryWakeUp()
 
-        //if stamina is >30% and was sleeping, start walking
+        //can pet only if 1 tick passed
+        const last_time_pet = new Date(this.info.last_time_pet)
+        const ticks = this.getTicksFromDate(last_time_pet)
+        if(ticks<=1) return false;//at least 1 tick for petting again
+        this.info.last_time_pet = new Date();
+        this.info.informations.pets++;
+        
+        //if 1 tick passed, check if the pet is done after 12h after the last effettive pet, and can update happiness
+        const last_time_pet_real = new Date(this.info.last_time_pet_real)
+        const ticks_real = this.getTicksFromDate(last_time_pet_real)
+
+        if(ticks_real<(TICK_DAY/2)) return true;//if not, return true (pet with no effect)
+        if(!checkMaxStat(this.info.statictics.happiness)){
+            this.info.statictics.happiness.actual++;
+        }
+        this.info.last_time_pet_real = new Date();
+        this.info.last_happiness_update = new Date();
+        return true;
+    }
+
+    private tryWakeUp(){
+        if(this.info.state!='sleeping')return;
+        if(!percentageStat(this.info.statictics.stamina, 30))return;
+        this.changeState('walking');
     }
 
     getUpdateTime(){
@@ -155,16 +200,5 @@ class CreatureClass {
 }
 
 
-function checkMaxStat (s: Stat):boolean{
-    return s.actual === s.max
-}
-
-function checkMinStat (s: Stat):boolean{
-    return s.actual === 0
-}
-
-function tryRandom(n:number): boolean{
-    return Math.floor(Math.random() * 100)<n;//random number from 1 to 100
-}
 
 export {CreatureClass}

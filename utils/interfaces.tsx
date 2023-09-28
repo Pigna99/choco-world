@@ -2,24 +2,6 @@ type State = 'sleeping'|'walking'
 type VisualState = 'sleeping'|'walking'|'idle'|'eating'|'happy'
 type HappinessStatus = 'depressed'|'sad'|'normal'|'happy'|'delighted' 
 
-const happiness_modifier= [0,1,1,1,2,2,2,3,3,3,4];
-/**
- * Happiness values:
- * 
- *   0|depressed (x0)
- *   1--|
- *   2--| sad (x1)
- *   3--|
- *   4----|
- *   5----| normal (x2)
- *   6----|
- *   7------|
- *   8------| happy (x3)
- *   9------|
- *  10--------| delighted (x4)
- * 
- */
-
 interface Stat{
     max:number;
     actual:number;
@@ -29,21 +11,47 @@ interface Creature {
     name: string;
     state: State;
     last_update: Date;
-    last_time_pet: Date;//you can pet every time, but can modify the happiness stat only every 12 hours!
+    last_time_pet: Date;//per per tick
+    last_time_pet_real: Date;//real pet that can modify happiness
     last_happiness_update: Date;
+    last_time_feed: Date;
     statictics: {
         level: number;
         stamina: Stat;
         happiness: Stat;
         hunger: Stat;
         experience: Stat;
+    },
+    /**
+    * Add more info like number of naps, pets, time feed etc
+    */
+    informations: {
+        steps: number;//equal to total experience!
+        pets: number;
+        feeds: number;
+        birthday: Date;
     }
 }
 
-/**
- * Add more info like number of naps, pets, time feed etc
- */
+function percentageStat (s: Stat, percentage :number): boolean {//if actual value > percentage of max, true
+    let value = s.max * percentage / 100;
+    return s.actual > value;
+}
+
+function checkMaxStat (s: Stat):boolean{
+    return s.actual === s.max
+}
+
+function checkMinStat (s: Stat):boolean{
+    return s.actual === 0
+}
+
+function tryRandom(n:number): boolean{
+    return Math.floor(Math.random() * 100)<n;//random number from 1 to 100
+}
+
+
 
 
 export type {Creature, Stat, State}
-export{happiness_modifier}
+export{ checkMaxStat, checkMinStat, tryRandom, percentageStat}
