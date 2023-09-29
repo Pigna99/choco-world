@@ -7,7 +7,9 @@ export async function GET(request: Request) {
     const creatureName = searchParams.get('name');
     if(creatureName === null){
         console.log('No name');
-        return NextResponse.json({error:"no name from request"})
+        return NextResponse.json({error:"no name from request"},{
+            status: 404,
+          })
     }
 
     let files = getRoutes();//get all creature names
