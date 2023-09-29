@@ -1,6 +1,7 @@
 .button{
-    padding: 3px;
-    border:5px solid black;
+    font-size: 25px;
+    padding: 5px;
+    border:7px solid black;
     border-top: 0px;
     border-bottom: 0px;
     width: 50%;
@@ -12,4 +13,9 @@
 .button:hover{
     background-color: lightgray;
     cursor: pointer;
+}
+
+.container{
+    margin-top: -7px;
+    padding: 0;
 }

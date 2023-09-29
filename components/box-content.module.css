@@ -14,17 +14,19 @@
     flex-direction: column;
     background-color: white;
     border-radius: 0px;
-    border: solid 5px  black;
+    border: solid 7px  black;
     width: fit-content;
     height: fit-content;
+    font-size:40px;
 }
 
+
 .title{
-    font-size: 25px;
+    font-size: 50px;
 }
 
 .hr{
-    height: 5px;
+    height: 7px;
     background-color: black;
     border: solid 0 gray;
 }

@@ -14,8 +14,8 @@ let startElement: spritesList = 'stand';
 
 export const Box = ()=>{
     const [windowSize, setWindowSize] = useState([
-        window.innerWidth,
-        window.innerHeight,
+        500,
+        500,
     ]);
 
     const [firstUpdate, setFirstUpdate] = useState(true)
@@ -130,8 +130,8 @@ export const Box = ()=>{
     }, [update])
 
     useEffect(() => {
-        const handleWindowResize = () => {
-          setWindowSize([window.innerWidth, window.innerHeight]);
+        const handleWindowResize = () => {//set a max width
+          setWindowSize([window.innerWidth<=500 ? window.innerWidth : 500, window.innerHeight]);
         };
     
         window.addEventListener('resize', handleWindowResize);
