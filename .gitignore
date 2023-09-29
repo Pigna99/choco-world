@@ -14,7 +14,7 @@
 
 # production
 /build
-/chocos/*
+/chocos/
 
 # misc
 .DS_Store
