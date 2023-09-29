@@ -21,5 +21,7 @@ export async function GET(request: Request) {
     const response = creature.feed();//try to feed
 
     saveCreature(creature);
-    return NextResponse.json({creature: creature.getInfo(), update: response})
+    return NextResponse.json({creature: creature.getInfo(), update: response},{
+        status: 200,
+      })
 }

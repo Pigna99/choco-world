@@ -24,7 +24,7 @@ export const Box = ()=>{
     const [sprite, setSprite] = useState(startElement);
     const [isPlayingAnimation, setIsPlayingAnimation] = useState(false);
 
-    const [infoText, setInfoText] = useState('info');
+    const [infoText, setInfoText] = useState('loading...');
     const [infoBox, setInfoBox] = useState(VisualCreatureClass.generatePlaceholder());//change to a special info class/interface
     let updateTimeout:ReturnType<typeof setTimeout>;
     const clearUpdateTimeout = ()=>{

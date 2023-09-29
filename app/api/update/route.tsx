@@ -21,5 +21,7 @@ export async function GET(request: Request) {
     }
 
     saveCreature(creature);//save creature info
-    return NextResponse.json({creature: creature.getInfo()});
+    return NextResponse.json({creature: creature.getInfo(),} ,{
+        status: 200,
+      });
 }
