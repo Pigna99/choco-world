@@ -46,7 +46,12 @@ const InfoButton = ({handleClick}:{handleClick:MouseEventHandler}) =>{
 const InfoBox = ({isVisible, infoBox}:{isVisible:boolean, infoBox:Creature})=>{
     return(
         <div className={`${styles.infobox} ${isVisible? styles.infoboxvisible : styles.infoboxhidden}`}>
-            {infoBox.toString()}
+            <h2>{infoBox.name}</h2>
+            <div>{`Level: ${infoBox.statictics.level}`}</div>
+            <div>{`Stamina: ${infoBox.statictics.stamina.actual}/${infoBox.statictics.stamina.max}`}</div>
+            <div>{`Hunger: ${infoBox.statictics.hunger.actual}/${infoBox.statictics.hunger.max}`}</div>
+            <div>{`Happiness: ${infoBox.statictics.happiness.actual}/${infoBox.statictics.happiness.max}`}</div>
+            <div>{`Experience: ${infoBox.statictics.experience.actual}/${infoBox.statictics.experience.max}`}</div>
         </div>
     )
 }

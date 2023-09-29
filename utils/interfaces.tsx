@@ -39,11 +39,11 @@ function percentageStat (s: Stat, percentage :number): boolean {//if actual valu
 }
 
 function checkMaxStat (s: Stat):boolean{
-    return s.actual === s.max
+    return s.actual >= s.max
 }
 
 function checkMinStat (s: Stat):boolean{
-    return s.actual === 0
+    return s.actual <= 0
 }
 
 function tryRandom(n:number): boolean{
