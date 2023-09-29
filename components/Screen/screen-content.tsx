@@ -8,7 +8,7 @@ import { Creature } from '@/utils/interfaces';
 
 
 
-export const Screen = ({sprite, infoBox}:{sprite:spritesList, infoBox:String})=>{
+export const Screen = ({sprite, infoBox}:{sprite:spritesList, infoBox:Creature})=>{
     const [isInfo, setInfo] = useState(false);
     
     let reverse = false;
@@ -43,10 +43,10 @@ const InfoButton = ({handleClick}:{handleClick:MouseEventHandler}) =>{
         </div>
     )
 }
-const InfoBox = ({isVisible, infoBox}:{isVisible:boolean, infoBox:String})=>{
+const InfoBox = ({isVisible, infoBox}:{isVisible:boolean, infoBox:Creature})=>{
     return(
         <div className={`${styles.infobox} ${isVisible? styles.infoboxvisible : styles.infoboxhidden}`}>
-            {infoBox}
+            {infoBox.toString()}
         </div>
     )
 }

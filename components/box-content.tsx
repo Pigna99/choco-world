@@ -6,6 +6,7 @@ import { Screen } from './Screen/screen-content'
 import {useState, MouseEvent, useEffect} from 'react'
 import { spritesList } from '@/utils/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
+import { VisualCreatureClass } from '@/utils/VisualCreatureClass'
 
 let startElement: spritesList = 'stand';
 
@@ -14,10 +15,13 @@ let startElement: spritesList = 'stand';
 export const Box = ()=>{
     const [firstUpdate, setFirstUpdate] = useState(true)
     const [update, setUpdate] = useState(false);
+    
 
     const [sprite, setSprite] = useState(startElement);
+    const [isPlayingAnimation, setIsPlayingAnimation] = useState(false);
+
     const [infoText, setInfoText] = useState('info');
-    const [infoBox, setInfoBox] = useState('infos');//change to a special info class/interface
+    const [infoBox, setInfoBox] = useState(VisualCreatureClass.generatePlaceholder());//change to a special info class/interface
     let updateTimeout:ReturnType<typeof setTimeout>;
     const clearUpdateTimeout = ()=>{
         //console.log(updateTimeout)
@@ -25,9 +29,13 @@ export const Box = ()=>{
     }
 
     const feedCommand = async (e:MouseEvent) =>{
+        if(isPlayingAnimation)return;//make animation not interruptable!
+        setIsPlayingAnimation(true)
         clearUpdateTimeout()
         const res = await fetch(`/api/feed?name=${creatureName}`)
         const data = await res.json()
+        const creature: Creature = data.creature;
+        updateInfoBox(creature)
         if(data.update){
             updateVisuals('eating')
         }else{
@@ -38,9 +46,13 @@ export const Box = ()=>{
         setUpdate(!update)
     }
     const petCommand = async (e:MouseEvent) =>{
+        if(isPlayingAnimation)return;//make animation not interruptable!
+        setIsPlayingAnimation(true)
         clearUpdateTimeout()
         const res = await fetch(`/api/pet?name=${creatureName}`)
         const data = await res.json()
+        const creature: Creature = data.creature;
+        updateInfoBox(creature)
         if(data.update){
             updateVisuals('happy')
         }else{
@@ -52,9 +64,9 @@ export const Box = ()=>{
     }
     const updateCommand = async() =>{
         clearUpdateTimeout();
+        if(isPlayingAnimation){setIsPlayingAnimation(false)}//if animation ended
         await coreUpdate();
         setUpdate(!update)
-        //set info and infobox
     }
 
     const coreUpdate = async() =>{
@@ -66,7 +78,9 @@ export const Box = ()=>{
         }
         //console.log("Data received from API:", data)
         const creature: Creature = data.creature;
+        updateInfoBox(creature)
         updateVisuals(creature.state)
+        //set info and infobox
     }
 
     const updateVisuals = (v:VisualState)=>{
@@ -97,12 +111,17 @@ export const Box = ()=>{
         }
     }
 
+    const updateInfoBox = (c:Creature)=>{//format Creature?
+        setInfoBox(c);
+    }
+
     useEffect(() => {
         if(firstUpdate){
             setFirstUpdate(false);
             updateTimeout= setTimeout(updateCommand, 0);
             return;
         }
+        
         updateTimeout= setTimeout(updateCommand, 5000);
     }, [update])
 
