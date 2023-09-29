@@ -14,7 +14,7 @@
 
 # production
 /build
-/chocos/
+
 
 # misc
 .DS_Store
@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# others
+chocos/
+
+
