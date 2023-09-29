@@ -38,5 +38,6 @@ next-env.d.ts
 
 # others
 chocos/
+/chocos/
 
 
