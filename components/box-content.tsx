@@ -3,7 +3,7 @@ import styles from './box-content.module.css'
 import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
 import { Screen } from './Screen/screen-content'
-import {useState, MouseEvent, useEffect} from 'react'
+import {useState, MouseEvent, useEffect, useRef} from 'react'
 import { spritesList } from '@/utils/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/VisualCreatureClass'
@@ -13,9 +13,13 @@ let startElement: spritesList = 'stand';
 
 
 export const Box = ()=>{
+    const [windowSize, setWindowSize] = useState([
+        window.innerWidth,
+        window.innerHeight,
+    ]);
+
     const [firstUpdate, setFirstUpdate] = useState(true)
     const [update, setUpdate] = useState(false);
-    
 
     const [sprite, setSprite] = useState(startElement);
     const [isPlayingAnimation, setIsPlayingAnimation] = useState(false);
@@ -125,12 +129,23 @@ export const Box = ()=>{
         updateTimeout= setTimeout(updateCommand, 5000);
     }, [update])
 
+    useEffect(() => {
+        const handleWindowResize = () => {
+          setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+    
+        window.addEventListener('resize', handleWindowResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleWindowResize);
+        };
+      }, []);
     return(
     <div className={styles.box}>
         <h1 className={styles.title}>Choco World</h1>
         <Info infoText={infoText}/>
         <hr className={styles.hr}/>
-        <Screen sprite={sprite} infoBox={infoBox}/>
+        <Screen sprite={sprite} infoBox={infoBox} width={windowSize[0]}/>
         <hr className={styles.hr}/>
         <Commands feedCommand={feedCommand} petCommand={petCommand}/>
     </div>

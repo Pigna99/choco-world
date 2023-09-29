@@ -8,7 +8,7 @@ import { Creature } from '@/utils/interfaces';
 
 
 
-export const Screen = ({sprite, infoBox}:{sprite:spritesList, infoBox:Creature})=>{
+export const Screen = ({sprite, infoBox, width}:{sprite:spritesList, infoBox:Creature, width:number})=>{
     const [isInfo, setInfo] = useState(false);
     
     let reverse = false;
@@ -21,16 +21,15 @@ export const Screen = ({sprite, infoBox}:{sprite:spritesList, infoBox:Creature})
         setInfo(!isInfo);
     }
     return(
-        <div className={styles.screen}>
-            <div className={reverse ? styles.reverse : undefined}>
+        <div className={styles.screen} style={{width:width,height:width}}>
+            <InfoButton handleClick={handleInfoButton}/>
+            <div className={`${reverse ? styles.reverse : undefined} ${styles.sprite}`}>
                 <Image
                     src={`/images/sprites/${sprite}.gif`}
-                    width={200}
-                    height={200}
+                    fill
                     alt='Main screen sprites'
                 />
             </div>
-            <InfoButton handleClick={handleInfoButton}/>
             <InfoBox isVisible={isInfo} infoBox={infoBox}/>
         </div>
     )

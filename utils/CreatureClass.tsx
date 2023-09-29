@@ -52,13 +52,14 @@ class CreatureClass {
         const last_update = new Date(this.getUpdateTime());
         const new_ticks_float= ((new Date()).getTime()-last_update.getTime()) / (60000*TICK_VALUE);
         const new_ticks = Math.floor(new_ticks_float);
+        //console.log('new ticks(float): ' + new_ticks_float);
+        if(new_ticks<1)return;
         const new_update = new Date(last_update.getTime() + new_ticks*60000*TICK_VALUE);//updated timer
-    
+        console.log(`[${this.info.name}]: simulating ${new_ticks} tick(s)`);
         for(let i_ticks = new_ticks; i_ticks>0; --i_ticks){//foreach tick simulate!
             this.nextTick();
         }
         this.setUpdateTime(new_update); //update timer to the next tick
-        console.log('new ticks(float): ' + new_ticks_float);
     }
 
     private getTicksFromDate(d:Date){//number of ticks from that Date to now
@@ -110,12 +111,12 @@ class CreatureClass {
         
     }
     private levelUp(){
-        console.log(`Level up! ${this.info.name} reached level ${this.info.statictics.level}!`);
         this.info.statictics.level++;
         this.info.statictics.experience.actual=0;
         this.info.statictics.experience.max+= Math.floor(this.info.statictics.experience.max * EXPERIENCE_SCALING);//max_exp
         this.info.statictics.stamina.max+= Math.floor(this.info.statictics.stamina.max * STAMINA_SCALING);//stamina
         this.info.statictics.hunger.max+= Math.floor(this.info.statictics.hunger.max * HUNGER_SCALING);//hunger
+        console.log(`[${this.info.name}]: Level up! ${this.info.name} reached level ${this.info.statictics.level}!`);
     }
 
     private checkHappiness(){
