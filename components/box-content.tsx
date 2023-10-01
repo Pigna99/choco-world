@@ -42,7 +42,7 @@ export const Box = ()=>{
         if(!data.creature){return;}
         const creature: Creature = data.creature;
         updateInfoBox(creature)
-        if(data.update){
+        if(data.update){//can be done better if precalc is done in frontend
             updateVisuals('eating')
         }else{
             updateVisuals('idle')
@@ -60,7 +60,7 @@ export const Box = ()=>{
         if(!data.creature){return;}
         const creature: Creature = data.creature;
         updateInfoBox(creature)
-        if(data.update){
+        if(data.update){//can be done better if precalc is done in frontend
             updateVisuals('happy')
         }else{
             updateVisuals('idle')
