@@ -140,7 +140,7 @@ class CreatureClass {
         const last_time_feed = new Date(this.info.last_time_feed)
 
         const ticks = this.getTicksFromDate(last_time_feed)
-        if(ticks<=1) return false;//at least 1 tick for feeding againg
+        if(this.info.statictics.hunger.actual===this.info.statictics.hunger.max) return false;//check if hunger bar is not full
         console.log(`[${this.info.name}]: eating!`);
         this.info.statictics.hunger.actual = this.info.statictics.hunger.max;
         this.info.last_time_feed = new Date();
@@ -159,7 +159,7 @@ class CreatureClass {
         //can pet only if 1 tick passed
         const last_time_pet = new Date(this.info.last_time_pet)
         const ticks = this.getTicksFromDate(last_time_pet)
-        if(ticks<=1) return false;//at least 1 tick for petting again
+        if(ticks<1) return false;//at least 1 tick for petting again
         console.log(`[${this.info.name}]: petted!`);
         this.info.last_time_pet = new Date();
         this.info.informations.pets++;
