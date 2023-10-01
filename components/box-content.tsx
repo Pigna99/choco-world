@@ -137,9 +137,9 @@ export const Box = ()=>{
         const handleWindowResize = () => {//set a max width
           setWindowSize([window.innerWidth<=500 ? window.innerWidth : 500, window.innerHeight]);
         };
-    
+        
         window.addEventListener('resize', handleWindowResize);
-    
+        setWindowSize([window.innerWidth<=500 ? window.innerWidth : 500, window.innerHeight]);
         return () => {
           window.removeEventListener('resize', handleWindowResize);
         };
