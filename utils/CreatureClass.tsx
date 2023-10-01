@@ -91,6 +91,9 @@ class CreatureClass {
             if(checkMaxStat(this.info.statictics.experience)){
                 this.levelUp();
             }
+            //happiness check
+            this.checkHappiness();
+            return;
         }
 
         if (this.info.state === 'sleeping'){
@@ -105,9 +108,11 @@ class CreatureClass {
             if(checkMaxStat(this.info.statictics.stamina)){
                 this.changeState('walking');
             }
+            //happiness check
+            this.checkHappiness();
+            return;
         }
-        //happiness check
-        this.checkHappiness();
+        
         
     }
     private levelUp(){
