@@ -1,8 +1,11 @@
+import { getRoutes,  } from '@/utils/database';
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
-    console.log("test API");
-
-    return NextResponse.json("test API");
+    let id = await getRoutes();
+    console.log(id)
+    return NextResponse.json({routes_list:id},{
+        status: 200,
+      });
 }
 

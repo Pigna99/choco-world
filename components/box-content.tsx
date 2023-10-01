@@ -1,4 +1,4 @@
-import { creatureName } from '@/utils/settings'
+import { creatureId } from '@/utils/settings'
 import styles from './box-content.module.css'
 import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
@@ -36,7 +36,7 @@ export const Box = ()=>{
         if(isPlayingAnimation)return;//make animation not interruptable!
         setIsPlayingAnimation(true)
         clearUpdateTimeout()
-        const res = await fetch(`/api/feed?name=${creatureName}`)
+        const res = await fetch(`/api/feed?id=${creatureId}`)
         const data = await res.json()
         const creature: Creature = data.creature;
         updateInfoBox(creature)
@@ -53,7 +53,7 @@ export const Box = ()=>{
         if(isPlayingAnimation)return;//make animation not interruptable!
         setIsPlayingAnimation(true)
         clearUpdateTimeout()
-        const res = await fetch(`/api/pet?name=${creatureName}`)
+        const res = await fetch(`/api/pet?id=${creatureId}`)
         const data = await res.json()
         const creature: Creature = data.creature;
         updateInfoBox(creature)
@@ -74,7 +74,7 @@ export const Box = ()=>{
     }
 
     const coreUpdate = async() =>{
-        const res = await fetch(`/api/update?name=${creatureName}`)
+        const res = await fetch(`/api/update?id=${creatureId}`)
         const data = await res.json()
         
         if(!data){

@@ -1,28 +1,29 @@
 import { CreatureClass } from '@/utils/CreatureClass';
-import { getCreature, getRoutes, saveCreature } from '@/utils/utils';
+import { getCreature, updateCreature } from '@/utils/database';
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url)
-    const creatureName = searchParams.get('name');
-    if(creatureName === null){
-        console.log('No name');
-        return NextResponse.json({error:"no name from request"},{
-            status: 404,
-          })
-    }
-
-    let files = getRoutes();//get all creature names
+  const { searchParams } = new URL(request.url)
+  const creatureId = searchParams.get('id');
+  if(creatureId === null){
+    console.log('No id');
+    return NextResponse.json({error:"no id from request"},{
+      status: 404,
+    })
+  }
 
     let creature:CreatureClass;
-    if(!files.includes(creatureName)){//if the name is not found, generate a new Choco!
-        creature = CreatureClass.newCreature(creatureName);
-    }else{//else, read info from memory and update (simulate)
-        creature = new CreatureClass(getCreature(creatureName));
-        creature.simulate();
+    creature = new CreatureClass(await getCreature(creatureId));//fetch creature from db
+    if(creature.getInfo()===null){
+      console.log("ERROR, no creature found")
+      return NextResponse.json({error:"no id in database"},{
+        status: 404,
+      })
     }
-
-    saveCreature(creature);//save creature info
+    
+    creature.simulate();//simulate
+    
+    await updateCreature(creature.getInfo(), creatureId);//save creature info
     return NextResponse.json({creature: creature.getInfo(),} ,{
         status: 200,
       });
