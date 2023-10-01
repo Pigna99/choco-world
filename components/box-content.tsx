@@ -1,4 +1,4 @@
-import { creatureId } from '@/utils/settings'
+import { CREATURE_ID } from '@/utils/settings'
 import styles from './box-content.module.css'
 import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
@@ -17,7 +17,7 @@ export const Box = ()=>{
         500,
         500,
     ]);
-
+    
     const [firstUpdate, setFirstUpdate] = useState(true)
     const [update, setUpdate] = useState(false);
 
@@ -36,8 +36,10 @@ export const Box = ()=>{
         if(isPlayingAnimation)return;//make animation not interruptable!
         setIsPlayingAnimation(true)
         clearUpdateTimeout()
-        const res = await fetch(`/api/feed?id=${creatureId}`)
+        
+        const res = await fetch(`/api/feed?id=${CREATURE_ID}`)
         const data = await res.json()
+        if(!data.creature){return;}
         const creature: Creature = data.creature;
         updateInfoBox(creature)
         if(data.update){
@@ -53,8 +55,9 @@ export const Box = ()=>{
         if(isPlayingAnimation)return;//make animation not interruptable!
         setIsPlayingAnimation(true)
         clearUpdateTimeout()
-        const res = await fetch(`/api/pet?id=${creatureId}`)
+        const res = await fetch(`/api/pet?id=${CREATURE_ID}`)
         const data = await res.json()
+        if(!data.creature){return;}
         const creature: Creature = data.creature;
         updateInfoBox(creature)
         if(data.update){
@@ -74,8 +77,9 @@ export const Box = ()=>{
     }
 
     const coreUpdate = async() =>{
-        const res = await fetch(`/api/update?id=${creatureId}`)
+        const res = await fetch(`/api/update?id=${CREATURE_ID}`)
         const data = await res.json()
+        if(!data.creature){return;}
         
         if(!data){
             console.log("ERROR! DATA NOT RECEIVED"); return;

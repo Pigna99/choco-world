@@ -10,7 +10,7 @@ export const connect = async () => {
   const connection = await mongoose
     .connect(`${DATABASE_URL as string}`)
     .catch(err => console.log(err))
-  console.log("Mongoose Connection Established")
+  //console.log("Mongoose Connection Established")
   const creatureCollection = CreatureModel;
   creatureCollection.createCollection()
   return { connection, creatureCollection }

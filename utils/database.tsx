@@ -28,7 +28,7 @@ const getRoutes = async ()=>{//return an array of id (string)
 
 const getCreature = async (creatureId:string)=>{
     const { creatureCollection } = await connect()
-    return await creatureCollection.findOne({id_:creatureId});
+    return await creatureCollection.findOne({_id:creatureId});
 }
 
 const newCreature = async (name:string)=>{//create new creature and return id
@@ -40,8 +40,8 @@ const newCreature = async (name:string)=>{//create new creature and return id
 
 const updateCreature = async (creature: Creature, creatureId: string)=>{//save creature and return id
     const { creatureCollection } = await connect() // connect to database
-    await creatureCollection.find({id_:creatureId}).updateOne(creature);
-    console.log(`[${creature.name}-${creatureId}]-updated`)
+    await creatureCollection.findOneAndUpdate({_id:creatureId},creature);
+    //console.log(`[${creature.name}-${creatureId}]-updated`)
 }
 
 export {getRoutes, getCreature, updateCreature, newCreature}
