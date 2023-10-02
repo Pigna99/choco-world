@@ -29,6 +29,7 @@ export const Screen = ({sprite, infoBox, width}:{sprite:spritesList, infoBox:Cre
                     src={`/images/sprites/${sprite}.gif`}
                     fill
                     alt='Main screen sprites'
+                    priority
                 />
             </div>
             <InfoBox isVisible={isInfo} infoBox={infoBox}/>

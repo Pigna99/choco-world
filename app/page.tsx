@@ -10,37 +10,37 @@ export default function Home() {
       <Head>
         <link
           rel="preload"
-          href="../public/images/sprites/eat.gif"
+          href="/images/sprites/eat.gif"
           as="image"
         />
         <link
           rel="preload"
-          href="../public/images/sprites/happy.gif"
+          href="/images/sprites/happy.gif"
           as="image"
         />
         <link
           rel="preload"
-          href="../public/images/sprites/sleep.gif"
+          href="/images/sprites/sleep.gif"
           as="image"
         />
         <link
           rel="preload"
-          href="../public/images/sprites/stand.gif"
+          href="/images/sprites/stand.gif"
           as="image"
         />
         <link
           rel="preload"
-          href="../public/images/sprites/walk-bottom.gif"
+          href="/images/sprites/walk-bottom.gif"
           as="image"
         />
         <link
           rel="preload"
-          href="../public/images/sprites/walk-right.gif"
+          href="/images/sprites/walk-right.gif"
           as="image"
         />
         <link
           rel="preload"
-          href="../public/images/sprites/walk-top.gif"
+          href="/images/sprites/walk-top.gif"
           as="image"
         />
       </Head>
