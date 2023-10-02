@@ -19,3 +19,12 @@
     margin-top: -7px;
     padding: 0;
 }
+
+.blocked{
+    background-color: gray;
+}
+
+.blocked:hover{
+    background-color: gray;
+    cursor:default;
+}

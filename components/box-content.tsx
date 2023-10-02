@@ -1,15 +1,14 @@
-import { CREATURE_ID } from '@/utils/settings'
+import { CREATURE_ID, TICK_VALUE } from '@/utils/settings'
 import styles from './box-content.module.css'
 import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
 import { Screen } from './Screen/screen-content'
-import {useState, MouseEvent, useEffect, useRef} from 'react'
-import { spritesList } from '@/utils/utilsFrontend'
+import {useState, MouseEvent, useEffect} from 'react'
+import { precalcFeed, precalcPet, spritesList } from '@/utils/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/VisualCreatureClass'
 
 let startElement: spritesList = 'stand';
-
 
 
 export const Box = ()=>{
@@ -19,6 +18,7 @@ export const Box = ()=>{
     ]);
     
     const [firstUpdate, setFirstUpdate] = useState(true)
+    const [lastUpdate, setLastUpdate] = useState(new Date(0));
     const [update, setUpdate] = useState(false);
 
     const [sprite, setSprite] = useState(startElement);
@@ -32,63 +32,58 @@ export const Box = ()=>{
         if(updateTimeout)clearTimeout(updateTimeout);
     }
 
+    const isUpdateTime = ()=>{//check if is time to update, and if true set new time
+        //const timeLeft = (new Date()).getTime() - (lastUpdate.getTime()+TICK_VALUE*60000)
+        const value = (lastUpdate.getTime()+TICK_VALUE*60000)<(new Date()).getTime()
+        //console.log(timeLeft/1000, value)
+        return value
+    }
+
+    //block7wait command if is fetching!
     const feedCommand = async (e:MouseEvent) =>{
         if(isPlayingAnimation)return;//make animation not interruptable!
         setIsPlayingAnimation(true)
-        clearUpdateTimeout()
+        clearUpdateTimeout()//stop autoupdate timeout
         
+        precalcFeed(infoBox) ? updateVisuals('eating') : updateVisuals('idle-feed')//precalc if you can feed or not for fast update
+
         const res = await fetch(`/api/feed?id=${CREATURE_ID}`)
-        const data = await res.json()
-        if(!data.creature){return;}
-        const creature: Creature = data.creature;
-        updateInfoBox(creature)
-        if(data.update){//can be done better if precalc is done in frontend
-            updateVisuals('eating')
-        }else{
-            updateVisuals('idle')
-            setInfoText('not hungry')
-            console.log('You have to wait more before eating again')
-        }
-        setUpdate(!update)
+        await apiCore(res, false);
     }
     const petCommand = async (e:MouseEvent) =>{
         if(isPlayingAnimation)return;//make animation not interruptable!
         setIsPlayingAnimation(true)
         clearUpdateTimeout()
+
+        precalcPet(infoBox) ? updateVisuals('happy') : updateVisuals('idle-pet')//precalc if you can pet or not for fast update
+
         const res = await fetch(`/api/pet?id=${CREATURE_ID}`)
-        const data = await res.json()
-        if(!data.creature){return;}
-        const creature: Creature = data.creature;
-        updateInfoBox(creature)
-        if(data.update){//can be done better if precalc is done in frontend
-            updateVisuals('happy')
-        }else{
-            updateVisuals('idle')
-            setInfoText('try pet later')
-            console.log('You have to wait more before petting again')
-        }
-        setUpdate(!update)
+        await apiCore(res, false);
     }
     const updateCommand = async() =>{
         clearUpdateTimeout();
         if(isPlayingAnimation){setIsPlayingAnimation(false)}//if animation ended
-        await coreUpdate();
-        setUpdate(!update)
+        if(!isUpdateTime()){//update only visual, not API
+            updateVisuals(infoBox.state)
+            setUpdate(!update)
+            return;
+        };
+        console.log("Update API")
+        const res = await fetch(`/api/update?id=${CREATURE_ID}`)
+        await apiCore(res, true);
     }
 
-    const coreUpdate = async() =>{
-        const res = await fetch(`/api/update?id=${CREATURE_ID}`)
+    const apiCore = async (res:Response, forceVisual:boolean)=>{
         const data = await res.json()
-        if(!data.creature){return;}
-        
         if(!data){
             console.log("ERROR! DATA NOT RECEIVED"); return;
         }
-        //console.log("Data received from API:", data)
+        if(!data.creature){console.log("ERROR! CREATURE NOT RECEIVED");return;}
         const creature: Creature = data.creature;
         updateInfoBox(creature)
-        updateVisuals(creature.state)
-        //set info and infobox
+        setUpdate(!update)
+        if(forceVisual)updateVisuals(creature.state)
+        setLastUpdate(new Date());
     }
 
     const updateVisuals = (v:VisualState)=>{
@@ -105,6 +100,16 @@ export const Box = ()=>{
                 break;
             case 'idle':
                 setSprite('stand')
+                break;
+            case 'idle-feed':
+                setSprite('stand')
+                setInfoText('not hungry')
+                console.log('You have to wait more before eating again')
+                break;
+            case 'idle-pet':
+                setSprite('stand')
+                setInfoText('try pet later')
+                console.log('You have to wait more before petting again')
                 break;
             case 'eating':
                 setSprite('eat')
@@ -129,7 +134,6 @@ export const Box = ()=>{
             updateTimeout= setTimeout(updateCommand, 0);
             return;
         }
-        
         updateTimeout= setTimeout(updateCommand, 5000);
     }, [update])
 
@@ -151,7 +155,7 @@ export const Box = ()=>{
         <hr className={styles.hr}/>
         <Screen sprite={sprite} infoBox={infoBox} width={windowSize[0]}/>
         <hr className={styles.hr}/>
-        <Commands feedCommand={feedCommand} petCommand={petCommand}/>
+        <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation}/>
     </div>
     )
 }

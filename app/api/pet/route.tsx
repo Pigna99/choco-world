@@ -20,7 +20,6 @@ export async function GET(request: Request) {
         status: 404,
       })
     }
-
     creature.simulate();//first try to simulate
     const response = creature.pet();//try to pet
 

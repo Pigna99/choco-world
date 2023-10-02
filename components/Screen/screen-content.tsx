@@ -3,6 +3,7 @@ import styles from './screen-content.module.css'
 import Image from 'next/image'
 import { spritesList } from '@/utils/utilsFrontend';
 import { Creature } from '@/utils/interfaces';
+import { HAPPINESS_NAMES } from '@/utils/settings';
 
 
 
@@ -49,7 +50,7 @@ const InfoBox = ({isVisible, infoBox}:{isVisible:boolean, infoBox:Creature})=>{
             <div>{`Level: ${infoBox.statictics.level}`}</div>
             <div>{`Stamina: ${infoBox.statictics.stamina.actual}/${infoBox.statictics.stamina.max}`}</div>
             <div>{`Hunger: ${infoBox.statictics.hunger.actual}/${infoBox.statictics.hunger.max}`}</div>
-            <div>{`Happiness: ${infoBox.statictics.happiness.actual}/${infoBox.statictics.happiness.max}`}</div>
+            <div>{`Happiness: ${HAPPINESS_NAMES[infoBox.statictics.happiness.actual]}`}</div>
             <div>{`Experience: ${infoBox.statictics.experience.actual}/${infoBox.statictics.experience.max}`}</div>
         </div>
     )

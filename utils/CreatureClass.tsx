@@ -142,9 +142,6 @@ class CreatureClass {
 
     feed():boolean{
         this.tryWakeUp()
-        const last_time_feed = new Date(this.info.last_time_feed)
-
-        const ticks = this.getTicksFromDate(last_time_feed)
         if(this.info.statictics.hunger.actual===this.info.statictics.hunger.max) return false;//check if hunger bar is not full
         console.log(`[${this.info.name}]: eating!`);
         this.info.statictics.hunger.actual = this.info.statictics.hunger.max;
@@ -172,7 +169,6 @@ class CreatureClass {
         //if 1 tick passed, check if the pet is done after 12h after the last effettive pet, and can update happiness
         const last_time_pet_real = new Date(this.info.last_time_pet_real)
         const ticks_real = this.getTicksFromDate(last_time_pet_real)
-
         if(ticks_real<(TICK_DAY/2)) return true;//if not, return true (pet with no effect)
         if(!checkMaxStat(this.info.statictics.happiness)){
             this.info.statictics.happiness.actual++;
