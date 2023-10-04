@@ -2,7 +2,9 @@ import React from 'react'
 
 import { useState, useEffect } from "react";
 
-function Sprite({fps, framesArray, color}:{fps:number, framesArray:((color:string)=>React.JSX.Element[]), color:string}) {
+function Sprite({fps, framesArray, color, width, height }
+    :{fps:number, framesArray:((color:string)=>React.JSX.Element[]), color:string,
+        width:number, height:number}) {
     const generatedFrames = framesArray(color);
     const [frame, setFrame] = useState(generatedFrames[0]);
     const [frameNumber, setFrameNumber] = useState(0);
@@ -24,7 +26,7 @@ function Sprite({fps, framesArray, color}:{fps:number, framesArray:((color:strin
         //console.log(frame)
     }, [frame]);
   return (
-    <div style={{backgroundColor:'white', width:500, height:500}}>
+    <div style={{backgroundColor:'white', width:width, height:height}}>
         {
             frame
         }

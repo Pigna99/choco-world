@@ -23,7 +23,7 @@ export const Screen = ({sprite, infoBox, width}:{sprite:spritesList, infoBox:Cre
         <div className={styles.screen} style={{width:width,height:width}}>
             <InfoButton handleClick={handleInfoButton}/>
             <div className={`${reverse ? styles.reverse : undefined} ${styles.sprite}`}>
-                <Sprite  framesArray={getSprite(sprite).sprite} fps={getSprite(sprite).fps} color='#ffbf00'/>
+                <Sprite  framesArray={getSprite(sprite).sprite} fps={getSprite(sprite).fps} color='#ffbf00' width={width} height={width}/>
             </div>
             <InfoBox isVisible={isInfo} infoBox={infoBox}/>
         </div>
