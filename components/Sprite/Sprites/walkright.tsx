@@ -24,7 +24,7 @@ const walkChocobo1= (color:string)=>{
 function walkright(color:string){
   return pathFrames.map((el,index)=>{
     return(
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 200 200" shapeRendering="crispEdges">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 200 200" shapeRendering="crispEdges" key={'walkright-'+index}>
       {
         ((index%4===0) || (index%4 ===1 ))? walkChocobo0(color) : walkChocobo1(color)
       }

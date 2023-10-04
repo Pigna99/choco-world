@@ -19,7 +19,7 @@ const walkChocobo2= (color:string)=>{
 function walktop(color:string){
     return pathFrames.map((el,index)=>{
       return(
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 200 200" shapeRendering="crispEdges">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 200 200" shapeRendering="crispEdges" key={'walktop-'+index}>
         {
           (index%8===0)||(index%8===1)? walkChocobo0(color):
           (index%8===2)||(index%8===3)? walkChocobo1(color):
