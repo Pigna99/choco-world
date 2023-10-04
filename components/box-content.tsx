@@ -4,9 +4,9 @@ import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
 import { Screen } from './Screen/screen-content'
 import {useState, MouseEvent, useEffect} from 'react'
-import { precalcFeed, precalcPet, spritesList } from '@/utils/utilsFrontend'
+import { precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
-import { VisualCreatureClass } from '@/utils/VisualCreatureClass'
+import { VisualCreatureClass } from '@/utils/frontend/VisualCreatureClass'
 
 let startElement: spritesList = 'stand';
 

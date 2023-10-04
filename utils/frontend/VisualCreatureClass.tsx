@@ -1,4 +1,4 @@
-import { Creature } from "./interfaces";
+import { Creature } from "../interfaces";
 
 export class VisualCreatureClass{
 

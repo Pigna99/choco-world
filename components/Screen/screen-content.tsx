@@ -1,13 +1,11 @@
-import { MouseEventHandler, useState , MouseEvent} from 'react'
+import { MouseEventHandler, useState , MouseEvent, JSX} from 'react'
 import styles from './screen-content.module.css'
-import Image from 'next/image'
-import { spritesList } from '@/utils/utilsFrontend';
+import { spritesList } from '@/utils/frontend/utilsFrontend';
 import { Creature } from '@/utils/interfaces';
 import { HAPPINESS_NAMES } from '@/utils/settings';
 
-
-
-
+import Sprite from "@/components/Sprite/Sprite";
+import getSprite from '../Sprite/spriteUtils';
 
 export const Screen = ({sprite, infoBox, width}:{sprite:spritesList, infoBox:Creature, width:number})=>{
     const [isInfo, setInfo] = useState(false);
@@ -25,12 +23,7 @@ export const Screen = ({sprite, infoBox, width}:{sprite:spritesList, infoBox:Cre
         <div className={styles.screen} style={{width:width,height:width}}>
             <InfoButton handleClick={handleInfoButton}/>
             <div className={`${reverse ? styles.reverse : undefined} ${styles.sprite}`}>
-                <Image
-                    src={`/images/sprites/${sprite}.gif`}
-                    fill
-                    alt='Main screen sprites'
-                    priority
-                />
+                <Sprite  framesArray={getSprite(sprite).sprite} fps={getSprite(sprite).fps} color='#ffbf00'/>
             </div>
             <InfoBox isVisible={isInfo} infoBox={infoBox}/>
         </div>

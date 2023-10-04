@@ -1,6 +1,5 @@
 type State = 'sleeping'|'walking'
 type VisualState = State | 'idle'|'eating'|'happy'|'idle-feed'|'idle-pet'
-type HappinessStatus = 'depressed'|'sad'|'normal'|'happy'|'delighted' 
 
 interface Stat{
     max:number;

@@ -1,5 +1,5 @@
-import { Creature , State, checkMaxStat, checkMinStat, percentageStat, tryRandom} from "./interfaces";
-import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS } from './settings';
+import { Creature , State, checkMaxStat, checkMinStat, percentageStat, tryRandom} from "../interfaces";
+import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS } from '../settings';
 
 class CreatureClass {
     private info: Creature;

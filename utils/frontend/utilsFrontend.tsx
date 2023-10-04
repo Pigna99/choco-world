@@ -1,5 +1,5 @@
-import { Creature } from "./interfaces";
-import { TICK_VALUE } from "./settings";
+import { Creature } from "../interfaces";
+import { TICK_VALUE } from "../settings";
 
 type spritesList =
     'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top';

@@ -3,7 +3,7 @@
 import Head from "next/head";
 import { Box } from '@/components/box-content'
 import styles from './page.module.css'
-import { spritesArray, spritesList } from "@/utils/utilsFrontend";
+import { spritesArray, spritesList } from "@/utils/frontend/utilsFrontend";
 
 export default function Home() {
   return (

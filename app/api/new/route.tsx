@@ -1,4 +1,4 @@
-import { newCreature } from '@/utils/database';
+import { newCreature } from '@/utils/backend/database';
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {

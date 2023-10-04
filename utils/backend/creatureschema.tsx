@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-import { Creature } from "./interfaces"
+import { Creature } from "../interfaces"
 
 const creatureScheme = new mongoose.Schema<Creature>(
     {

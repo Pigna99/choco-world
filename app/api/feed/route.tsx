@@ -1,5 +1,5 @@
-import { CreatureClass } from '@/utils/CreatureClass';
-import { getCreature, updateCreature } from '@/utils/database';
+import { CreatureClass } from '@/utils/backend/CreatureClass';
+import { getCreature, updateCreature } from '@/utils/backend/database';
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {

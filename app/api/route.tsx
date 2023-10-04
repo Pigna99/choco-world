@@ -1,4 +1,4 @@
-import { getRoutes,  } from '@/utils/database';
+import { getRoutes,  } from '@/utils/backend/database';
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {

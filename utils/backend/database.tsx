@@ -1,6 +1,6 @@
 import { CreatureClass } from './CreatureClass';
 import { connect } from './connect';
-import { Creature } from './interfaces';
+import { Creature } from '../interfaces';
 
 
 //fs 
