@@ -156,9 +156,9 @@ export const Box = ()=>{
       }, []);
     return(
     <div className={styles.box}>
-        <h1 className={styles.title}>Choco World</h1>
-        <Info infoText={infoText}/>
         <Screen sprite={sprite} infoBox={infoBox} width={windowSize[0]} isInfo={isInfo}/>
+        <hr className={styles.hr}/>
+        <Info infoText={infoText}/>
         <hr className={styles.hr}/>
         <Stats info={infoBox}/>
         <Commands feedCommand={feedCommand} petCommand={petCommand} infoCommand={handleInfoButton} blockCommand={isPlayingAnimation}/>
