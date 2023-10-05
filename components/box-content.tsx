@@ -4,12 +4,14 @@ import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
 import { Screen } from './Screen/screen-content'
 import {useState, MouseEvent, useEffect} from 'react'
-import { precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
+import { menu, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/frontend/VisualCreatureClass'
 import { Stats } from './Stats/stats'
+import { Menu } from './Menu/menu'
 
 let startElement: spritesList = 'stand';
+let startMenu: menu = 'stats';
 
 
 export const Box = ()=>{
@@ -18,9 +20,11 @@ export const Box = ()=>{
         500,
     ]);
 
+    const [selectedMenu, setSelectedMenu] = useState(startMenu)
+
     const [isInfo, setInfo] = useState(false);
-    const handleInfoButton = (e:MouseEvent):void =>{
-        setInfo(!isInfo);
+    const setMenu = (m:menu)=> (e:MouseEvent):void =>{
+        setSelectedMenu(m);
     }
     
     const [firstUpdate, setFirstUpdate] = useState(true)
@@ -156,12 +160,23 @@ export const Box = ()=>{
       }, []);
     return(
     <div className={styles.box}>
-        <Screen sprite={sprite} infoBox={infoBox} width={windowSize[0]} isInfo={isInfo}/>
-        <hr className={styles.hr}/>
-        <Info infoText={infoText}/>
-        <hr className={styles.hr}/>
-        <Stats info={infoBox}/>
-        <Commands feedCommand={feedCommand} petCommand={petCommand} infoCommand={handleInfoButton} blockCommand={isPlayingAnimation}/>
+        <Screen sprite={sprite} width={windowSize[0]}/>
+        <div className={styles.mainContent}>
+            {
+                selectedMenu=== 'stats' ? <Stats info={infoBox}/> :
+                selectedMenu=== 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation}/>:
+                <Info infoBox={infoBox}/>
+            }
+        </div>
+        <Menu selectedMenu={selectedMenu} setMenu={setMenu}/>        
+        
     </div>
     )
 }
+
+/**
+ * <hr className={styles.hr}/>
+ * 
+ *         
+    
+ */

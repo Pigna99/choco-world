@@ -19,6 +19,7 @@
     border-top: 7px solid black;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .blocked{

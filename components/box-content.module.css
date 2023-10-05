@@ -14,9 +14,10 @@
     flex-direction: column;
     background-color: white;
     border-radius: 0px;
-    
-    width: fit-content;
-    height: fit-content;
+    padding: 0; margin: 0;
+    height: 100%;
+    max-width: 500px;
+    max-height: 1000px;
     font-size:40px;
 }
 
@@ -26,7 +27,14 @@
 }
 
 .hr{
+
     height: 7px;
     background-color: black;
-    border: solid 0 gray;
+    border: 0;
+}
+
+.mainContent{
+    height:100%;
+    margin:0; padding: 0;border: 0;
+    border-top: 7px solid black;
 }

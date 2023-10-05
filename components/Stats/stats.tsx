@@ -1,6 +1,7 @@
 import { Creature , Stat} from '@/utils/interfaces'
 import styles from './stats.module.css'
 import { HAPPINESS_NAMES } from '@/utils/settings';
+import { Children } from 'react';
 
 
 
@@ -29,13 +30,14 @@ const Stat = ({s, name, happiness, colored}:{s:Stat, name:string, happiness?:boo
                     name
                 }
             </div>
-            <div className={styles.statValue}>
-                {
-                    happiness ? HAPPINESS_NAMES[s.actual]:`${s.actual}/${s.max}`
-                }
-            </div>
             <div className={styles.statBar}>
-                <StatBar s={s} colored={colored}/>
+                <StatBar s={s} colored={colored}>
+                    <div className={styles.statValue}>
+                    {
+                        happiness ? HAPPINESS_NAMES[s.actual]:`${s.actual}/${s.max}`
+                    }
+                    </div>
+                </StatBar>
             </div>
             
             
@@ -43,7 +45,7 @@ const Stat = ({s, name, happiness, colored}:{s:Stat, name:string, happiness?:boo
     )
 }
 
-const StatBar = ({s, colored}:{s:Stat, colored?:boolean})=>{
+const StatBar = ({s, colored, children}:{s:Stat, colored?:boolean, children?:React.ReactNode})=>{
     let bar_color = 'lightblue'
     if(colored){
         let percentage = Math.round((s.actual/s.max)*100)
@@ -53,8 +55,10 @@ const StatBar = ({s, colored}:{s:Stat, colored?:boolean})=>{
         else bar_color = 'green'
     }
     return(
-        <div style={{width:'100%', height:10, backgroundColor:'gray'}} >
-            <div style={{width:`${(s.actual/s.max)*100}%`,height:'100%', backgroundColor:bar_color}}></div>
+        <div style={{width:'100%', height:15, backgroundColor:'gray'}} >
+            <div style={{width:`${(s.actual/s.max)*100}%`,height:'100%', backgroundColor:bar_color}}>  
+            </div>
+            {children}
         </div>
     )
 }
