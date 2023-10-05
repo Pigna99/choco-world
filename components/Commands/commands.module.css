@@ -1,10 +1,10 @@
 .button{
     font-size: 25px;
     padding: 5px;
-    border:7px solid black;
-    border-top: 0px;
-    border-bottom: 0px;
-    width: 50%;
+    border: 0px;
+    border-bottom:7px solid black;
+
+    width: 100%;
     font-family: 'Minecraft';
     color: black;
     background-color: white;
@@ -16,8 +16,9 @@
 }
 
 .container{
-    margin-top: -7px;
-    padding: 0;
+    border-top: 7px solid black;
+    display: flex;
+    flex-direction: column;
 }
 
 .blocked{

@@ -1,0 +1,33 @@
+.container{
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.statContainer{
+    display: grid;
+    grid-template-columns: 30% 20% 50%;
+    columns: 30% 20% 50%;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.statName{
+    display: flex;
+    font-size: 20px;
+    justify-content: left;
+    padding-left: 10px;
+}
+
+.statValue{
+    display: flex;
+    font-size: 20px;
+    justify-content: right;
+}
+
+.statBar{
+    margin: 5px;
+}
+
+.nameContainer{
+    font-size: 30px;
+}

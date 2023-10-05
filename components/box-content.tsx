@@ -7,6 +7,7 @@ import {useState, MouseEvent, useEffect} from 'react'
 import { precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/frontend/VisualCreatureClass'
+import { Stats } from './Stats/stats'
 
 let startElement: spritesList = 'stand';
 
@@ -16,6 +17,11 @@ export const Box = ()=>{
         500,
         500,
     ]);
+
+    const [isInfo, setInfo] = useState(false);
+    const handleInfoButton = (e:MouseEvent):void =>{
+        setInfo(!isInfo);
+    }
     
     const [firstUpdate, setFirstUpdate] = useState(true)
     const [lastUpdate, setLastUpdate] = useState(new Date(0));
@@ -152,10 +158,10 @@ export const Box = ()=>{
     <div className={styles.box}>
         <h1 className={styles.title}>Choco World</h1>
         <Info infoText={infoText}/>
+        <Screen sprite={sprite} infoBox={infoBox} width={windowSize[0]} isInfo={isInfo}/>
         <hr className={styles.hr}/>
-        <Screen sprite={sprite} infoBox={infoBox} width={windowSize[0]}/>
-        <hr className={styles.hr}/>
-        <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation}/>
+        <Stats info={infoBox}/>
+        <Commands feedCommand={feedCommand} petCommand={petCommand} infoCommand={handleInfoButton} blockCommand={isPlayingAnimation}/>
     </div>
     )
 }
