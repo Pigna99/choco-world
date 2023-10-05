@@ -2,12 +2,13 @@
 import styles from './commands.module.css'
 import { MouseEventHandler } from "react"
 
-export const Commands = ({feedCommand, petCommand, blockCommand}:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler, blockCommand:boolean})=>{
+export const Commands = ({feedCommand, petCommand, blockCommand, info}:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler, blockCommand:boolean, info:string})=>{
     
     return(
         <div className={styles.container}>
             <Button name={'Feed'} clickEvent={feedCommand} blocked={blockCommand}/>
             <Button name={'Pet'} clickEvent={petCommand} blocked={blockCommand}/>
+            <div className={styles.infoText}>{info}</div>
         </div>
     )
 }

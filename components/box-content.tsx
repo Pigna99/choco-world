@@ -22,7 +22,6 @@ export const Box = ()=>{
 
     const [selectedMenu, setSelectedMenu] = useState(startMenu)
 
-    const [isInfo, setInfo] = useState(false);
     const setMenu = (m:menu)=> (e:MouseEvent):void =>{
         setSelectedMenu(m);
     }
@@ -164,7 +163,7 @@ export const Box = ()=>{
         <div className={styles.mainContent}>
             {
                 selectedMenu=== 'stats' ? <Stats info={infoBox}/> :
-                selectedMenu=== 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation}/>:
+                selectedMenu=== 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation} info={infoText}/>:
                 <Info infoBox={infoBox}/>
             }
         </div>
