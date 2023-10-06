@@ -208,11 +208,9 @@ export const Box = () => {
 const LoadingSpinner = ({visible}:{visible:boolean})=>{
     return(
         <div className={styles.loading}>
-            <div className={styles.translatesvg}>
-                {
-                    visible ? <Loading/>: <div style={{height:15}}/>
-                }
-            </div>
+            {
+                visible||true ? <Loading/>: <div style={{height:15}}/>
+            }
         </div>
     )
 }
@@ -221,11 +219,11 @@ const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
     return (
         <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}` }>
             <div>loading...</div>
-           <Sprite fps={22} framesArray={loading} color={''} width={"50%"} height={"10px"}/>
+           <Sprite fps={18} framesArray={loading} color={''} width={"50%"} height={"10px"}/>
         </div>
     )
 }
 
 const Loading = () =>{
-    return <Sprite fps={22} framesArray={loading} color={''} width={"95%"} height={"15px"}/>
+    return <Sprite fps={18} framesArray={loading} color={''} width={"100%"} height={"8px"}/>
 }

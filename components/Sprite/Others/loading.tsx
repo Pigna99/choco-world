@@ -6,7 +6,7 @@ const pathFrames2 = [[<path key='Layer 1_sprite_01.svg'  stroke="#000000" d="M0 
 function loading(color: string) {
     return pathFrames2.map((el, index) => {
       return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 96 6" shapeRendering="crispEdges" key={'loading-' + index} preserveAspectRatio="none" width={'100%'} height={'100%'}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 96 6" shapeRendering="crispEdges" key={'loading-' + index} preserveAspectRatio="none" height={"100%"} width={"100%"} style={{display:'flex'}}>
             {
                 el.map(el=>el)
             }
