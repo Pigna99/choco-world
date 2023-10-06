@@ -184,12 +184,13 @@ export const Box = () => {
     return (
         <div className={styles.box}>
             <LoadingScreen isLoading={isFirstLoading}/>
+            {
+                isFetching || isPlayingAnimation ? <LoadingSpinner/> : null
+            }   
             <Screen sprite={sprite} width={windowSize[0]} />
             
             <div className={styles.mainContent}>
-                {
-                isFetching || isPlayingAnimation ? <LoadingSpinner/> : null
-                }   
+                
                 {
                     selectedMenu === 'stats' ? <Stats info={infoBox} /> :
                         selectedMenu === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation} info={infoText} /> :
@@ -212,13 +213,13 @@ const LoadingSpinner = ()=>{
 
 const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
     return (
-        <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}`} style={{ }}>
+        <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}` }>
             <div>loading...</div>
-           <Sprite fps={16} framesArray={loading} color={''} width={200} height={200}/>
+           <Sprite fps={22} framesArray={loading} color={''} width={"50%"} height={"10px"}/>
         </div>
     )
 }
 
 const Loading = () =>{
-    return <Sprite fps={16} framesArray={loading} color={''} width={100} height={100}/>
+    return <Sprite fps={22} framesArray={loading} color={''} width={"50%"} height={"0px"}/>
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 function Sprite({fps, framesArray, color, width, height }
     :{fps:number, framesArray:((color:string)=>React.JSX.Element[]), color:string,
-        width:number, height:number}) {
+        width:string, height:string}) {
     const generatedFrames = framesArray(color);
     const [frame, setFrame] = useState(generatedFrames[0]);
     const [frameNumber, setFrameNumber] = useState(0);
