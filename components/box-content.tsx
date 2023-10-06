@@ -42,7 +42,7 @@ export const Box = () => {
     const [infoBox, setInfoBox] = useState(VisualCreatureClass.generatePlaceholder());//change to a special info class/interface
     let updateTimeout: ReturnType<typeof setTimeout>;
     const clearUpdateTimeout = () => {
-        //console.log(updateTimeout)
+        console.log(updateTimeout)
         if (updateTimeout) clearTimeout(updateTimeout);
     }
 
@@ -74,7 +74,7 @@ export const Box = () => {
     }
     const updateCommand = async () => {
         clearUpdateTimeout();
-        if (isPlayingAnimation) { setIsPlayingAnimation(false) }//if animation ended
+        if (isPlayingAnimation) { setUpdate(!update); return; }//if animation ended
         if (!isUpdateTime()) {//update only visual, not API
             updateVisuals(infoBox.state)
             setUpdate(!update)
@@ -143,6 +143,14 @@ export const Box = () => {
     const updateInfoBox = (c: Creature) => {//format Creature?
         setInfoBox(c);
     }
+
+    useEffect(() => {
+        if(isPlayingAnimation)setTimeout(()=>setIsPlayingAnimation(false),5000);
+        if(!isPlayingAnimation && !isFirstLoading){
+            updateCommand();
+        }
+    }, [isPlayingAnimation])
+    
 
     useEffect(() => {
         if (firstUpdate) {
