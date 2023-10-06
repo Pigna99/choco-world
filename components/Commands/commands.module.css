@@ -2,7 +2,7 @@
     font-size: 25px;
     padding: 5px;
     border: 0px;
-    margin: 5px;
+    margin: 0px;
     border: 3px solid gray;
 
 
@@ -24,11 +24,11 @@
 }
 
 .blocked{
-    background-color: gray;
+    background-color: rgb(184, 184, 184);
 }
 
 .blocked:hover{
-    background-color: gray;
+    background-color: rgb(184, 184, 184);
     cursor:default;
 }
 
