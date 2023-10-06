@@ -14,37 +14,47 @@ import Image from 'next/image'
 
 let startElement: spritesList = 'stand';
 let startMenu: menu = 'stats';
-
+let startUpdateTimeout: NodeJS.Timeout |null= null;
 
 export const Box = () => {
+    //window size
     const [windowSize, setWindowSize] = useState([
         500,
         500,
     ]);
 
+    //loading tools
     const [isFirstLoading, setIsFirstLoading] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
 
-
+    //menu
     const [selectedMenu, setSelectedMenu] = useState(startMenu)
     const setMenu = (m: menu) => (e: MouseEvent): void => {
         setSelectedMenu(m);
     }
 
-    const [firstUpdate, setFirstUpdate] = useState(true)
-    const [lastUpdate, setLastUpdate] = useState(new Date(0));
-    const [update, setUpdate] = useState(false);
+    
 
+    //sprites and infotext
     const [sprite, setSprite] = useState(startElement);
     const [isPlayingAnimation, setIsPlayingAnimation] = useState(false);
-
     const [infoText, setInfoText] = useState('loading...');
-    const [infoBox, setInfoBox] = useState(VisualCreatureClass.generatePlaceholder());//change to a special info class/interface
-    let updateTimeout: ReturnType<typeof setTimeout>;
-    const clearUpdateTimeout = () => {
-        //console.log(updateTimeout)
-        if (updateTimeout) clearTimeout(updateTimeout);
+
+    //info for fetching
+    const [firstUpdate, setFirstUpdate] = useState(true)
+    const [updateTimeout, setUpdateTimeout] = useState(startUpdateTimeout);
+    const stopTimeout=()=>{
+        //console.log(updateTimeout+ ' stopped')
+        if(updateTimeout)clearTimeout(updateTimeout);
     }
+    const newTimeout=(f:Function, time:number)=>{
+        stopTimeout();
+        setUpdateTimeout(setTimeout(()=>{f()},time))
+    }
+    const [isUpdatedInfoBox, setIsUpdatedInfoBox] = useState(false);
+    const [infoBox, setInfoBox] = useState(VisualCreatureClass.generatePlaceholder());//change to a special info class/interface
+    const [isUpdatedlastUpdate, setIsUpdatedlastUpdate] = useState(false);
+    const [lastUpdate, setLastUpdate] = useState(new Date(0));
 
     const isUpdateTime = () => {//check if is time to update, and if true set new time
         //const timeLeft = (new Date()).getTime() - (lastUpdate.getTime()+TICK_VALUE*60000)
@@ -53,39 +63,36 @@ export const Box = () => {
         return value
     }
 
-    //block7wait command if is fetching!
+    //fetching commands
     const feedCommand = async (e: MouseEvent) => {
         if (isPlayingAnimation) return;//make animation not interruptable!
+        stopTimeout()//stop autoupdate timeout
         setIsPlayingAnimation(true)
-        clearUpdateTimeout()//stop autoupdate timeout
-
+    
         precalcFeed(infoBox) ? updateVisuals('eating') : updateVisuals('idle-feed')//precalc if you can feed or not for fast update
 
         await apiCore('feed', false);
     }
     const petCommand = async (e: MouseEvent) => {
         if (isPlayingAnimation) return;//make animation not interruptable!
+        stopTimeout()
         setIsPlayingAnimation(true)
-        clearUpdateTimeout()
-
+        
         precalcPet(infoBox) ? updateVisuals('happy') : updateVisuals('idle-pet')//precalc if you can pet or not for fast update
 
         await apiCore('pet', false);
     }
     const updateCommand = async () => {
-        clearUpdateTimeout();
-        if (isPlayingAnimation) { setUpdate(!update); return; }//if animation ended
         if (!isUpdateTime()) {//update only visual, not API
             updateVisuals(infoBox.state)
-            setUpdate(!update)
+            newTimeout(updateCommand,5000);
             return;
         };
-        
+
         await apiCore('update', true);
-        if (isFirstLoading) setIsFirstLoading(false);
     }
 
-    const apiCore = async (api: API_string, forceVisual: boolean) => {
+    const apiCore = async (api: API_string, forceVisual?: boolean) => {
         console.log("Update API")
         setIsFetching(true);
         const res = await fetch(`/api/${api}?id=${CREATURE_ID}`)
@@ -95,11 +102,12 @@ export const Box = () => {
         }
         if (!data.creature) { console.log("ERROR! CREATURE NOT RECEIVED"); return; }
         const creature: Creature = data.creature;
-        updateInfoBox(creature)
-        setUpdate(!update)
-        if (forceVisual) updateVisuals(creature.state)
+        setInfoBox(creature)
+        
+        if(forceVisual) updateVisuals(creature.state)
         setLastUpdate(new Date());
         setIsFetching(false);
+        if(isFirstLoading)setIsFirstLoading(false)//for loading screen
     }
 
     const updateVisuals = (v: VisualState) => {
@@ -139,27 +147,27 @@ export const Box = () => {
                 break;
         }
     }
-
-    const updateInfoBox = (c: Creature) => {//format Creature?
-        setInfoBox(c);
-    }
-
-    useEffect(() => {
-        if(isPlayingAnimation)setTimeout(()=>setIsPlayingAnimation(false),5000);
-        if(!isPlayingAnimation && !isFirstLoading){
-            updateCommand();
-        }
-    }, [isPlayingAnimation])
     
+    useEffect(() => {//first update
+        setFirstUpdate(false)
+        updateCommand();
+    }, [])
 
-    useEffect(() => {
-        if (firstUpdate) {
-            setFirstUpdate(false);
-            updateTimeout = setTimeout(updateCommand, 0);
-            return;
+    useEffect(() => {//if creature is saved
+        if(!firstUpdate)setIsUpdatedInfoBox(true);
+    }, [infoBox])
+
+    useEffect(() => {//if last update is saved
+        if(!firstUpdate)setIsUpdatedlastUpdate(true);
+    }, [lastUpdate])
+
+    useEffect(() => {//than we can do a new timeout
+        if(isUpdatedInfoBox && isUpdatedlastUpdate){
+            newTimeout(updateCommand,5000);
+            setTimeout(()=>setIsPlayingAnimation(false),5000)
+            setIsUpdatedInfoBox(false); setIsUpdatedlastUpdate(false);
         }
-        updateTimeout = setTimeout(updateCommand, 5000);
-    }, [update])
+    }, [isUpdatedInfoBox,isUpdatedlastUpdate])
 
     useEffect(() => {
         const handleWindowResize = () => {//set a max width
