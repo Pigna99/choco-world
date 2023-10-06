@@ -12,14 +12,13 @@
     font-size: 20px;
     justify-content: center;
     align-items: center;
-    border: 5px solid black;
-    border-left: 0;
-    border-bottom: 0;
+    border: 3px solid black;
+    border-right: 0;
     cursor: pointer;
 }
 
 .right{
-    border-right: 0;
+    border-right: 3px solid black;
 }
 
 .elementText{
