@@ -3,7 +3,7 @@ import styles from './box-content.module.css'
 import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
 import { Screen } from './Screen/screen-content'
-import { useState, MouseEvent, useEffect } from 'react'
+import { useState, MouseEvent, useEffect, JSX } from 'react'
 import { API_string, menu, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/frontend/VisualCreatureClass'
@@ -11,6 +11,8 @@ import { Stats } from './Stats/stats'
 import { Menu } from './Menu/menu'
 import spinner from '@/public/spinner.svg'
 import Image from 'next/image'
+import Sprite from './Sprite/Sprite'
+import loading from './Sprite/Others/loading'
 
 let startElement: spritesList = 'stand';
 let startMenu: menu = 'stats';
@@ -203,7 +205,7 @@ export const Box = () => {
 const LoadingSpinner = ()=>{
     return(
         <div className={styles.loading}>
-            <Image src={spinner} width={30} height={30} alt='loading spinner' priority/>
+            <Loading/>
         </div>
     )
 }
@@ -212,7 +214,11 @@ const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
     return (
         <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}`} style={{ }}>
             <div>loading...</div>
-            <Image src={spinner} width={100} height={100} alt='loading spinner' priority/>
+           <Sprite fps={16} framesArray={loading} color={''} width={200} height={200}/>
         </div>
     )
+}
+
+const Loading = () =>{
+    return <Sprite fps={16} framesArray={loading} color={''} width={100} height={100}/>
 }
