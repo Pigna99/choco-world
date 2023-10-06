@@ -26,7 +26,7 @@ function Sprite({fps, framesArray, color, width, height }
         //console.log(frame)
     }, [frame]);
   return (
-    <div style={{backgroundColor:'white', width:width, height:height}}>
+    <div style={{width:width, height:height}}>
         {
             frame
         }
