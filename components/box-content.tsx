@@ -187,7 +187,7 @@ export const Box = () => {
             {
                 isFetching || isPlayingAnimation ? <LoadingSpinner/> : null
             }   
-            <Screen sprite={sprite} width={windowSize[0]} />
+            <Screen sprite={sprite} width={windowSize[0]+"px"} />
             
             <div className={styles.mainContent}>
                 
