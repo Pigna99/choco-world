@@ -117,7 +117,7 @@ class CreatureClass {
     }
     private levelUp(){
         this.info.statictics.level++;
-        this.info.statictics.experience.actual=0;
+        this.info.statictics.experience.actual-= this.info.statictics.experience.max;//remove exp for the level
         this.info.statictics.experience.max+= Math.floor(this.info.statictics.experience.max * EXPERIENCE_SCALING);//max_exp
         this.info.statictics.stamina.max+= Math.floor(this.info.statictics.stamina.max * STAMINA_SCALING);//stamina
         this.info.statictics.hunger.max+= Math.floor(this.info.statictics.hunger.max * HUNGER_SCALING);//hunger
