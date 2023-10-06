@@ -6,9 +6,11 @@ export const Commands = ({feedCommand, petCommand, blockCommand, info}:{feedComm
     
     return(
         <div className={styles.container}>
-            <Button name={'Feed'} clickEvent={feedCommand} blocked={blockCommand}/>
-            <Button name={'Pet'} clickEvent={petCommand} blocked={blockCommand}/>
             <div className={styles.infoText}>{info}</div>
+            <div className={styles.buttonContainer}>
+                <Button name={'Feed'} clickEvent={feedCommand} blocked={blockCommand}/>
+                <Button name={'Pet'} clickEvent={petCommand} blocked={blockCommand}/>
+            </div>
         </div>
     )
 }

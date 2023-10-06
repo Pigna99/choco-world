@@ -8,6 +8,7 @@ type menu = 'stats' | 'actions' | 'info'
     
 const spritesArray:spritesList[] = ['eat','happy','sleep','stand','walk-bottom','walk-right','walk-left','walk-top'];
 
+type API_string = 'update'|'pet'|'feed'
 
 
 function getTicksFromDate(d:Date){//number of ticks from that Date to now
@@ -26,5 +27,5 @@ const precalcPet = (c:Creature):boolean=>{
 
 
 
-export type {spritesList, menu}
+export type {spritesList, menu, API_string}
 export{getTicksFromDate, precalcFeed, precalcPet,spritesArray}

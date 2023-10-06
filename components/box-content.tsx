@@ -4,11 +4,13 @@ import { Commands } from './Commands/commands'
 import { Info } from './Info/info'
 import { Screen } from './Screen/screen-content'
 import { useState, MouseEvent, useEffect } from 'react'
-import { menu, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
+import { API_string, menu, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/frontend/VisualCreatureClass'
 import { Stats } from './Stats/stats'
 import { Menu } from './Menu/menu'
+import spinner from '@/public/spinner.svg'
+import Image from 'next/image'
 
 let startElement: spritesList = 'stand';
 let startMenu: menu = 'stats';
@@ -21,6 +23,7 @@ export const Box = () => {
     ]);
 
     const [isFirstLoading, setIsFirstLoading] = useState(true);
+    const [isFetching, setIsFetching] = useState(false);
 
 
     const [selectedMenu, setSelectedMenu] = useState(startMenu)
@@ -58,8 +61,7 @@ export const Box = () => {
 
         precalcFeed(infoBox) ? updateVisuals('eating') : updateVisuals('idle-feed')//precalc if you can feed or not for fast update
 
-        const res = await fetch(`/api/feed?id=${CREATURE_ID}`)
-        await apiCore(res, false);
+        await apiCore('feed', false);
     }
     const petCommand = async (e: MouseEvent) => {
         if (isPlayingAnimation) return;//make animation not interruptable!
@@ -68,8 +70,7 @@ export const Box = () => {
 
         precalcPet(infoBox) ? updateVisuals('happy') : updateVisuals('idle-pet')//precalc if you can pet or not for fast update
 
-        const res = await fetch(`/api/pet?id=${CREATURE_ID}`)
-        await apiCore(res, false);
+        await apiCore('pet', false);
     }
     const updateCommand = async () => {
         clearUpdateTimeout();
@@ -79,13 +80,15 @@ export const Box = () => {
             setUpdate(!update)
             return;
         };
-        console.log("Update API")
-        const res = await fetch(`/api/update?id=${CREATURE_ID}`)
-        await apiCore(res, true);
+        
+        await apiCore('update', true);
         if (isFirstLoading) setIsFirstLoading(false);
     }
 
-    const apiCore = async (res: Response, forceVisual: boolean) => {
+    const apiCore = async (api: API_string, forceVisual: boolean) => {
+        console.log("Update API")
+        setIsFetching(true);
+        const res = await fetch(`/api/${api}?id=${CREATURE_ID}`)
         const data = await res.json()
         if (!data) {
             console.log("ERROR! DATA NOT RECEIVED"); return;
@@ -96,6 +99,7 @@ export const Box = () => {
         setUpdate(!update)
         if (forceVisual) updateVisuals(creature.state)
         setLastUpdate(new Date());
+        setIsFetching(false);
     }
 
     const updateVisuals = (v: VisualState) => {
@@ -162,29 +166,38 @@ export const Box = () => {
     }, []);
     return (
         <div className={styles.box}>
-            <LoadingScreen isLoading={isFirstLoading} width={windowSize[0]} height={windowSize[1]}/>
+            <LoadingScreen isLoading={isFirstLoading}/>
             <Screen sprite={sprite} width={windowSize[0]} />
+            
             <div className={styles.mainContent}>
+                {
+                isFetching || isPlayingAnimation ? <LoadingSpinner/> : null
+                }   
                 {
                     selectedMenu === 'stats' ? <Stats info={infoBox} /> :
                         selectedMenu === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation} info={infoText} /> :
                             <Info infoBox={infoBox} />
                 }
+                
             </div>
             <Menu selectedMenu={selectedMenu} setMenu={setMenu} />
         </div>
     )
 }
 
-/**
- * <hr className={styles.hr}/>
- * 
- *         
-    
- */
+const LoadingSpinner = ()=>{
+    return(
+        <div className={styles.loading}>
+            <Image src={spinner} width={30} height={30} alt='loading spinner'/>
+        </div>
+    )
+}
 
-const LoadingScreen = ({ isLoading, width, height }: { isLoading:boolean,width: number, height:number }) => {
+const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
     return (
-        <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}`} style={{ }}>loading...</div>
+        <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}`} style={{ }}>
+            <div>loading...</div>
+            <Image src={spinner} width={100} height={100} alt='loading spinner'/>
+        </div>
     )
 }
