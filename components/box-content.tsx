@@ -42,7 +42,7 @@ export const Box = () => {
     const [infoBox, setInfoBox] = useState(VisualCreatureClass.generatePlaceholder());//change to a special info class/interface
     let updateTimeout: ReturnType<typeof setTimeout>;
     const clearUpdateTimeout = () => {
-        console.log(updateTimeout)
+        //console.log(updateTimeout)
         if (updateTimeout) clearTimeout(updateTimeout);
     }
 
