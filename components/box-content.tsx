@@ -186,9 +186,9 @@ export const Box = () => {
             <LoadingScreen isLoading={isFirstLoading}/>
             
             <Screen sprite={sprite} width={windowSize[0]+"px"} />
-            
+            <LoadingSpinner visible={isFetching || isPlayingAnimation}/>
             <div className={styles.mainContent}>
-                
+            
                 {
                     selectedMenu === 'stats' ? <Stats info={infoBox} /> :
                         selectedMenu === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation} info={infoText} /> :
@@ -198,7 +198,7 @@ export const Box = () => {
                 
             </div>
             
-            <LoadingSpinner visible={isFetching || isPlayingAnimation}/>
+            
             
             <Menu selectedMenu={selectedMenu} setMenu={setMenu} />
         </div>
@@ -209,7 +209,7 @@ const LoadingSpinner = ({visible}:{visible:boolean})=>{
     return(
         <div className={styles.loading}>
             {
-                visible||true ? <Loading/>: <div style={{height:15}}/>
+                visible ? <Loading/>: <div style={{height:10}}/>
             }
         </div>
     )
@@ -225,5 +225,5 @@ const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
 }
 
 const Loading = () =>{
-    return <Sprite fps={18} framesArray={loading} color={''} width={"100%"} height={"8px"}/>
+    return <Sprite fps={18} framesArray={loading} color={''} width={"100%"} height={"10px"}/>
 }
