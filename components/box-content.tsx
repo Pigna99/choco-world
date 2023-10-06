@@ -163,8 +163,7 @@ export const Box = () => {
 
     useEffect(() => {//than we can do a new timeout
         if(isUpdatedInfoBox && isUpdatedlastUpdate){
-            newTimeout(updateCommand,5000);
-            setTimeout(()=>setIsPlayingAnimation(false),5000)
+            newTimeout(async()=>{await updateCommand();setIsPlayingAnimation(false);},5000);
             setIsUpdatedInfoBox(false); setIsUpdatedlastUpdate(false);
         }
     }, [isUpdatedInfoBox,isUpdatedlastUpdate])
