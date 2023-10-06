@@ -188,7 +188,7 @@ export const Box = () => {
 const LoadingSpinner = ()=>{
     return(
         <div className={styles.loading}>
-            <Image src={spinner} width={30} height={30} alt='loading spinner'/>
+            <Image src={spinner} width={30} height={30} alt='loading spinner' priority/>
         </div>
     )
 }
@@ -197,7 +197,7 @@ const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
     return (
         <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}`} style={{ }}>
             <div>loading...</div>
-            <Image src={spinner} width={100} height={100} alt='loading spinner'/>
+            <Image src={spinner} width={100} height={100} alt='loading spinner' priority/>
         </div>
     )
 }

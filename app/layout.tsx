@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Choco World',
   description: 'Play with your friendly chocobo!',
+  manifest: "/manifest.json",
 }
 
 export default function RootLayout({
