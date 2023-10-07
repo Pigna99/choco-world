@@ -30,8 +30,8 @@ export const Content = ({selectedMenu, info, action, isPlayingAnimation, command
         const isLeftSwipe = distance > minSwipeDistance
         const isRightSwipe = distance < -minSwipeDistance
         //if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
-        isLeftSwipe ? cycleMenu(false)() : cycleMenu(true)()
-        
+        if(isLeftSwipe)cycleMenu(false)()
+        if(isRightSwipe)cycleMenu(true)()
     }
     //touch
 
