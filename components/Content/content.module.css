@@ -15,16 +15,3 @@
     width: 100%;
     transition: all 0.3s linear;
 }
-
-.left{
-    transform: translate(-100%,0);
-
-}
-.right{
-    transform: translate(+100%,0);
-}
-
-.actual{
-    transform: translate(0,0);
-}
-

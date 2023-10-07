@@ -33,7 +33,7 @@ export const Box = () => {
         :
          [selectedMenu[1],selectedMenu[2],selectedMenu[2]+1]
     }
-    const cycleMenu = (left:boolean) => (e: MouseEvent): void => {
+    const cycleMenu = (left:boolean) => (e?: MouseEvent): void => {
         let length_menu = menuList.length;
         let newMenu=shiftMenu(left);
         left ?  
@@ -193,7 +193,7 @@ export const Box = () => {
             <LoadingSpinner visible={isFetching || isPlayingAnimation}/>
             <Content selectedMenu={selectedMenu} info={infoBox} action={infoText} isPlayingAnimation={isPlayingAnimation} commands={{
                 feedCommand: feedCommand,petCommand: petCommand
-            }} />
+            }} cycleMenu={cycleMenu}/>
             <Menu selectedMenu={selectedMenu[1]} cycleMenu={cycleMenu} />
         </div>
     )
