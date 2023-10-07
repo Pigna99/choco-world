@@ -38,9 +38,13 @@
     width: 100%;
 }
 
-.arrow:hover{
-    background-color: rgb(155, 155, 155);
-}
+
+
+@media (hover: hover) { 
+    .arrow:hover { 
+        background-color: rgb(155, 155, 155);
+    } 
+} 
 
 .reverse{
     -webkit-transform: scaleX(-1);
