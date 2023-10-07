@@ -14,7 +14,7 @@ export const Content = ({selectedMenu, info, action, isPlayingAnimation, command
     const [touchEnd, setTouchEnd] = useState<null|number>(null)
 
     // the required distance between touchStart and touchEnd to be detected as a swipe
-    const minSwipeDistance = 50 
+    const minSwipeDistance = 80 
 
     const onTouchStart:TouchEventHandler<HTMLDivElement> = (e) => {
         setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
@@ -32,6 +32,11 @@ export const Content = ({selectedMenu, info, action, isPlayingAnimation, command
         //if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
         if(isLeftSwipe)cycleMenu(false)()
         if(isRightSwipe)cycleMenu(true)()
+    }
+
+    const setTranslateSwipe=()=>{
+        const min_swipe=10;
+        return touchStart&&touchEnd ? touchEnd-touchStart>=min_swipe ? touchEnd-touchStart-min_swipe : touchEnd-touchStart<=-min_swipe ? touchEnd-touchStart+min_swipe : 0 : 0
     }
     //touch
 
@@ -52,9 +57,9 @@ export const Content = ({selectedMenu, info, action, isPlayingAnimation, command
                     return(
                         <div key={'menu-'+ el} className={`${styles.contentBox} ${index===0 ? styles.left: index===1? styles.actual : styles.right}`}
                             style={
-                                index===0 ?{transform:`translateX(${touchStart&&touchEnd ? touchEnd-touchStart:0}px) translateX(-100%)`}:
-                                index===1 ?{transform:`translateX(${touchStart&&touchEnd ? touchEnd-touchStart:0}px)`}:
-                                {transform:`translateX(${touchStart&&touchEnd ? touchEnd-touchStart:0}px) translateX(100%)`}
+                                index===0 ?{transform:`translateX(${setTranslateSwipe()}px) translateX(-100%)`}:
+                                index===1 ?{transform:`translateX(${setTranslateSwipe()}px)`}:
+                                {transform:`translateX(${setTranslateSwipe()}px) translateX(100%)`}
                             }
                         >
                             {getMainContent(el)}
