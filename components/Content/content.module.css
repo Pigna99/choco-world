@@ -1,0 +1,30 @@
+.mainContent{
+    position: relative;
+    height:100%;
+    width: 100%;
+    margin:0; padding: 0;border: 0;
+    border: 3px solid black;
+    border-top: 0;
+    border-bottom: 0;
+    overflow: hidden;
+}
+
+.contentBox{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    transition: all 0.3s linear;
+}
+
+.left{
+    transform: translate(-100%,0);
+
+}
+.right{
+    transform: translate(+100%,0);
+}
+
+.actual{
+    transform: translate(0,0);
+}
+

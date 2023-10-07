@@ -1,10 +1,10 @@
-import walkright from "@/components/Sprite/Sprites/walkright";
-import walktop from "@/components/Sprite/Sprites/walktop";
-import walkbottom from "@/components/Sprite/Sprites/walkbottom";
-import stand from "@/components/Sprite/Sprites/stand"
-import sleep from "@/components/Sprite/Sprites/sleep";
-import happy from "@/components/Sprite/Sprites/happy";
-import eat from "@/components/Sprite/Sprites/eat";
+import walkright from "@/components/Screen/Sprite/Sprites/walkright";
+import walktop from "@/components/Screen/Sprite/Sprites/walktop";
+import walkbottom from "@/components/Screen/Sprite/Sprites/walkbottom";
+import stand from "@/components/Screen/Sprite/Sprites/stand"
+import sleep from "@/components/Screen/Sprite/Sprites/sleep";
+import happy from "@/components/Screen/Sprite/Sprites/happy";
+import eat from "@/components/Screen/Sprite/Sprites/eat";
 import { spritesList } from "@/utils/frontend/utilsFrontend";
 
 const getSprite=(sprite:spritesList)=>{

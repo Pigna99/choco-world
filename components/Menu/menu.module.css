@@ -1,20 +1,20 @@
 .menu{
     height: 50px;
     display: grid;
-    grid-template-columns: 33.3% 33.3% 33.4%;
+    grid-template-columns: 20% 60% 20%;
     background-color: gainsboro;
-    
 }
 
 .element{
     display: flex;
     height: 50px;
-    font-size: 20px;
+    font-size: 30px;
     justify-content: center;
     align-items: center;
     border: 3px solid black;
     border-right: 0;
     cursor: pointer;
+    user-select: none;
 }
 
 .right{
@@ -31,3 +31,18 @@
     cursor: default;
 }
 
+.arrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.arrow:hover{
+    background-color: rgb(155, 155, 155);
+}
+
+.reverse{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}

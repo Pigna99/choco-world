@@ -1,8 +1,8 @@
 import styles from './screen-content.module.css'
 import { spritesList } from '@/utils/frontend/utilsFrontend';
 
-import Sprite from "@/components/Sprite/Sprite";
-import getSprite from '../Sprite/spriteUtils';
+import Sprite from "@/components/Screen/Sprite/Sprite";
+import getSprite from './Sprite/spriteUtils';
 
 export const Screen = ({sprite, width}:{sprite:spritesList,width:string})=>{
     

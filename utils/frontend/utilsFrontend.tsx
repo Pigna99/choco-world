@@ -4,9 +4,12 @@ import { TICK_VALUE } from "../settings";
 type spritesList =
     'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top';
 
-type menu = 'stats' | 'actions' | 'info'
-    
+type menu = 'stats' | 'actions' | 'info' | 'settings'
+
+const menuList:menu[] = ['stats', 'actions', 'info', 'settings']    
 const spritesArray:spritesList[] = ['eat','happy','sleep','stand','walk-bottom','walk-right','walk-left','walk-top'];
+
+type menu_interface ={left:number,actual:number,right:number}
 
 type API_string = 'update'|'pet'|'feed'
 
@@ -27,5 +30,5 @@ const precalcPet = (c:Creature):boolean=>{
 
 
 
-export type {spritesList, menu, API_string}
-export{getTicksFromDate, precalcFeed, precalcPet,spritesArray}
+export type {spritesList, menu, API_string, menu_interface}
+export{getTicksFromDate, precalcFeed, precalcPet,spritesArray,menuList}

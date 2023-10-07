@@ -1,21 +1,17 @@
 import { CREATURE_ID, TICK_VALUE } from '@/utils/settings'
 import styles from './box-content.module.css'
-import { Commands } from './Commands/commands'
-import { Info } from './Info/info'
 import { Screen } from './Screen/screen-content'
-import { useState, MouseEvent, useEffect, JSX } from 'react'
-import { API_string, menu, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
+import { useState, MouseEvent, useEffect } from 'react'
+import { API_string, menuList, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/frontend/VisualCreatureClass'
-import { Stats } from './Stats/stats'
 import { Menu } from './Menu/menu'
-import spinner from '@/public/spinner.svg'
-import Image from 'next/image'
-import Sprite from './Sprite/Sprite'
-import loading from './Sprite/Others/loading'
+import Sprite from './Screen/Sprite/Sprite'
+import loading from './Screen/Sprite/Other/loading'
+import { Content } from './Content/content'
 
 let startElement: spritesList = 'stand';
-let startMenu: menu = 'stats';
+let startMenu = [menuList.length-1,0,1];
 let startUpdateTimeout: NodeJS.Timeout |null= null;
 
 export const Box = () => {
@@ -31,11 +27,20 @@ export const Box = () => {
 
     //menu
     const [selectedMenu, setSelectedMenu] = useState(startMenu)
-    const setMenu = (m: menu) => (e: MouseEvent): void => {
-        setSelectedMenu(m);
+    const shiftMenu = (left:boolean) =>{//really bad shift array function
+        return left ?
+         [selectedMenu[0]-1,selectedMenu[0],selectedMenu[1]]
+        :
+         [selectedMenu[1],selectedMenu[2],selectedMenu[2]+1]
     }
-
-    
+    const cycleMenu = (left:boolean) => (e: MouseEvent): void => {
+        let length_menu = menuList.length;
+        let newMenu=shiftMenu(left);
+        left ?  
+            newMenu[0]<0 ? setSelectedMenu([length_menu-1, newMenu[1], newMenu[2]]): setSelectedMenu(newMenu)
+        :
+            newMenu[2]>length_menu-1 ? setSelectedMenu([newMenu[0], newMenu[1], 0]): setSelectedMenu(newMenu)
+    }
 
     //sprites and infotext
     const [sprite, setSprite] = useState(startElement);
@@ -184,23 +189,12 @@ export const Box = () => {
     return (
         <div className={styles.box}>
             <LoadingScreen isLoading={isFirstLoading}/>
-            
             <Screen sprite={sprite} width={windowSize[0]+"px"} />
             <LoadingSpinner visible={isFetching || isPlayingAnimation}/>
-            <div className={styles.mainContent}>
-            
-                {
-                    selectedMenu === 'stats' ? <Stats info={infoBox} /> :
-                        selectedMenu === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} blockCommand={isPlayingAnimation} info={infoText} /> :
-                            <Info infoBox={infoBox} />
-                }
-                
-                
-            </div>
-            
-            
-            
-            <Menu selectedMenu={selectedMenu} setMenu={setMenu} />
+            <Content selectedMenu={selectedMenu} info={infoBox} action={infoText} isPlayingAnimation={isPlayingAnimation} commands={{
+                feedCommand: feedCommand,petCommand: petCommand
+            }} />
+            <Menu selectedMenu={selectedMenu[1]} cycleMenu={cycleMenu} />
         </div>
     )
 }
