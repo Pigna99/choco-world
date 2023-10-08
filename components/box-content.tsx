@@ -189,8 +189,10 @@ export const Box = () => {
         if(sprite==='eggshake'){
             setSprite('egg');
             return;}
-        setSprite('eggshake');
-        return;
+        else if(sprite==='egg'){
+            setSprite('eggshake');
+            return;
+        }   
     }
 
     useEffect(() => {

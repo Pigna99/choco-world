@@ -2,7 +2,7 @@ import { Creature, Gender } from "../interfaces";
 import { TICK_VALUE } from "../settings";
 
 type spritesList =
-    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'none';
+    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'none';
 
 type menu = 'stats' | 'actions' | 'info' | 'settings' | 'chocos' | 'new' | 'load'
 
