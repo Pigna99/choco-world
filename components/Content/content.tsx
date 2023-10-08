@@ -54,14 +54,14 @@ export const Content = (
                 chocoMenuList[id] === 'info' ?<Info infoBox={info} creatureId={selectedChocoId}/> :
                 chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco}/> :
                 chocoMenuList[id] === 'settings' ? <Settings/> :
-            <div>no menu</div> ) 
+            <div></div> ) 
         }
         return(
             newMenuList[id] === 'new' ? <NewChoco />:
             newMenuList[id] === 'load' ? <LoadChoco/>:
             newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco}/> :
             newMenuList[id] === 'settings' ? <Settings/> :
-            <div>no menu</div>
+            <div></div>
         )
                  
     }
