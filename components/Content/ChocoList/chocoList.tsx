@@ -14,7 +14,7 @@ function ChocoList({selectedChocoId, changeChoco}:{selectedChocoId:string|null, 
   const testChoco2:savedChoco={
     name: 'Villano',
     color: '#f00000',
-    gender: 'male',
+    gender: 'female',
     id: '6522807f982f72aa57f7daed'
   }
   const list = [testChoco1,testChoco2]
