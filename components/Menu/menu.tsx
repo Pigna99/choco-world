@@ -1,21 +1,21 @@
-import {  menuList } from '@/utils/frontend/utilsFrontend'
+import {  chocoMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
 import styles from './menu.module.css'
 import { MouseEventHandler } from 'react'
 
-export const Menu = ({selectedMenu, cycleMenu}:{selectedMenu:number,cycleMenu:(left:boolean)=>MouseEventHandler})=>{
+export const Menu = ({selectedMenu, cycleMenu,creatureId}:{selectedMenu:number,cycleMenu:(left:boolean)=>MouseEventHandler,creatureId:string|null})=>{
     return(
         <div className={styles.menu}>
             <MenuArrow reverse cycleMenu={cycleMenu(true)}/>
-            <MenuElement selectedMenu={selectedMenu}/>
+            <MenuElement selectedMenu={selectedMenu} creatureId={creatureId}/>
             <MenuArrow isRight cycleMenu={cycleMenu(false)}/>
         </div>
     )
 }
 
-const MenuElement = ({selectedMenu}:{selectedMenu:number})=>{
+const MenuElement = ({selectedMenu, creatureId}:{selectedMenu:number,creatureId:string|null})=>{
     return(
         <div className={`${styles.element} ${styles.active}`}>
-            <div className={styles.elementText}>{menuList[selectedMenu]}</div>
+            <div className={styles.elementText}>{creatureId==='new' ?newMenuList[selectedMenu]:chocoMenuList[selectedMenu]}</div>
         </div>
     )
 }

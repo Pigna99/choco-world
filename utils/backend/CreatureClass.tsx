@@ -1,4 +1,4 @@
-import { Creature , State, checkMaxStat, checkMinStat, percentageStat, tryRandom} from "../interfaces";
+import { Creature , Gender, State, checkMaxStat, checkMinStat, percentageStat, tryRandom} from "../interfaces";
 import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS } from '../settings';
 
 class CreatureClass {
@@ -6,11 +6,13 @@ class CreatureClass {
     constructor(creature: Creature){
         this.info = creature;
     }
-    static newCreature(name:string): CreatureClass{//new creature generator
+    static newCreature(name:string, color:string, gender:Gender): CreatureClass{//new creature generator
         let right_now = new Date;
         let baseCreature:Creature= {
             name: name,
             state: 'walking',
+            color:color,
+            gender: gender,
             last_update: right_now,
             last_time_pet: right_now,
             last_time_pet_real: right_now,

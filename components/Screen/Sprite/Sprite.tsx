@@ -9,13 +9,15 @@ function Sprite({fps, framesArray, color, width, height }
     const [frame, setFrame] = useState(generatedFrames[0]);
     const [frameNumber, setFrameNumber] = useState(0);
     const [isChangeFrame, setIsChangeFrame] = useState(false);
+    const [lastFrameTimeOut, setLastFrameTimeOut] =useState<NodeJS.Timeout |null>(null)
 
     useEffect(() => {
         const maxFrame = generatedFrames.length;
         frameNumber<(maxFrame-1) ? setFrameNumber(frameNumber+1) : setFrameNumber(0);
-        setTimeout(()=>{
+        if(lastFrameTimeOut)clearTimeout(lastFrameTimeOut);
+        setLastFrameTimeOut(setTimeout(()=>{
             setIsChangeFrame(!isChangeFrame)
-        },Math.round((1000)/(fps)))
+        },Math.round((1000)/(fps))))
     }, [isChangeFrame]);
 
     useEffect(() => {

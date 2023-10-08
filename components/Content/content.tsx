@@ -1,13 +1,18 @@
-import { menuList } from '@/utils/frontend/utilsFrontend'
+import { chocoMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
 import styles from './content.module.css'
 import { Info } from './Info/info'
 import { Stats } from './Stats/stats'
 import { Commands } from './Commands/commands'
 import { Creature } from '@/utils/interfaces'
-import React, { MouseEventHandler, TouchEventHandler, useEffect, useState } from 'react'
+import React, { MouseEventHandler, TouchEventHandler, useState } from 'react'
 import { Settings } from './Settings/settings'
+import ChocoList from './ChocoList/chocoList'
+import NewChoco from './NewChoco/newChoco'
+import LoadChoco from './LoadChoco/loadChoco'
 
-export const Content = ({selectedMenu, info, action, isPlayingAnimation, commands , cycleMenu}:{selectedMenu:number[], info:Creature, action:string,isPlayingAnimation:boolean, commands:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler} ,cycleMenu:(e:boolean)=>()=>void})=>{
+export const Content = (
+    {selectedChocoId,changeChoco,selectedMenu, info, action, isPlayingAnimation, commands , cycleMenu}:
+    {selectedChocoId:string|null,selectedMenu:number[], info:Creature, action:string,isPlayingAnimation:boolean, commands:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler} ,cycleMenu:(e:boolean)=>()=>void,changeChoco:(id:string)=>void})=>{
     
     //touch
     const [touchStart, setTouchStart] = useState<null|number>(null)
@@ -42,11 +47,23 @@ export const Content = ({selectedMenu, info, action, isPlayingAnimation, command
 
     //connect menu entry to menu component
     const getMainContent =(id:number)=>{
-        return (menuList[id] === 'stats' ? <Stats info={info} /> :
-            menuList[id] === 'actions' ? <Commands feedCommand={commands.feedCommand} petCommand={commands.petCommand} block={isPlayingAnimation} info={action} /> :
-            menuList[id] === 'info' ?<Info infoBox={info} /> :
-            menuList[id] === 'settings' ? <Settings/> :
-        <div>no menu</div> )          
+        if(selectedChocoId!=='new'){
+            return (
+                chocoMenuList[id] === 'stats' ? <Stats info={info} /> :
+                chocoMenuList[id] === 'actions' ? <Commands feedCommand={commands.feedCommand} petCommand={commands.petCommand} block={isPlayingAnimation} info={action} /> :
+                chocoMenuList[id] === 'info' ?<Info infoBox={info} creatureId={selectedChocoId}/> :
+                chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco}/> :
+                chocoMenuList[id] === 'settings' ? <Settings/> :
+            <div>no menu</div> ) 
+        }
+        return(
+            newMenuList[id] === 'new' ? <NewChoco />:
+            newMenuList[id] === 'load' ? <LoadChoco/>:
+            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco}/> :
+            newMenuList[id] === 'settings' ? <Settings/> :
+            <div>no menu</div>
+        )
+                 
     }
     //connect menu entry to menu component
 

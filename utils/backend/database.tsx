@@ -1,6 +1,7 @@
 import { CreatureClass } from './CreatureClass';
 import { connect } from './connect';
-import { Creature } from '../interfaces';
+import { Creature, Gender } from '../interfaces';
+import { savedChoco } from '../interfaces';
 
 
 //fs 
@@ -31,11 +32,17 @@ const getCreature = async (creatureId:string)=>{
     return await creatureCollection.findOne({_id:creatureId});
 }
 
-const newCreature = async (name:string)=>{//create new creature and return id
+const newCreature = async (name:string, color:string, gender:Gender)=>{//create new creature and return id
     const { creatureCollection } = await connect() // connect to database
-    const c = new creatureCollection(CreatureClass.newCreature(name).getInfo());
+    const c = new creatureCollection(CreatureClass.newCreature(name,color,gender).getInfo());
     await c.save();
-    return c._id.toString();
+    const creature:savedChoco ={
+        name: name,
+        color: color,
+        gender: gender,
+        id: c._id.toString()
+    }
+    return creature;
 }
 
 const updateCreature = async (creature: Creature, creatureId: string)=>{//save creature and return id

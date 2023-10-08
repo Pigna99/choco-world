@@ -1,6 +1,7 @@
 type State = 'sleeping'|'walking'
 type VisualState = State | 'idle'|'eating'|'happy'|'idle-feed'|'idle-pet'
 
+type Gender = 'male' |'female'
 interface Stat{
     max:number;
     actual:number;
@@ -8,6 +9,8 @@ interface Stat{
 
 interface Creature {
     name: string;
+    color: string;
+    gender: Gender;
     state: State;
     last_update: Date;
     last_time_pet: Date;//per per tick
@@ -32,6 +35,8 @@ interface Creature {
     }
 }
 
+type savedChoco = {name:string, color:string, gender:Gender, id:string}
+
 function percentageStat (s: Stat, percentage :number): boolean {//if actual value > percentage of max, true
     let value = s.max * percentage / 100;
     return s.actual > value;
@@ -52,5 +57,5 @@ function tryRandom(n:number): boolean{
 
 
 
-export type {Creature, Stat, State, VisualState}
+export type {Creature, Stat, State, VisualState, Gender, savedChoco}
 export{ checkMaxStat, checkMinStat, tryRandom, percentageStat}

@@ -1,5 +1,6 @@
+import { generateArrayFrame } from '@/utils/frontend/utilsFrontend'
 import React from 'react'
-const pathFrames = [0, 1, 2, 3]
+const pathFrames = generateArrayFrame(4)
 
 const standChocobo0 = (color: string) => {
   return (

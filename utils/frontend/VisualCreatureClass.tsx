@@ -7,6 +7,8 @@ export class VisualCreatureClass{
         const baseCreature:Creature= {
             name: 'placeholder',
             state: 'walking',
+            color: "#ffffff",
+            gender: "male",
             last_update: right_now,
             last_time_pet: right_now,
             last_time_pet_real: right_now,

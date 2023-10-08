@@ -2,7 +2,7 @@ import { CREATURE_ID, TICK_VALUE } from '@/utils/settings'
 import styles from './box-content.module.css'
 import { Screen } from './Screen/screen-content'
 import { useState, MouseEvent, useEffect } from 'react'
-import { API_string, menuList, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
+import { API_string, chocoMenuList, getRange, newMenuList, precalcFeed, precalcPet, spritesList } from '@/utils/frontend/utilsFrontend'
 import { Creature, VisualState } from '@/utils/interfaces'
 import { VisualCreatureClass } from '@/utils/frontend/VisualCreatureClass'
 import { Menu } from './Menu/menu'
@@ -11,7 +11,7 @@ import loading from './Screen/Sprite/Other/loading'
 import { Content } from './Content/content'
 
 let startElement: spritesList = 'stand';
-let startMenu = [menuList.length-1,0,1];
+let startMenu = [chocoMenuList.length-1,0,1];
 let startUpdateTimeout: NodeJS.Timeout |null= null;
 
 export const Box = () => {
@@ -34,7 +34,7 @@ export const Box = () => {
          [selectedMenu[1],selectedMenu[2],selectedMenu[2]+1]
     }
     const cycleMenu = (left:boolean) => (e?: MouseEvent): void => {
-        let length_menu = menuList.length;
+        let length_menu = (creatureId === 'new' ? newMenuList.length: chocoMenuList.length);
         let newMenu=shiftMenu(left);
         left ?  
             newMenu[0]<0 ? setSelectedMenu([length_menu-1, newMenu[1], newMenu[2]]): setSelectedMenu(newMenu)
@@ -48,6 +48,13 @@ export const Box = () => {
     const [infoText, setInfoText] = useState('loading...');
 
     //info for fetching
+    const [creatureId, setCreatureId] = useState<string|null>(null);
+    //change creature!
+    const changeCreature=(id:string)=>{
+        if(id!==creatureId)setCreatureId(id)
+    }
+
+
     const [firstUpdate, setFirstUpdate] = useState(true)
     const [updateTimeout, setUpdateTimeout] = useState(startUpdateTimeout);
     const stopTimeout=()=>{
@@ -89,8 +96,8 @@ export const Box = () => {
 
         await apiCore('pet', false);
     }
-    const updateCommand = async () => {
-        if (!isUpdateTime()) {//update only visual, not API
+    const updateCommand = async (force?:boolean) => {
+        if (!isUpdateTime() && !force) {//update only visual, not API
             updateVisuals(infoBox.state)
             newTimeout(updateCommand,5000);
             return;
@@ -102,7 +109,7 @@ export const Box = () => {
     const apiCore = async (api: API_string, forceVisual?: boolean) => {
         console.log("Update API")
         setIsFetching(true);
-        const res = await fetch(`/api/${api}?id=${CREATURE_ID}`)
+        const res = await fetch(`/api/${api}?id=${creatureId}`)
         const data = await res.json()
         if (!data) {
             console.log("ERROR! DATA NOT RECEIVED"); return;
@@ -157,8 +164,49 @@ export const Box = () => {
     
     useEffect(() => {//first update
         setFirstUpdate(false)
-        updateCommand();
+        setCreatureId(CREATURE_ID)
+        stopTimeout()
     }, [])
+
+    useEffect(() => {//first update+menu change
+        if(creatureId!== null &&creatureId!== 'new'){//first update and set a creature
+            setSelectedMenu(startMenu);
+            //setSelectedMenu([chocoMenuList.length-3,chocoMenuList.length-2,chocoMenuList.length-1]);
+            setSprite('none');
+            stopTimeout();
+            updateCommand(true);
+            return;
+        }
+        if(creatureId==='new'){
+            setSelectedMenu([newMenuList.length-1,0,1]);
+            setTimeout(()=>setSprite('egg'),1);
+            newTimeout(eggAnimation,5000);
+            return;
+        }
+    }, [creatureId])
+
+    const eggAnimation = ()=>{
+        if(sprite==='eggshake'){
+            setSprite('egg');
+            return;}
+        setSprite('eggshake');
+        return;
+    }
+
+    useEffect(() => {
+        if(sprite==='egg'){
+            newTimeout(eggAnimation,getRange(3000,10000));
+            return;
+        }
+        if(sprite==='eggshake'){
+            newTimeout(eggAnimation,getRange(200,600));
+        }
+    }, [sprite])
+    /*
+    useEffect(() => {
+        console.log(selectedMenu)
+    }, [selectedMenu])
+    */
 
     useEffect(() => {//if creature is saved
         if(!firstUpdate)setIsUpdatedInfoBox(true);
@@ -189,12 +237,12 @@ export const Box = () => {
     return (
         <div className={styles.box}>
             <LoadingScreen isLoading={isFirstLoading}/>
-            <Screen sprite={sprite} width={windowSize[0]+"px"} />
+            <Screen sprite={sprite} width={windowSize[0]+"px"} color={infoBox.color}/>
             <LoadingSpinner visible={isFetching || isPlayingAnimation}/>
-            <Content selectedMenu={selectedMenu} info={infoBox} action={infoText} isPlayingAnimation={isPlayingAnimation} commands={{
+            <Content selectedChocoId={creatureId} selectedMenu={selectedMenu} info={infoBox} action={infoText} isPlayingAnimation={isPlayingAnimation} commands={{
                 feedCommand: feedCommand,petCommand: petCommand
-            }} cycleMenu={cycleMenu}/>
-            <Menu selectedMenu={selectedMenu[1]} cycleMenu={cycleMenu} />
+            }} cycleMenu={cycleMenu} changeChoco={changeCreature}/>
+            <Menu selectedMenu={selectedMenu[1]} cycleMenu={cycleMenu} creatureId={creatureId}/>
         </div>
     )
 }

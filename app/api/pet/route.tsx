@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const creatureId = searchParams.get('id');
-  if(creatureId === null){
+  if(creatureId === null || creatureId === ''){
     console.log('No id');
     return NextResponse.json({error:"no id from request"},{
       status: 404,
