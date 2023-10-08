@@ -1,5 +1,6 @@
 import { Creature } from '@/utils/interfaces'
 import styles from './info.module.css'
+import { GenderIcon } from '../icons'
 
 export const Info = ({infoBox,creatureId}:{infoBox:Creature,creatureId:string|null})=>{
     return(

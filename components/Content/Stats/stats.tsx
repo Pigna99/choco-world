@@ -2,6 +2,7 @@ import { Creature , Stat} from '@/utils/interfaces'
 import styles from './stats.module.css'
 import { HAPPINESS_NAMES } from '@/utils/settings';
 import { Children } from 'react';
+import { GenderIcon } from '../icons';
 
 
 
@@ -10,6 +11,7 @@ export const Stats = ({info}:{info:Creature})=>{
         <div className={styles.container}>
             <div className={styles.nameContainer}>
                 <h4>{info.name}</h4>
+                <GenderIcon gender={info.gender} dim={45}/>
             </div>
             <div className={styles.statName}>
                 {`Level ${info.statictics.level}`}

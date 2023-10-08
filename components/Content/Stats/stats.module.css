@@ -33,5 +33,9 @@
 }
 
 .nameContainer{
-    font-size: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 40px;
+    margin-bottom: 5px;
 }
