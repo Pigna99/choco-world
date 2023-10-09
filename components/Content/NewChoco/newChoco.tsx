@@ -16,6 +16,7 @@ function NewChoco({newChoco, clicks}:{clicks:number, newChoco:(name:string,color
     //console.log(clicks, clicksNeeded)
     if(clicksNeeded===clicks){
       newChoco(text,color,gender)
+      setClicksNeeded(clicksNeeded+10)
     }
   }, [clicksNeeded, clicks])
   

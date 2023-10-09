@@ -102,6 +102,12 @@ export const Box = () => {
         if(name.length<2 || name.length>20)return;//validate lenght
         //validate color!
         console.log("Creating a new Creature");
+        if(name==='test'){
+            console.log('setting hatching')
+            setSprite("hatching")
+            stopTimeout()
+            return;
+        }
         const fetchstring =`/api/new?name=${name}&color=${color.split('#')[1]}&gender=${gender}`;
         //console.log(fetchstring)
         const res = await fetch(fetchstring)
@@ -119,19 +125,23 @@ export const Box = () => {
         let cr = infoBox;
         cr.color= c.color;
         setInfoBox(cr);
-        console.log('settting hatching')
+        //console.log('settting hatching')
         setSprite("hatching")
-        newTimeout(()=>{addCreatureToList(c)},8000)
+        setTimeout(()=>{addCreatureToList(c)},8000)
     }
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
     
     const clickEgg = (e:MouseEvent)=>{
+        if(sprite==='hatching'){
+            return stopTimeout();
+        }
         setClicks(clicks+1)
-        console.log(clicks, sprite)
+        //console.log(clicks, sprite)
         if(sprite==='egg'){
-            console.log('settting eggshake')
+            //console.log('settting eggshake')
             setSprite('eggshake');
         }
+        
     }
 
     //change creature!
@@ -287,21 +297,10 @@ export const Box = () => {
     }, [creatureList])
 
 
-    const eggAnimation = ()=>{
-        console.log('goegganimation')
-        if(sprite==='eggshake'){
-            setSprite('egg');
-            return;}
-        else if(sprite==='egg'){
-            setSprite('eggshake');
-            return;
-        }   
-    }
-
     useEffect(() => {
-        console.log(sprite)
+        //console.log(sprite)
         if(sprite==='egg'){
-            newTimeout(eggAnimation,getRange(3000,10000));
+            newTimeout(()=>{setSprite('eggshake');},getRange(3000,10000));
             setTimeout(()=>{
                 if(creatureId==='new'){
                     if(isFirstLoading)setIsFirstLoading(false)
@@ -310,7 +309,7 @@ export const Box = () => {
             return;
         }
         if(sprite==='eggshake'){
-            newTimeout(eggAnimation,getRange(200,600));
+            newTimeout(()=>{setSprite('egg');},getRange(200,600));
         }
         
     }, [sprite])
