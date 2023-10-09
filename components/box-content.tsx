@@ -196,9 +196,14 @@ export const Box = () => {
         const res = await fetch(`/api/${api}?id=${creatureId}`)
         const data = await res.json()
         if (!data) {
-            console.log("ERROR! DATA NOT RECEIVED"); return;
+            console.log("ERROR! DATA NOT RECEIVED");
+            if(isFirstLoading)setIsFirstLoading(false)//for loading screen
+            return;
         }
-        if (!data.creature) { console.log("ERROR! CREATURE NOT RECEIVED"); return; }
+        if (!data.creature) { 
+            console.log("ERROR! CREATURE NOT RECEIVED");
+            if(isFirstLoading)setIsFirstLoading(false)//for loading screen
+            return; }
         const creature: Creature = data.creature;
         setInfoBox(creature)
         
@@ -265,7 +270,7 @@ export const Box = () => {
             return;
         }
         if(creatureId==='new'){
-            console.log('new creature')
+            //console.log('new creature')
             setSelectedMenu([newMenuList.length-1,0,1]);
             setTimeout(()=>setSprite('egg'),50);
             newTimeout(eggAnimation,5000);
