@@ -92,7 +92,7 @@ export const Box = () => {
     }
 
     const newChoco = async(name:string, color:string, gender:Gender)=>{
-        if(name.length<5 || name.length>20)return;//validate lenght
+        if(name.length<2 || name.length>20)return;//validate lenght
         //validate color!
         console.log("Creating a new Creature");
         const fetchstring =`/api/new?name=${name}&color=${color.split('#')[1]}&gender=${gender}`;
@@ -115,7 +115,7 @@ export const Box = () => {
         cr.color= c.color;
         setInfoBox(cr);
         setTimeout(()=>setSprite("hatching"),50);
-        newTimeout(()=>{setSprite("hatching-end");setTimeout(()=>{addCreatureToList(c)},2000)}, 5000)
+        newTimeout(()=>{addCreatureToList(c)},8000)
     }
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
     const clickEgg = ()=>{
@@ -353,11 +353,11 @@ const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
     return (
         <div className={`${styles.loadingScreen} ${isLoading? '' : styles.loaded}` }>
             <div>loading...</div>
-           <Sprite fps={18} framesArray={loading} color={''} width={"50%"} height={"10px"}/>
+           <Sprite fps={18} framesArray={loading} color={''} width={"50%"} height={"10px"} loop/>
         </div>
     )
 }
 
 const Loading = () =>{
-    return <Sprite fps={18} framesArray={loading} color={''} width={"100%"} height={"10px"}/>
+    return <Sprite fps={18} framesArray={loading} color={''} width={"100%"} height={"10px"} loop/>
 }
