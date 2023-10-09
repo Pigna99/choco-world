@@ -119,7 +119,6 @@ export const Box = () => {
         let cr = infoBox;
         cr.color= c.color;
         setInfoBox(cr);
-        console.log('settting hatching')
         stopTimeout();
         setSprite("hatching")
         newTimeout(()=>{addCreatureToList(c)},8000)
@@ -128,7 +127,6 @@ export const Box = () => {
     const clickEgg = ()=>{
         setClicks(clicks+1)
         if(sprite==='egg'){
-            console.log('settting eggshake')
             setSprite('eggshake');
         }
     }
