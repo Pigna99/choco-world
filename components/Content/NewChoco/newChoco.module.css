@@ -2,15 +2,10 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 400px;
     height: 100%;
     align-items: center;
 }
-.genderContainer{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
+
 
 .selectedItem{
     border: 3px solid grey;
@@ -20,13 +15,31 @@
 }
 
 .selected{
+    display: flex;
     background-color: rgb(192, 191, 191);
     border: 3px solid black;
     cursor: default;
+    
 }
 
 .buttonContainer{
     min-width: 200px;
     width: 70%;
     height: 60px;
+}
+
+.entryContainer{
+    display: grid;
+    width: 100%;
+    grid-template-columns: 35% 65%;
+    padding: 3px
+}
+
+.genderContainer{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    padding: 3px
 }
