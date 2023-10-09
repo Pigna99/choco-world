@@ -9,7 +9,7 @@ import { Menu } from './Menu/menu'
 import Sprite from './Screen/Sprite/Sprite'
 import loading from './Screen/Sprite/Other/loading'
 import { Content } from './Content/content'
-import { load, save } from '@/utils/frontend/localStorage'
+import { load, reset, save } from '@/utils/frontend/localStorage'
 
 let startElement: spritesList = 'stand';
 let startMenu = [chocoMenuList.length-1,0,1];
@@ -59,6 +59,13 @@ export const Box = () => {
 
     const saveCreatureList = ()=>{
         save({list:creatureList, last_choco:creatureId});
+    }
+    const resetCreatureList = ()=>{
+        reset();
+        const info:frontend_info = load()
+        setCreatureId(info.last_choco)//set last saved
+        setCreatureList(info.list)
+        
     }
     const loadChoco = async (id:string) =>{
         console.log("Check id")
@@ -332,7 +339,7 @@ export const Box = () => {
             <Screen sprite={sprite} width={windowSize[0]+"px"} color={infoBox.color} clickScreen={clickEgg}/>
             <LoadingSpinner visible={isFetching || isPlayingAnimation}/>
             <Content clicks={clicks} chocoArray={creatureList} selectedChocoId={creatureId} selectedMenu={selectedMenu} info={infoBox} action={infoText} isPlayingAnimation={isPlayingAnimation} commands={{
-                feedCommand: feedCommand,petCommand: petCommand, loadChoco:loadChoco, newChoco:newChoco
+                feedCommand: feedCommand,petCommand: petCommand, loadChoco:loadChoco, newChoco:newChoco, deleteAll:resetCreatureList
             }} cycleMenu={cycleMenu} changeChoco={changeCreature}/>
             <Menu selectedMenu={selectedMenu[1]} cycleMenu={cycleMenu} creatureId={creatureId}/>
         </div>

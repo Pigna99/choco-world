@@ -15,4 +15,8 @@ const load=()=>{
     return JSON.parse(info);
 }
 
-export {load,save}
+const reset=()=>{
+    save(startingInfo)
+}
+
+export {load,save,reset}
