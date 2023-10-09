@@ -108,20 +108,18 @@ export const Box = () => {
         const data = await res.json()
         if (!data) {
             console.log("ERROR! DATA NOT RECEIVED");
-            setIsFetching(false);
             setClicks(clicks-10)
             return;
         }
         if (!data.savedCreature) {
             console.log("ERROR! CREATURE INFO NOT RECEIVED");
-            setIsFetching(false);
             setClicks(clicks-10)
             return; }
         const c: savedChoco = data.savedCreature;
         let cr = infoBox;
         cr.color= c.color;
         setInfoBox(cr);
-        setTimeout(()=>setSprite("hatching"),50);
+        setSprite("hatching")
         newTimeout(()=>{addCreatureToList(c)},8000)
     }
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
