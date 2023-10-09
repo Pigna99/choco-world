@@ -5,7 +5,7 @@ import { MouseEventHandler } from 'react'
 export const Settings = ({deleteAll}:{deleteAll:MouseEventHandler})=>{
     return(
         <div className={``}>
-            <Button name='delete data' clickEvent={deleteAll}/>
+            <Button name='delete local data' clickEvent={deleteAll}/>
         </div>
     )
 }
