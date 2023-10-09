@@ -10,6 +10,7 @@ import egg from "./Sprites/egg";
 import eggshake from "./Sprites/eggshake";
 import none from "./Sprites/none";
 import hatching from "./Sprites/hatching";
+import hatchingend from "./Sprites/hatchingend";
 
 const getSprite=(sprite:spritesList)=>{
     const baseStatiFPS= 32;
@@ -26,6 +27,7 @@ const getSprite=(sprite:spritesList)=>{
         case 'egg': returnValues.sprite = egg; returnValues.fps = baseStatiFPS; break;
         case 'eggshake': returnValues.sprite = eggshake; returnValues.fps = baseStatiFPS;break;
         case 'hatching': returnValues.sprite = hatching; returnValues.fps = 6;break;
+        case 'hatching-end': returnValues.sprite = hatchingend; returnValues.fps = baseStatiFPS;break;
         case 'none':
         default: returnValues.sprite = none; returnValues.fps = 16;break;
     }

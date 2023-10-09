@@ -3,7 +3,7 @@ import styles from './content.module.css'
 import { Info } from './Info/info'
 import { Stats } from './Stats/stats'
 import { Commands } from './Commands/commands'
-import { Creature } from '@/utils/interfaces'
+import { Creature, Gender, savedChoco } from '@/utils/interfaces'
 import React, { MouseEventHandler, TouchEventHandler, useState } from 'react'
 import { Settings } from './Settings/settings'
 import ChocoList from './ChocoList/chocoList'
@@ -11,8 +11,8 @@ import NewChoco from './NewChoco/newChoco'
 import LoadChoco from './LoadChoco/loadChoco'
 
 export const Content = (
-    {selectedChocoId,changeChoco,selectedMenu, info, action, isPlayingAnimation, commands , cycleMenu}:
-    {selectedChocoId:string|null,selectedMenu:number[], info:Creature, action:string,isPlayingAnimation:boolean, commands:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler} ,cycleMenu:(e:boolean)=>()=>void,changeChoco:(id:string)=>void})=>{
+    {clicks,selectedChocoId,changeChoco,selectedMenu, info, action, isPlayingAnimation, commands , cycleMenu, chocoArray}:
+    {clicks: number,selectedChocoId:string|null,selectedMenu:number[], info:Creature, action:string,isPlayingAnimation:boolean, commands:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler, loadChoco:(id:string)=>void, newChoco:(name:string,color:string,gender:Gender)=>void} ,cycleMenu:(e:boolean)=>()=>void,changeChoco:(id:string)=>void, chocoArray:savedChoco[]})=>{
     
     //touch
     const [touchStart, setTouchStart] = useState<null|number>(null)
@@ -52,14 +52,14 @@ export const Content = (
                 chocoMenuList[id] === 'stats' ? <Stats info={info} /> :
                 chocoMenuList[id] === 'actions' ? <Commands feedCommand={commands.feedCommand} petCommand={commands.petCommand} block={isPlayingAnimation} info={action} /> :
                 chocoMenuList[id] === 'info' ?<Info infoBox={info} creatureId={selectedChocoId}/> :
-                chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco}/> :
+                chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco} chocoArray={chocoArray}/> :
                 chocoMenuList[id] === 'settings' ? <Settings/> :
             <div></div> ) 
         }
         return(
-            newMenuList[id] === 'new' ? <NewChoco />:
-            newMenuList[id] === 'load' ? <LoadChoco/>:
-            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco}/> :
+            newMenuList[id] === 'new' ? <NewChoco newChoco={commands.newChoco} clicks={clicks}/>:
+            newMenuList[id] === 'load' ? <LoadChoco loadChoco={commands.loadChoco}/>:
+            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco} chocoArray={chocoArray}/> :
             newMenuList[id] === 'settings' ? <Settings/> :
             <div></div>
         )

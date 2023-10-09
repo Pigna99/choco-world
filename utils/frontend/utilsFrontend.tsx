@@ -1,8 +1,8 @@
-import { Creature, Gender } from "../interfaces";
+import { Creature, savedChoco } from "../interfaces";
 import { TICK_VALUE } from "../settings";
 
 type spritesList =
-    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'none';
+    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'hatching-end'|'none';
 
 type menu = 'stats' | 'actions' | 'info' | 'settings' | 'chocos' | 'new' | 'load'
 
@@ -13,6 +13,11 @@ const spritesArray:spritesList[] = ['eat','happy','sleep','stand','walk-bottom',
 type menu_interface ={left:number,actual:number,right:number}
 
 type API_string = 'update'|'pet'|'feed'
+
+type frontend_info = {
+    list:savedChoco[],
+    last_choco:string,
+}
 
 function getTicksFromDate(d:Date){//number of ticks from that Date to now
     const new_ticks_float= ((new Date()).getTime()-d.getTime()) / (60000*TICK_VALUE);
@@ -42,5 +47,5 @@ const getRange=(start:number, end:number)=>{
 }
 
 
-export type {spritesList, menu, API_string, menu_interface}
+export type {spritesList, menu, API_string, menu_interface, frontend_info}
 export{getTicksFromDate, precalcFeed, precalcPet,spritesArray,chocoMenuList,newMenuList,generateArrayFrame, getRange}

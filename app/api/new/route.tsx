@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const creatureName = searchParams.get('name');
-  const creatureColor = searchParams.get('color');
+  let creatureColor = searchParams.get('color');
   const creatureGender = searchParams.get('gender');
   if(creatureName === null || creatureName === ''){
     console.log('No name');
@@ -37,10 +37,10 @@ export async function GET(request: Request) {
       status: 404,
     })
   }
-  
+  creatureColor= '#'+creatureColor;
 
-  const id= await newCreature(creatureName, creatureColor, getGender(creatureGender));//save creature info
-  return NextResponse.json({creatureId: id, text:`Id for [${creatureName}], the new creature generated:${id}`} ,{
+  const creature= await newCreature(creatureName, creatureColor, getGender(creatureGender));//save creature info
+  return NextResponse.json({savedCreature:creature, text:`Id for [${creatureName}], the new creature generated:${creature.id}`} ,{
       status: 200,
     });
 }

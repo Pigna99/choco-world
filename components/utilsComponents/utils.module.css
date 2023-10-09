@@ -1,0 +1,53 @@
+.button{
+    font-size: 25px;
+    padding: 5px;
+    border: 0px;
+    margin: 0px;
+    border: 3px solid gray;
+    min-height: 25px;
+    height: 100%;
+    width: 100%;
+    font-family: 'Minecraft';
+    color: black;
+    background-color: rgba(211, 211, 211, 0.383);
+}
+
+.button:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.blocked{
+    background-color: rgb(184, 184, 184);
+}
+
+.blocked:hover{
+    background-color: rgb(184, 184, 184);
+    cursor:default;
+}
+
+.input{
+    background-color: rgb(210, 210, 210);
+    border: 3px solid black;
+    color: black;
+    width: 100%;
+    max-width: 300px;
+    height: 40px;
+    text-align: center;
+    font-family : minecraft !important;
+}
+
+.input:focus{
+    outline: none !important;
+    border:3px solid grey;
+}
+
+.color{
+    background-color: rgb(210, 210, 210);
+    border: 3px solid black;
+    color: black;
+    width: 100%;
+    max-width: 300px;
+    height: 40px;
+    text-align: center;
+}

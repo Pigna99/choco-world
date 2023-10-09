@@ -3,6 +3,7 @@
     src: url('../public/fonts/Minecraft.ttf') format('truetype');
 }
 
+
 .box>*{
     color: black;
     text-align: center;

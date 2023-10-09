@@ -1,7 +1,8 @@
 import { Gender } from "../interfaces"
 
 const validateHexColor = (color:string|null)=>{
-    if(color)return /^#[0-9A-F]{6}$/i.test(color)
+    console.log(color)
+    if(color)return /^[0-9A-F]{6}$/i.test(color)
     return false
 }
 

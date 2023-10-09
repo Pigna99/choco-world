@@ -1,4 +1,4 @@
-import { Creature , Gender, State, checkMaxStat, checkMinStat, percentageStat, tryRandom} from "../interfaces";
+import { Creature , Gender, State, checkMaxStat, checkMinStat, percentageStat, savedChoco, tryRandom} from "../interfaces";
 import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS } from '../settings';
 
 class CreatureClass {
@@ -47,6 +47,14 @@ class CreatureClass {
         }
 
         return new CreatureClass(baseCreature);
+    }
+    getSavedCreature(id:string):savedChoco{
+        return {
+            name: this.info.name,
+            color: this.info.color,
+            gender: this.info.gender,
+            id: id
+          }
     }
 
     simulate(){

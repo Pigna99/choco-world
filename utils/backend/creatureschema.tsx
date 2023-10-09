@@ -6,6 +6,8 @@ const creatureScheme = new mongoose.Schema<Creature>(
     {
         name: String,
         state: String,
+        color: String,
+        gender: String,
         last_update: Date,
         last_time_pet: Date,
         last_time_pet_real: Date,

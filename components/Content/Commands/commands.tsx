@@ -1,4 +1,5 @@
 
+import { Button } from '@/components/utilsComponents/buttons'
 import styles from './commands.module.css'
 import { MouseEventHandler } from "react"
 
@@ -16,10 +17,3 @@ export const Commands = ({feedCommand, petCommand, block, info}:{feedCommand:Mou
 }
 
 
-const Button = ({name, clickEvent, blocked} : {name: String, clickEvent: MouseEventHandler, blocked:boolean})=>{
-    return(
-        <button onClick={clickEvent} className={`${styles.button} ${blocked ? styles.blocked : ""}`}>
-            {name}
-        </button>
-    )
-}

@@ -2,27 +2,13 @@ import React, { MouseEventHandler } from 'react'
 import styles from './chocoList.module.css'
 import { savedChoco } from '@/utils/interfaces'
 import { Gender } from '@/utils/interfaces'
-import { ChocoImage, GenderIcon } from '../icons'
+import { ChocoImage, GenderIcon } from '../../utilsComponents/icons'
 
-function ChocoList({selectedChocoId, changeChoco}:{selectedChocoId:string|null, changeChoco:(id:string)=>void}) {
-  const testChoco1:savedChoco={
-    name: 'Pigna',
-    color: '#aaa000',
-    gender: 'male',
-    id: '65193d0fd0780be48381e964'
-  }
-  const testChoco2:savedChoco={
-    name: 'Villano',
-    color: '#f00000',
-    gender: 'female',
-    id: '6522807f982f72aa57f7daed'
-  }
-  const list = [testChoco1,testChoco2]
-
+function ChocoList({selectedChocoId, changeChoco, chocoArray}:{selectedChocoId:string|null, changeChoco:(id:string)=>void ,chocoArray:savedChoco[]}) {
   return (
     <div className={styles.container}>
       {
-        list.map((el)=>{
+        chocoArray.map((el)=>{
           return(
             <ListElement active={el.id===selectedChocoId} key={el.id} onClick={()=>{if(el.id!==selectedChocoId)changeChoco(el.id)}}>
               <ChocoEntry info={el}/>

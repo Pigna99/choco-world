@@ -1,0 +1,32 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 400px;
+    height: 100%;
+    align-items: center;
+}
+.genderContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.selectedItem{
+    border: 3px solid grey;
+    padding:3px;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+}
+
+.selected{
+    background-color: rgb(192, 191, 191);
+    border: 3px solid black;
+    cursor: default;
+}
+
+.buttonContainer{
+    min-width: 200px;
+    width: 70%;
+    height: 60px;
+}

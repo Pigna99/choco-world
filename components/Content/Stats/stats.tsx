@@ -2,7 +2,7 @@ import { Creature , Stat} from '@/utils/interfaces'
 import styles from './stats.module.css'
 import { HAPPINESS_NAMES } from '@/utils/settings';
 import { Children } from 'react';
-import { GenderIcon } from '../icons';
+import { GenderIcon } from '../../utilsComponents/icons';
 
 
 
