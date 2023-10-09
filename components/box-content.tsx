@@ -119,14 +119,17 @@ export const Box = () => {
         let cr = infoBox;
         cr.color= c.color;
         setInfoBox(cr);
-        stopTimeout();
+        //console.log('settting hatching')
         setSprite("hatching")
         newTimeout(()=>{addCreatureToList(c)},8000)
     }
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
-    const clickEgg = ()=>{
+    
+    const clickEgg = (e:MouseEvent)=>{
         setClicks(clicks+1)
+        //console.log(clicks, sprite)
         if(sprite==='egg'){
+            //console.log('settting eggshake')
             setSprite('eggshake');
         }
     }
@@ -272,7 +275,6 @@ export const Box = () => {
             //console.log('new creature')
             setSelectedMenu([newMenuList.length-1,0,1]);
             setTimeout(()=>setSprite('egg'),50);
-            newTimeout(eggAnimation,5000);
             
             return;
         }
@@ -286,6 +288,7 @@ export const Box = () => {
 
 
     const eggAnimation = ()=>{
+        //console.log('goegganimation')
         if(sprite==='eggshake'){
             setSprite('egg');
             return;}
@@ -296,6 +299,7 @@ export const Box = () => {
     }
 
     useEffect(() => {
+        //console.log(sprite)
         if(sprite==='egg'){
             newTimeout(eggAnimation,getRange(3000,10000));
             setTimeout(()=>{

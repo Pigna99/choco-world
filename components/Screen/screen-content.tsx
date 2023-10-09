@@ -14,7 +14,7 @@ export const Screen = ({sprite, width, color, clickScreen}:{sprite:spritesList,w
     }
     return(
         <div className={styles.screen} style={{width:width,height:width}} onClick={clickScreen}>
-            <div className={`${reverse ? styles.reverse : undefined} ${styles.sprite}`}>
+            <div className={`${reverse ? styles.reverse : ''} ${styles.sprite}`}>
                 <Sprite loop={getSprite(sprite).loop} framesArray={getSprite(sprite).sprite} fps={getSprite(sprite).fps} color={color} width={width} height={width}/>
             </div>
         </div>

@@ -5,8 +5,11 @@
 }
 
 .sprite{
-    image-rendering: pixelated;
-    position:relative;
+
+}
+.screen{
+    position: relative;
+    background-color: transparent;
     width: 100%;
     height: 100%;
 }
