@@ -1,12 +1,14 @@
 import {  chocoMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
 import styles from './menu.module.css'
 import { MouseEventHandler } from 'react'
+import useGlobalContext from '../context'
 
-export const Menu = ({selectedMenu, cycleMenu,creatureId}:{selectedMenu:number,cycleMenu:(left:boolean)=>MouseEventHandler,creatureId:string|null})=>{
+export const Menu = ()=>{
+    const {selectedMenu, cycleMenu, creatureId} = useGlobalContext()
     return(
         <div className={styles.menu}>
             <MenuArrow reverse cycleMenu={cycleMenu(true)}/>
-            <MenuElement selectedMenu={selectedMenu} creatureId={creatureId}/>
+            <MenuElement selectedMenu={selectedMenu[1]} creatureId={creatureId}/>
             <MenuArrow isRight cycleMenu={cycleMenu(false)}/>
         </div>
     )

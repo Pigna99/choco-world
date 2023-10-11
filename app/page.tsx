@@ -4,6 +4,7 @@ import Head from "next/head";
 import { Box } from '@/components/box-content'
 import styles from './page.module.css'
 import { spritesArray, spritesList } from "@/utils/frontend/utilsFrontend";
+import { GlobalProvider } from "@/components/context";
 
 export default function Home() {
   return (
@@ -21,8 +22,10 @@ export default function Home() {
             )
           })
         }
-      </Head>
-      <Box/>
+        </Head>
+      <GlobalProvider>
+        <Box/>
+      </GlobalProvider>
     </main>
   )
 }

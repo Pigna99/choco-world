@@ -3,17 +3,18 @@ import styles from './content.module.css'
 import { Info } from './Info/info'
 import { Stats } from './Stats/stats'
 import { Commands } from './Commands/commands'
-import { Creature, Gender, savedChoco } from '@/utils/interfaces'
-import React, { MouseEventHandler, TouchEventHandler, useState } from 'react'
+import React, { TouchEventHandler, useState } from 'react'
 import { Settings } from './Settings/settings'
 import ChocoList from './ChocoList/chocoList'
 import NewChoco from './NewChoco/newChoco'
 import LoadChoco from './LoadChoco/loadChoco'
+import useGlobalContext from '../context'
 
-export const Content = (
-    {clicks,selectedChocoId,changeChoco,selectedMenu, info, action, isPlayingAnimation, commands , cycleMenu, chocoArray}:
-    {clicks: number,selectedChocoId:string|null,selectedMenu:number[], info:Creature, action:string,isPlayingAnimation:boolean, commands:{feedCommand:MouseEventHandler, petCommand:MouseEventHandler, loadChoco:(id:string)=>void, newChoco:(name:string,color:string,gender:Gender)=>void, deleteAll:MouseEventHandler} ,cycleMenu:(e:boolean)=>()=>void,changeChoco:(id:string)=>void, chocoArray:savedChoco[]})=>{
-    
+export const Content = ()=>{
+    const {clicks,creatureId,changeCreature,selectedMenu, creatureInfo, action, isPlayingAnimation, cycleMenu, creatureList} = useGlobalContext()
+    const {feedCommand,petCommand,loadCreature,newCreature,resetCreatureList } = useGlobalContext()
+    const sMenu:any[] = selectedMenu;
+
     //touch
     const [touchStart, setTouchStart] = useState<null|number>(null)
     const [touchEnd, setTouchEnd] = useState<null|number>(null)
@@ -47,20 +48,20 @@ export const Content = (
 
     //connect menu entry to menu component
     const getMainContent =(id:number)=>{
-        if(selectedChocoId!=='new'){
+        if(creatureId!=='new'){
             return (
-                chocoMenuList[id] === 'stats' ? <Stats info={info} /> :
-                chocoMenuList[id] === 'actions' ? <Commands feedCommand={commands.feedCommand} petCommand={commands.petCommand} block={isPlayingAnimation} info={action} /> :
-                chocoMenuList[id] === 'info' ?<Info infoBox={info} creatureId={selectedChocoId}/> :
-                chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco} chocoArray={chocoArray}/> :
-                chocoMenuList[id] === 'settings' ? <Settings deleteAll={commands.deleteAll}/> :
+                chocoMenuList[id] === 'stats' ? <Stats info={creatureInfo} /> :
+                chocoMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={action} /> :
+                chocoMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={creatureId}/> :
+                chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
+                chocoMenuList[id] === 'settings' ? <Settings deleteAll={resetCreatureList}/> :
             <div></div> ) 
         }
         return(
-            newMenuList[id] === 'new' ? <NewChoco newChoco={commands.newChoco} clicks={clicks}/>:
-            newMenuList[id] === 'load' ? <LoadChoco loadChoco={commands.loadChoco}/>:
-            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={selectedChocoId} changeChoco={changeChoco} chocoArray={chocoArray}/> :
-            newMenuList[id] === 'settings' ? <Settings deleteAll={commands.deleteAll}/> :
+            newMenuList[id] === 'new' ? <NewChoco newChoco={newCreature} clicks={clicks}/>:
+            newMenuList[id] === 'load' ? <LoadChoco loadChoco={loadCreature}/>:
+            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
+            newMenuList[id] === 'settings' ? <Settings deleteAll={resetCreatureList}/> :
             <div></div>
         )
                  
@@ -70,7 +71,7 @@ export const Content = (
     return(
         <div className={`${styles.mainContent}`} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
             {
-                selectedMenu.map((el,index)=>{
+                sMenu.map((el,index)=>{
                     return(
                         <div key={'menu-'+ el} className={`${styles.contentBox} ${index===0 ? styles.left: index===1? styles.actual : styles.right}`}
                             style={
