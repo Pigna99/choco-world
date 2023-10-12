@@ -22,7 +22,7 @@ const Loading = () =>{
 const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {
     const [disable, setDisable] = useState(false);
     useEffect(() => {
-        setTimeout(()=>setDisable(true), 1000)
+        if(!isLoading)setTimeout(()=>setDisable(true), 500)
     }, [isLoading])//disable this animation after 1 second
     
     return (
