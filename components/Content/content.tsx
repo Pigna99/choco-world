@@ -1,4 +1,4 @@
-import { chocoMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
+import { creatureMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
 import styles from './content.module.css'
 import { Info } from './Info/info'
 import { Stats } from './Stats/stats'
@@ -13,7 +13,7 @@ import useGlobalContext from '../context'
 export const Content = ()=>{
     const {clicks,creatureId,changeCreature,selectedMenu, creatureInfo, infoText, isPlayingAnimation, cycleMenu, creatureList} = useGlobalContext()
     const {feedCommand,petCommand,loadCreature,newCreature} = useGlobalContext()
-    const sMenu:any[] = selectedMenu;
+    const sMenu:any[] = selectedMenu.list;
 
     //touch
     const [touchStart, setTouchStart] = useState<null|number>(null)
@@ -48,13 +48,13 @@ export const Content = ()=>{
 
     //connect menu entry to menu component
     const getMainContent =(id:number)=>{
-        if(creatureId!=='new'){
+        if(selectedMenu.name!=='new'){
             return (
-                chocoMenuList[id] === 'stats' ? <Stats info={creatureInfo} /> :
-                chocoMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={infoText} /> :
-                chocoMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={creatureId}/> :
-                chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
-                chocoMenuList[id] === 'settings' ? <Settings/> :
+                creatureMenuList[id] === 'stats' ? <Stats info={creatureInfo} /> :
+                creatureMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={infoText} /> :
+                creatureMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={creatureId}/> :
+                creatureMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
+                creatureMenuList[id] === 'settings' ? <Settings/> :
             <div></div> ) 
         }
         return(

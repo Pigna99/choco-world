@@ -1,23 +1,23 @@
-import {  chocoMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
+import { creatureMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
 import styles from './menu.module.css'
 import { MouseEventHandler } from 'react'
 import useGlobalContext from '../context'
 
 export const Menu = ()=>{
-    const {selectedMenu, cycleMenu, creatureId} = useGlobalContext()
+    const {selectedMenu, cycleMenu} = useGlobalContext()
     return(
         <div className={styles.menu}>
             <MenuArrow reverse cycleMenu={cycleMenu(true)}/>
-            <MenuElement selectedMenu={selectedMenu[1]} creatureId={creatureId}/>
+            <MenuElement selectedMenu={selectedMenu.list[1]} menuName={selectedMenu.name}/>
             <MenuArrow isRight cycleMenu={cycleMenu(false)}/>
         </div>
     )
 }
 
-const MenuElement = ({selectedMenu, creatureId}:{selectedMenu:number,creatureId:string|null})=>{
+const MenuElement = ({selectedMenu, menuName}:{selectedMenu:number,menuName:string|null})=>{
     return(
         <div className={`${styles.element} ${styles.active}`}>
-            <div className={styles.elementText}>{creatureId==='new' ?newMenuList[selectedMenu]:chocoMenuList[selectedMenu]}</div>
+            <div className={styles.elementText}>{menuName==='new' ?newMenuList[selectedMenu]:creatureMenuList[selectedMenu]}</div>
         </div>
     )
 }

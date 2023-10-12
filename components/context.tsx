@@ -1,12 +1,12 @@
 import { MouseEventHandler, PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { load, reset, save } from '@/utils/frontend/localStorage'
-import { API_string, chocoMenuList, frontend_info, newMenuList, precalcFeed, precalcPet, spritesSettings, updateVisualsLogic } from "@/utils/frontend/utilsFrontend";
+import { API_string, creatureMenuList, frontend_info, newMenuList, precalcFeed, precalcPet, spritesSettings, updateVisualsLogic } from "@/utils/frontend/utilsFrontend";
 import { Creature, Gender, VisualState, savedChoco } from "@/utils/interfaces";
 import { VisualCreatureClass } from "@/utils/frontend/VisualCreatureClass";
 import { shiftMenu } from "@/utils/frontend/menu";
 import { checkCreatureId, validateNewCreature, isUpdateTime } from "@/utils/frontend/fetchValidation";
 type GlobalPropsProvided = { 
-    isFirstLoading:boolean,  isFetching:boolean, isPlayingAnimation:boolean, sprite:spritesSettings, infoText:string, creatureInfo:Creature, creatureId:string, creatureList:savedChoco[], selectedMenu:number[],  clicks:number,
+    isFirstLoading:boolean,  isFetching:boolean, isPlayingAnimation:boolean, sprite:spritesSettings, infoText:string, creatureInfo:Creature, creatureId:string, creatureList:savedChoco[], selectedMenu:{name:string, list:number[]},  clicks:number,
     feedCommand:MouseEventHandler, petCommand:MouseEventHandler,//actions
     resetCreatureList:MouseEventHandler,removeActualCreature:MouseEventHandler//settings
     loadCreature:(id:string)=>void, newCreature:(name:string,color:string,gender:Gender)=>void, changeCreature:(id:string)=>void, //load, new, change
@@ -16,8 +16,9 @@ type GlobalPropsProvided = {
 
 const GlobalContext = createContext<GlobalPropsProvided|null|any>(null);
 
-let startSprite: spritesSettings = {name:'none',loop:true}
-let startMenu = [chocoMenuList.length-1,0,1];
+const startSprite: spritesSettings = {name:'none',loop:true}
+const startMenu = {name:'creature', list: [creatureMenuList.length-1,0,1]};
+const startMenuNew = {name:'new',list:[newMenuList.length-1,0,1]}
 let startUpdateTimeout: NodeJS.Timeout |null= null;
 
 export const GlobalProvider = (props: PropsWithChildren) => {
@@ -80,7 +81,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         stopTimeout();
         setUpdateTimeout(setTimeout(()=>{f()},time))
     }
-    //TIMEOUT LOGIC
+    //TIMEOUT LOGIC 
 
     //clicks on main screen
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
@@ -196,12 +197,13 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [selectedMenu, setSelectedMenu] = useState(startMenu) //actual selected menu
     
     const cycleMenu = (left:boolean) => (e?: MouseEvent): void => {//cycle left/right throw menu elements
-        const length_menu = (creatureId === 'new' ? newMenuList.length : chocoMenuList.length);
-        let newMenu=shiftMenu(selectedMenu,left);
+        const length_menu = (creatureId === 'new' ? newMenuList.length : creatureMenuList.length);
+        let newMenu=shiftMenu(selectedMenu.list,left);
         left ?  
-            newMenu[0]<0 ? setSelectedMenu([length_menu-1, newMenu[1], newMenu[2]]): setSelectedMenu(newMenu)
+            newMenu[0]<0 ? (newMenu=[length_menu-1, newMenu[1], newMenu[2]]) : null
         :
-            newMenu[2]>length_menu-1 ? setSelectedMenu([newMenu[0], newMenu[1], 0]): setSelectedMenu(newMenu)
+            newMenu[2]>length_menu-1 ? newMenu=[newMenu[0], newMenu[1], 0] : null;
+        setSelectedMenu({...selectedMenu, list:newMenu})
     }
     
     useEffect(() => {//first update
@@ -214,10 +216,10 @@ export const GlobalProvider = (props: PropsWithChildren) => {
 
     useEffect(() => {//first update+menu change
         if(creatureId!== '' &&creatureId!== 'new'){//first update and set a creature throgh id
-            ;//set at the end of fetch
             updateVisuals('loading');
             stopTimeout();
             updateCommand(true, ()=>{
+                console.log('setting menu')
                 setSelectedMenu(startMenu);
                 saveCreatureList();
             });
@@ -225,7 +227,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         }
         if(creatureId==='new'){//new creature setting screen
             if(isFirstLoading)setIsFirstLoading(false)
-            setSelectedMenu([newMenuList.length-1,0,1]);
+            setSelectedMenu(startMenuNew);
             stopTimeout();
             updateVisuals('egg')
             return;
@@ -244,6 +246,10 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     useEffect(() => {//if last update is saved
         if(!isFirstUpdate)setIsUpdatedlastUpdate(true);
     }, [lastUpdate])
+
+    useEffect(()=>{
+        console.log(selectedMenu)
+    }, [selectedMenu])
 
     useEffect(() => {//than we can do a new timeout
         if(isUpdatedCreatureInfo && isUpdatedlastUpdate){

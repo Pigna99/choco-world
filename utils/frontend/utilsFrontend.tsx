@@ -69,7 +69,7 @@ const updateVisualsLogic=(v: VisualState, setSprite:Dispatch<SetStateAction<spri
 
 type menu = 'stats' | 'actions' | 'info' | 'settings' | 'chocos' | 'new' | 'load'
 
-const chocoMenuList:menu[] = ['stats', 'actions', 'info', 'settings', 'chocos']    
+const creatureMenuList:menu[] = ['stats', 'actions', 'info', 'settings', 'chocos']    
 const newMenuList:menu[] = ['new','load', 'settings','chocos']  
 
 type menu_interface ={left:number,actual:number,right:number}
@@ -110,4 +110,4 @@ const getRange=(start:number, end:number)=>{
 
 
 export type {spritesList, menu, API_string, menu_interface, frontend_info, spritesSettings}
-export{getTicksFromDate, precalcFeed, precalcPet,chocoMenuList,newMenuList,generateArrayFrame, getRange, updateVisualsLogic}
+export{getTicksFromDate, precalcFeed, precalcPet,creatureMenuList,newMenuList,generateArrayFrame, getRange, updateVisualsLogic}
