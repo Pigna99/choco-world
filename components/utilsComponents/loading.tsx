@@ -10,7 +10,7 @@ const LoadingSpinner = ({visible}:{visible:boolean})=>{
         <div className={styles.loading}>
             <div className={styles.loadingContainer}>
             {
-                visible||true ? <Loading/>: <div style={{height:10}}/>
+                visible ? <Loading/>: <div style={{height:10}}/>
             }
             </div>
         </div>
