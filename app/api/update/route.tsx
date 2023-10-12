@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     creature = new CreatureClass(await getCreature(creatureId));//fetch creature from db
     if(creature.getInfo()===null){
       console.log("ERROR, no creature found")
-      return NextResponse.json({error:"no id in database"},{
+      return NextResponse.json({error:"noiddb"},{
         status: 404,
       })
     }

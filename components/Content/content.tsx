@@ -12,7 +12,7 @@ import useGlobalContext from '../context'
 
 export const Content = ()=>{
     const {clicks,creatureId,changeCreature,selectedMenu, creatureInfo, infoText, isPlayingAnimation, cycleMenu, creatureList} = useGlobalContext()
-    const {feedCommand,petCommand,loadCreature,newCreature,resetCreatureList } = useGlobalContext()
+    const {feedCommand,petCommand,loadCreature,newCreature} = useGlobalContext()
     const sMenu:any[] = selectedMenu;
 
     //touch
@@ -54,14 +54,14 @@ export const Content = ()=>{
                 chocoMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={infoText} /> :
                 chocoMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={creatureId}/> :
                 chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
-                chocoMenuList[id] === 'settings' ? <Settings deleteAll={resetCreatureList}/> :
+                chocoMenuList[id] === 'settings' ? <Settings/> :
             <div></div> ) 
         }
         return(
             newMenuList[id] === 'new' ? <NewChoco newChoco={newCreature} clicks={clicks}/>:
             newMenuList[id] === 'load' ? <LoadChoco loadChoco={loadCreature}/>:
             newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
-            newMenuList[id] === 'settings' ? <Settings deleteAll={resetCreatureList}/> :
+            newMenuList[id] === 'settings' ? <Settings/> :
             <div></div>
         )
                  

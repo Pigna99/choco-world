@@ -8,7 +8,7 @@ import { checkCreatureId, validateNewCreature, isUpdateTime } from "@/utils/fron
 type GlobalPropsProvided = { 
     isFirstLoading:boolean,  isFetching:boolean, isPlayingAnimation:boolean, sprite:spritesSettings, infoText:string, creatureInfo:Creature, creatureId:string, creatureList:savedChoco[], selectedMenu:number[],  clicks:number,
     feedCommand:MouseEventHandler, petCommand:MouseEventHandler,//actions
-    resetCreatureList:MouseEventHandler,//settings
+    resetCreatureList:MouseEventHandler,removeActualCreature:MouseEventHandler//settings
     loadCreature:(id:string)=>void, newCreature:(name:string,color:string,gender:Gender)=>void, changeCreature:(id:string)=>void, //load, new, change
     cycleMenu:(left:boolean)=>(()=>void),//menu
     clickScreen:MouseEventHandler,//screen
@@ -35,11 +35,13 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [creatureList, setCreatureList] = useState<savedChoco[]>([]);//list of creatures, saved in local storage
     const [creatureId, setCreatureId] = useState<string>('');//actual creature loaded
 
+    const changeCreature=(id:string)=>{
+        if(id!==creatureId)setCreatureId(id)
+    }
     const addCreatureToList = (c:savedChoco)=>{//add new creature to list, and set new actual creature id
         setCreatureList([...creatureList,c])
         setCreatureId(c.id)
     }
-
     const saveCreatureList = ()=>{
         save({list:creatureList, last_choco:creatureId});
     }
@@ -48,10 +50,21 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         const info:frontend_info = load()
         setCreatureId(info.last_choco)//set last saved
         setCreatureList(info.list)
-        
     }
-    const changeCreature=(id:string)=>{
-        if(id!==creatureId)setCreatureId(id)
+    const removeActualCreature = ()=>{
+        
+        if(creatureList.length===0)return;
+        for(let i=0; i<creatureList.length; ++i){
+            if(creatureList[i].id===creatureId){
+                let newList = creatureList;
+                newList.splice(i,1);
+                let newId = newList.length!==0 ? newList[0].id : 'new'
+                setCreatureList(newList)
+                setCreatureId(newId)
+                save({list:newList,last_choco:newId})
+                return;
+            }
+        }
     }
 
     //TIMEOUT LOGIC
@@ -157,6 +170,9 @@ export const GlobalProvider = (props: PropsWithChildren) => {
             console.log("ERROR! API DATA NOT RECEIVED");
             if(isFirstLoading)setIsFirstLoading(false)//for loading screen
             if(resetClicks)setClicks(clicks-10)
+            if(data.error === 'noiddb'){
+                removeActualCreature();
+            }
             return[false,null]; 
         }
         if(loading)setIsFetching(false);
@@ -229,7 +245,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     }, [isUpdatedCreatureInfo,isUpdatedlastUpdate])
 
     return (
-      <GlobalContext.Provider value={{isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
+      <GlobalContext.Provider value={{removeActualCreature,isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
         {props.children}
       </GlobalContext.Provider>
     );
