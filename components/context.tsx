@@ -143,7 +143,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
 
         await apiCore('pet', false);
     }
-    const updateCommand = async (force?:boolean) => {
+    const updateCommand = async (force?:boolean, then?:()=>void) => {
         if (creatureId==='' || creatureId==='new')return;
         if (!isUpdateTime(lastUpdate) && !force) {//update only visual, not API
             updateVisuals(creatureInfo.state)
@@ -152,6 +152,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         };
 
         await apiCore('update', true);
+        if(then)then()
     }
     const apiCore = async (api: API_string, forceVisual?: boolean) => {
         const response = await apiFetch(`/api/${api}?id=${creatureId}`, true);
@@ -213,11 +214,13 @@ export const GlobalProvider = (props: PropsWithChildren) => {
 
     useEffect(() => {//first update+menu change
         if(creatureId!== '' &&creatureId!== 'new'){//first update and set a creature throgh id
-            setSelectedMenu(startMenu);
+            ;//set at the end of fetch
             updateVisuals('loading');
             stopTimeout();
-            updateCommand(true);
-            saveCreatureList();
+            updateCommand(true, ()=>{
+                setSelectedMenu(startMenu);
+                saveCreatureList();
+            });
             return;
         }
         if(creatureId==='new'){//new creature setting screen
