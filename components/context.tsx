@@ -15,6 +15,7 @@ type GlobalPropsProvided = {
     loadCreature:(id:string)=>void, newCreature:(name:string,color:string,gender:Gender)=>void, changeCreature:(id:string)=>void, //load, new, change
     cycleMenu:(left:boolean)=>(()=>void),//menu
     clickScreen:MouseEventHandler,//screen
+    isAudioPlaying:boolean, toggleAudio:()=>void//audio
 }
 
 const GlobalContext = createContext<GlobalPropsProvided|null|any>(null);
@@ -25,6 +26,11 @@ const startMenuNew = {name:'new',list:[newMenuList.length-1,0,1]}
 let startUpdateTimeout: NodeJS.Timeout |null= null;
 
 export const GlobalProvider = (props: PropsWithChildren) => {
+    //audio
+    const [isAudioPlaying, setAudioIsPlaying] = useState(false);
+    const toggleAudio=()=>{
+        setAudioIsPlaying(!isAudioPlaying)
+    }
     //loading tools
     const [isFirstLoading, setIsFirstLoading] = useState(true); //first load 
     const [isFetching, setIsFetching] = useState(false); //fetching 
@@ -262,7 +268,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     }, [isUpdatedCreatureInfo,isUpdatedlastUpdate])
 
     return (
-      <GlobalContext.Provider value={{removeActualCreature,isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
+      <GlobalContext.Provider value={{isAudioPlaying, toggleAudio, removeActualCreature,isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
         {props.children}
       </GlobalContext.Provider>
     );
