@@ -5,10 +5,13 @@ import { Creature, Gender, VisualState, savedChoco } from "@/utils/interfaces";
 import { VisualCreatureClass } from "@/utils/frontend/VisualCreatureClass";
 import { shiftMenu } from "@/utils/frontend/menu";
 import { checkCreatureId, validateNewCreature, isUpdateTime } from "@/utils/frontend/fetchValidation";
+
+
+
 type GlobalPropsProvided = { 
     isFirstLoading:boolean,  isFetching:boolean, isPlayingAnimation:boolean, sprite:spritesSettings, infoText:string, creatureInfo:Creature, creatureId:string, creatureList:savedChoco[], selectedMenu:{name:string, list:number[]},  clicks:number,
     feedCommand:MouseEventHandler, petCommand:MouseEventHandler,//actions
-    resetCreatureList:MouseEventHandler,removeActualCreature:MouseEventHandler//settings
+    resetCreatureList:MouseEventHandler,removeActualCreature:MouseEventHandler,//settings
     loadCreature:(id:string)=>void, newCreature:(name:string,color:string,gender:Gender)=>void, changeCreature:(id:string)=>void, //load, new, change
     cycleMenu:(left:boolean)=>(()=>void),//menu
     clickScreen:MouseEventHandler,//screen
@@ -248,7 +251,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     }, [lastUpdate])
 
     useEffect(()=>{
-        console.log(selectedMenu)
+        //console.log(selectedMenu)
     }, [selectedMenu])
 
     useEffect(() => {//than we can do a new timeout

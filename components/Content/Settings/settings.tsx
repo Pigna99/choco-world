@@ -2,14 +2,17 @@ import { Button } from '@/components/utilsComponents/buttons'
 import styles from './settings.module.css'
 import { MouseEventHandler, useState } from 'react'
 import useGlobalContext from '@/components/context'
+import ReactHowler from 'react-howler'
 
 export const Settings = ()=>{
     const {removeActualCreature, resetCreatureList, creatureId} = useGlobalContext()
+    const [isPlaying, setIsPlaying] = useState(false);
     return(
         <div className={styles.container}>
             <SettingValidator name='delete all local data' clickEvent={resetCreatureList}/>
             {(creatureId!== '' && creatureId !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreature}/>:null}
-            
+            <SettingValidator name='sound test' clickEvent={()=>setIsPlaying(!isPlaying)}/>
+            <ReactHowler src={'/music/chocotheme.mp3'} playing={isPlaying}/>
         </div>
     )
 }
