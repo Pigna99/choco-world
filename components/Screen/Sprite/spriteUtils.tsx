@@ -14,7 +14,7 @@ import hatching from "./Sprites/hatching";
 const getSprite=(sprite:spritesList)=>{
     const baseStatiFPS= 32;
     let returnValues =
-    {sprite:none, fps:baseStatiFPS, loop:true}
+    {sprite:none, fps:baseStatiFPS}
     switch (sprite) {
         case 'eat':  returnValues.sprite = eat; returnValues.fps = 8 ;break;
         case 'happy':  returnValues.sprite = happy; returnValues.fps = 12 ;break;
@@ -23,9 +23,9 @@ const getSprite=(sprite:spritesList)=>{
         case 'walk-top':  returnValues.sprite = walktop; returnValues.fps = 16 ;break;
         case 'walk-bottom':  returnValues.sprite = walkbottom; returnValues.fps = 16 ;break;
         case 'walk-right':  returnValues.sprite = walkright; returnValues.fps =  16;break;
-        case 'egg': returnValues.sprite = egg; returnValues.fps = baseStatiFPS; returnValues.loop=false; break;
+        case 'egg': returnValues.sprite = egg; returnValues.fps = baseStatiFPS; break;
         case 'eggshake': returnValues.sprite = eggshake; returnValues.fps = baseStatiFPS;break;
-        case 'hatching': returnValues.sprite = hatching; returnValues.fps = 6; returnValues.loop=false;break;
+        case 'hatching': returnValues.sprite = hatching; returnValues.fps = 6;break;
         case 'none':
         default: returnValues.sprite = none; returnValues.fps = 16;break;
     }

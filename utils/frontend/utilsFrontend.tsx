@@ -1,14 +1,75 @@
-import { Creature, savedChoco } from "../interfaces";
+import { Dispatch, SetStateAction } from "react";
+import { Creature, VisualState, savedChoco } from "../interfaces";
 import { TICK_VALUE } from "../settings";
 
 type spritesList =
-    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'hatching-end'|'none';
+    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'none';
+
+type spritesSettings = {
+    name:spritesList,
+    loop:boolean,
+    numLoops?:number
+    onEnd?:()=>void
+}
+
+const updateVisualsLogic=(v: VisualState, setSprite:Dispatch<SetStateAction<spritesSettings>>, setInfoText:Dispatch<SetStateAction<string>>)=>{
+    switch (v) {
+        case 'walking':
+            let r = Math.floor(Math.random() * 4)
+            const walking_sprites: spritesList[] = ['walk-bottom', 'walk-right', 'walk-left', 'walk-top']
+            setSprite({name:walking_sprites[r], loop:true})//randomize walking better
+            setInfoText('walking...')
+            break;
+        case 'sleeping':
+            setSprite({name:'sleep', loop:true})
+            setInfoText('sleeping...')
+            break;
+        case 'idle':
+            setSprite({name:'stand', loop:true})
+            break;
+        case 'idle-feed':
+            setSprite({name:'stand', loop:true})
+            setInfoText('not hungry')
+            console.log('You have to wait more before eating again')
+            break;
+        case 'idle-pet':
+            setSprite({name:'stand', loop:true})
+            setInfoText('try pet later')
+            console.log('You have to wait more before petting again')
+            break;
+        case 'eating':
+            setSprite({name:'eat', loop:true})
+            setInfoText('eating!')
+            break;
+        case 'happy':
+            setSprite({name:'happy', loop:true})
+            setInfoText('happy!')
+            break;
+        case 'egg':
+            setSprite({name:'egg', loop:false})
+            break;
+        case 'eggshake':
+            setSprite({name:'eggshake',loop:false, numLoops:0, onEnd:()=>{
+                updateVisualsLogic('egg', setSprite, setInfoText)
+            }})
+            break;  
+        case 'hatching':
+            setSprite({name:'hatching', loop:false})
+            break;  
+        case 'loading':
+            setSprite({name:'none', loop:false})
+            setInfoText('loading info...')
+            break;   
+        default:
+            console.log('error, no animation')
+            break;
+    }
+}
 
 type menu = 'stats' | 'actions' | 'info' | 'settings' | 'chocos' | 'new' | 'load'
 
 const chocoMenuList:menu[] = ['stats', 'actions', 'info', 'settings', 'chocos']    
 const newMenuList:menu[] = ['new','load', 'settings','chocos']  
-const spritesArray:spritesList[] = ['eat','happy','sleep','stand','walk-bottom','walk-right','walk-left','walk-top'];
 
 type menu_interface ={left:number,actual:number,right:number}
 
@@ -47,5 +108,5 @@ const getRange=(start:number, end:number)=>{
 }
 
 
-export type {spritesList, menu, API_string, menu_interface, frontend_info}
-export{getTicksFromDate, precalcFeed, precalcPet,spritesArray,chocoMenuList,newMenuList,generateArrayFrame, getRange}
+export type {spritesList, menu, API_string, menu_interface, frontend_info, spritesSettings}
+export{getTicksFromDate, precalcFeed, precalcPet,chocoMenuList,newMenuList,generateArrayFrame, getRange, updateVisualsLogic}

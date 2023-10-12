@@ -2,7 +2,7 @@ import { newCreature } from '@/utils/backend/database';
 import { getGender, validateGender, validateHexColor } from '@/utils/backend/utilsBackend';
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   const { searchParams } = new URL(request.url)
   const creatureName = searchParams.get('name');
   let creatureColor = searchParams.get('color');

@@ -1,5 +1,5 @@
 type State = 'sleeping'|'walking'
-type VisualState = State | 'idle'|'eating'|'happy'|'idle-feed'|'idle-pet'
+type VisualState = State | 'idle'|'eating'|'happy'|'idle-feed'|'idle-pet' |'egg' |'hatching'|'loading'|'eggshake'
 
 type Gender = 'male' |'female'
 interface Stat{

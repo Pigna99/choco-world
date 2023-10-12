@@ -2,7 +2,6 @@ import React, { MouseEventHandler, useEffect, useState } from 'react'
 import styles from './newChoco.module.css'
 import {Input, ColorInput} from '@/components/utilsComponents/input'
 import { GenderIcon } from '@/components/utilsComponents/icons'
-import { Button } from '@/components/utilsComponents/buttons'
 import { Gender } from '@/utils/interfaces'
 
 

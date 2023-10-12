@@ -1,16 +1,22 @@
-import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { Dispatch, MouseEventHandler, PropsWithChildren, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { load, reset, save } from '@/utils/frontend/localStorage'
-import { API_string, chocoMenuList, frontend_info, getRange, newMenuList, precalcFeed, precalcPet, spritesList } from "@/utils/frontend/utilsFrontend";
+import { API_string, chocoMenuList, frontend_info, getRange, newMenuList, precalcFeed, precalcPet, spritesSettings, updateVisualsLogic } from "@/utils/frontend/utilsFrontend";
 import { Creature, Gender, VisualState, savedChoco } from "@/utils/interfaces";
 import { VisualCreatureClass } from "@/utils/frontend/VisualCreatureClass";
-import { TICK_VALUE } from "@/utils/settings";
 import { shiftMenu } from "@/utils/frontend/menu";
-type GlobalPropsProvided = any
+import { checkCreatureId, validateNewCreature, isUpdateTime } from "@/utils/frontend/fetchValidation";
+type GlobalPropsProvided = { 
+    isFirstLoading:boolean,  isFetching:boolean, isPlayingAnimation:boolean, sprite:spritesSettings, infoText:string, creatureInfo:Creature, creatureId:string, creatureList:savedChoco[], selectedMenu:number[],  clicks:number,
+    feedCommand:MouseEventHandler, petCommand:MouseEventHandler,//actions
+    resetCreatureList:MouseEventHandler,//settings
+    loadCreature:(id:string)=>void, newCreature:(name:string,color:string,gender:Gender)=>void, changeCreature:(id:string)=>void, //load, new, change
+    cycleMenu:(left:boolean)=>(()=>void),//menu
+    clickScreen:MouseEventHandler,//screen
+}
 
-// 1. create a context with ThemeState and initialize it to null
-const GlobalContext = createContext<GlobalPropsProvided>(null);
+const GlobalContext = createContext<GlobalPropsProvided|null|any>(null);
 
-let startElement: spritesList = 'stand';
+let startSprite: spritesSettings = {name:'none',loop:true}
 let startMenu = [chocoMenuList.length-1,0,1];
 let startUpdateTimeout: NodeJS.Timeout |null= null;
 
@@ -21,7 +27,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [isFirstUpdate, setIsFirstUpdate] = useState(true)//only for prevent the first rendering useEffect!
 
     //sprites and infotext
-    const [sprite, setSprite] = useState(startElement);//actual sprite playing
+    const [sprite, setSprite] = useState<spritesSettings>(startSprite);//playing sprite with settings
     const [isPlayingAnimation, setIsPlayingAnimation] = useState(false);//check if an important animation is playing
     const [infoText, setInfoText] = useState('loading...');//info text of the actual action
 
@@ -62,15 +68,11 @@ export const GlobalProvider = (props: PropsWithChildren) => {
 
     //clicks on main screen
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
-    const clickEgg = (e:MouseEvent)=>{
-        if(sprite==='hatching'){
-            return stopTimeout();
-        }
+    const clickScreen = (e:MouseEvent)=>{
+        //console.log(clicks)
         setClicks(clicks+1)
-        //console.log(clicks, sprite)
-        if(sprite==='egg'){
-            //console.log('settting eggshake')
-            setSprite('eggshake');
+        if(sprite.name==='egg'){
+            updateVisuals('eggshake');
         }
     }
     //clicks on main screen
@@ -79,89 +81,38 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [lastUpdate, setLastUpdate] = useState(new Date(0));
     const [isUpdatedlastUpdate, setIsUpdatedlastUpdate] = useState(false);//wait for the end for saving (useEffect)
 
-    const isUpdateTime = ():boolean => {//check if is time to update, and if true set new time
-        //const timeLeft = (new Date()).getTime() - (lastUpdate.getTime()+TICK_VALUE*60000)
-        const value = (lastUpdate.getTime() + TICK_VALUE * 60000) < (new Date()).getTime()
-        //console.log(timeLeft/1000, value)
-        return value
-    }
-    //check if is time to update the creature from API
-
-
-    
-    
     const [creatureInfo, setCreatureInfo] = useState(VisualCreatureClass.generatePlaceholder());//change to a special info class/interface
     const [isUpdatedCreatureInfo, setIsUpdatedCreatureInfo] = useState(false);//wait for the end of saving (useEffect)
     
-    
     //fetching commands
     const loadCreature = async (id:string) =>{
-        console.log("Check id")
-        //check if this id is present in the list:
-        for(let i=0; i<creatureList.length;++i){
-            if(id===creatureList[i].id){
-                console.log('id is already in list')
-                return;
-            }
-        }
-        setIsFetching(true);
-        const res = await fetch(`/api/check?id=${id}`)
-        const data = await res.json()
-        if (!data) {
-            console.log("ERROR! DATA NOT RECEIVED");
-            setIsFetching(false);
-            return;
-        }
-        if(!data.found) {
-            console.log("id not found");
-            setIsFetching(false);
-            return;
-        }
-        if (!data.savedCreature) {
-            console.log("ERROR! CREATURE INFO NOT RECEIVED");
-            setIsFetching(false);
-            return; }
-        const c: savedChoco = data.savedCreature;
+        if(!checkCreatureId(id, creatureList))return;
+        const response = await apiFetch(`/api/check?id=${id}`, true);
+        if(!response[0])return;
+        const c: savedChoco = response[1].savedCreature;
         addCreatureToList(c);
-        setIsFetching(false);
     }
-
     const newCreature = async(name:string, color:string, gender:Gender)=>{
-        if(name.length<2 || name.length>20)return;//validate lenght
-        //validate color!
+        if(!validateNewCreature(name,color))return;
+        stopTimeout()
         console.log("Creating a new Creature");
         if(name==='test'){
             console.log('setting hatching')
-            setSprite("hatching")
-            stopTimeout()
+            updateVisuals("hatching")
             return;
         }
-        const fetchstring =`/api/new?name=${name}&color=${color.split('#')[1]}&gender=${gender}`;
-        //console.log(fetchstring)
-        const res = await fetch(fetchstring)
-        const data = await res.json()
-        if (!data) {
-            console.log("ERROR! DATA NOT RECEIVED");
-            setClicks(clicks-10)
-            return;
-        }
-        if (!data.savedCreature) {
-            console.log("ERROR! CREATURE INFO NOT RECEIVED");
-            setClicks(clicks-10)
-            return; }
-        const c: savedChoco = data.savedCreature;
-        let cr = creatureInfo;
-        cr.color= c.color;
-        setCreatureInfo(cr);
-        //console.log('settting hatching')
-        setSprite("hatching")
-        setTimeout(()=>{addCreatureToList(c)},8000)
+        const response = await apiFetch(`/api/new?name=${name}&color=${color.split('#')[1]}&gender=${gender}`, false, true);
+        if(!response[0])return;
+        const c: savedChoco = response[1].savedCreature;
+        setCreatureInfo({...creatureInfo, color: c.color});
+        //console.log('setting hatching')
+        updateVisuals("hatching")//change to setAnimation
+        setTimeout(()=>{addCreatureToList(c)},8000)//not always working (or working double!)
     }
     const feedCommand = async (e: MouseEvent) => {
         if (isPlayingAnimation) return;//make animation not interruptable!
         stopTimeout()//stop autoupdate timeout
         setIsPlayingAnimation(true)
-    
         precalcFeed(creatureInfo) ? updateVisuals('eating') : updateVisuals('idle-feed')//precalc if you can feed or not for fast update
 
         await apiCore('feed', false);
@@ -170,14 +121,13 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         if (isPlayingAnimation) return;//make animation not interruptable!
         stopTimeout()
         setIsPlayingAnimation(true)
-        
         precalcPet(creatureInfo) ? updateVisuals('happy') : updateVisuals('idle-pet')//precalc if you can pet or not for fast update
 
         await apiCore('pet', false);
     }
     const updateCommand = async (force?:boolean) => {
         if (creatureId==='' || creatureId==='new')return;
-        if (!isUpdateTime() && !force) {//update only visual, not API
+        if (!isUpdateTime(lastUpdate) && !force) {//update only visual, not API
             updateVisuals(creatureInfo.state)
             newTimeout(updateCommand,5000);
             return;
@@ -185,28 +135,28 @@ export const GlobalProvider = (props: PropsWithChildren) => {
 
         await apiCore('update', true);
     }
-
     const apiCore = async (api: API_string, forceVisual?: boolean) => {
-        const response = await apiFetch(`/api/${api}?id=${creatureId}`);
+        const response = await apiFetch(`/api/${api}?id=${creatureId}`, true);
         if(!response[0])return;
         const creature: Creature = response[1].creature;
         setCreatureInfo(creature)
-        if(forceVisual) updateVisuals(creature.state)
+        if(forceVisual) updateVisuals(creature.state)//update the visual state after fetching
     }
-
-    const apiFetch = async (apiString:string, loading?:boolean ,clicks?:boolean)=>{
+    const apiFetch = async (apiString:string, loading:boolean ,resetClicks?:boolean)=>{
         console.log("Update API")
         if(loading)setIsFetching(true);
-        const res = await fetch(apiString)
+        const res = await fetch(apiString, {method: 'POST'})
         const data = await res.json()
         if (!data) {
             console.log("ERROR! FETCH DATA NOT RECEIVED");
             if(isFirstLoading)setIsFirstLoading(false)//for loading screen
+            if(resetClicks)setClicks(clicks-10)
             return[false, null];
         }
-        if (!data.creature) { 
+        if (!data.creature && !data.savedCreature) { 
             console.log("ERROR! API DATA NOT RECEIVED");
             if(isFirstLoading)setIsFirstLoading(false)//for loading screen
+            if(resetClicks)setClicks(clicks-10)
             return[false,null]; 
         }
         if(loading)setIsFetching(false);
@@ -215,45 +165,11 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         return [true,data]
     }
     
-
+    //update sprite and infoText
     const updateVisuals = (v: VisualState) => {
-        switch (v) {
-            case 'walking':
-                let r = Math.floor(Math.random() * 4)
-                const walking_sprites: spritesList[] = ['walk-bottom', 'walk-right', 'walk-left', 'walk-top']
-                setSprite(walking_sprites[r])//randomize walking better
-                setInfoText('walking...')
-                break;
-            case 'sleeping':
-                setSprite('sleep')
-                setInfoText('sleeping...')
-                break;
-            case 'idle':
-                setSprite('stand')
-                break;
-            case 'idle-feed':
-                setSprite('stand')
-                setInfoText('not hungry')
-                console.log('You have to wait more before eating again')
-                break;
-            case 'idle-pet':
-                setSprite('stand')
-                setInfoText('try pet later')
-                console.log('You have to wait more before petting again')
-                break;
-            case 'eating':
-                setSprite('eat')
-                setInfoText('eating!')
-                break;
-            case 'happy':
-                setSprite('happy')
-                setInfoText('happy!')
-                break;
-            default:
-                break;
-        }
+        updateVisualsLogic(v, setSprite, setInfoText);
     }
-
+    
      //menu
     const [selectedMenu, setSelectedMenu] = useState(startMenu) //actual selected menu
     
@@ -275,47 +191,27 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     }, [])
 
     useEffect(() => {//first update+menu change
-        if(creatureId!== '' &&creatureId!== 'new'){//first update and set a creature
+        if(creatureId!== '' &&creatureId!== 'new'){//first update and set a creature throgh id
             setSelectedMenu(startMenu);
-            //setSelectedMenu([chocoMenuList.length-3,chocoMenuList.length-2,chocoMenuList.length-1]);
-            setSprite('none');
+            updateVisuals('loading');
             stopTimeout();
             updateCommand(true);
             saveCreatureList();
             return;
         }
-        if(creatureId==='new'){
-            //console.log('new creature')
+        if(creatureId==='new'){//new creature setting screen
+            if(isFirstLoading)setIsFirstLoading(false)
             setSelectedMenu([newMenuList.length-1,0,1]);
-            newTimeout(()=>setSprite('egg'),50);
-            
+            stopTimeout();
+            updateVisuals('egg')
             return;
         }
 
     }, [creatureId])
 
-    useEffect(() => {//first update+menu change
+    useEffect(() => {//save creature list in local storage
         if(creatureList.length>0)saveCreatureList();
-        //console.log(creatureList)
     }, [creatureList])
-
-
-    useEffect(() => {
-        //console.log(sprite)
-        if(sprite==='egg'){
-            newTimeout(()=>{setSprite('eggshake');},getRange(3000,10000));
-            setTimeout(()=>{
-                if(creatureId==='new'){
-                    if(isFirstLoading)setIsFirstLoading(false)
-                }
-            },100);
-            return;
-        }
-        if(sprite==='eggshake'){
-            newTimeout(()=>{setSprite('egg');},getRange(200,600));
-        }
-        
-    }, [sprite])
 
     useEffect(() => {//if creature is saved
         if(!isFirstUpdate)setIsUpdatedCreatureInfo(true);
@@ -332,23 +228,15 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         }
     }, [isUpdatedCreatureInfo,isUpdatedlastUpdate])
 
-    
-
-
-
-
     return (
-      <GlobalContext.Provider value={{isFirstLoading, sprite, creatureInfo, clickEgg, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
+      <GlobalContext.Provider value={{isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
         {props.children}
       </GlobalContext.Provider>
     );
   };
 
 const useGlobalContext = () : GlobalPropsProvided => {
-  // 2. use the useContext hook
   const context = useContext(GlobalContext);
-
-  // 3. Make sure it's not null!
   if (!context) {
     throw new Error("Please use GlobalProvider in parent component");
   }

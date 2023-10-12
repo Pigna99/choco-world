@@ -11,7 +11,7 @@ import LoadChoco from './LoadChoco/loadChoco'
 import useGlobalContext from '../context'
 
 export const Content = ()=>{
-    const {clicks,creatureId,changeCreature,selectedMenu, creatureInfo, action, isPlayingAnimation, cycleMenu, creatureList} = useGlobalContext()
+    const {clicks,creatureId,changeCreature,selectedMenu, creatureInfo, infoText, isPlayingAnimation, cycleMenu, creatureList} = useGlobalContext()
     const {feedCommand,petCommand,loadCreature,newCreature,resetCreatureList } = useGlobalContext()
     const sMenu:any[] = selectedMenu;
 
@@ -51,7 +51,7 @@ export const Content = ()=>{
         if(creatureId!=='new'){
             return (
                 chocoMenuList[id] === 'stats' ? <Stats info={creatureInfo} /> :
-                chocoMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={action} /> :
+                chocoMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={infoText} /> :
                 chocoMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={creatureId}/> :
                 chocoMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
                 chocoMenuList[id] === 'settings' ? <Settings deleteAll={resetCreatureList}/> :
