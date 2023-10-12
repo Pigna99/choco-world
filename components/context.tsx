@@ -36,7 +36,10 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [creatureId, setCreatureId] = useState<string>('');//actual creature loaded
 
     const changeCreature=(id:string)=>{
-        if(id!==creatureId)setCreatureId(id)
+        if(id!==creatureId){
+            setCreatureId(id);
+            setIsPlayingAnimation(false)
+        }
     }
     const addCreatureToList = (c:savedChoco)=>{//add new creature to list, and set new actual creature id
         setCreatureList([...creatureList,c])
