@@ -1,6 +1,6 @@
-import { Dispatch, MouseEventHandler, PropsWithChildren, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { MouseEventHandler, PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { load, reset, save } from '@/utils/frontend/localStorage'
-import { API_string, chocoMenuList, frontend_info, getRange, newMenuList, precalcFeed, precalcPet, spritesSettings, updateVisualsLogic } from "@/utils/frontend/utilsFrontend";
+import { API_string, chocoMenuList, frontend_info, newMenuList, precalcFeed, precalcPet, spritesSettings, updateVisualsLogic } from "@/utils/frontend/utilsFrontend";
 import { Creature, Gender, VisualState, savedChoco } from "@/utils/interfaces";
 import { VisualCreatureClass } from "@/utils/frontend/VisualCreatureClass";
 import { shiftMenu } from "@/utils/frontend/menu";
@@ -83,7 +83,9 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
     const clickScreen = (e:MouseEvent)=>{
         //console.log(clicks)
-        setClicks(clicks+1)
+        if(sprite.name!=='hatching'){
+            setClicks(clicks+1)
+        }
         if(sprite.name==='egg'){
             updateVisuals('eggshake');
         }
