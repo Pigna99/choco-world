@@ -1,6 +1,5 @@
 import { Creature } from '@/utils/interfaces'
 import styles from './info.module.css'
-import { GenderIcon } from '../../utilsComponents/icons'
 
 export const Info = ({infoBox,creatureId}:{infoBox:Creature,creatureId:string|null})=>{
     return(
@@ -9,9 +8,13 @@ export const Info = ({infoBox,creatureId}:{infoBox:Creature,creatureId:string|nu
             <div>{`Times fed: ${infoBox.informations.feeds}`}</div>
             <div>{`Times petted: ${infoBox.informations.pets}`}</div>
             <div>{`Km done: ${infoBox.informations.steps}`}</div>
-            <div><span style={{fontSize:15}}>id:{creatureId}</span></div>
+            <div><span style={{fontSize:15}}>id:<span className={styles.copy} onClick={()=>{creatureId? copyId(creatureId):null}}>{creatureId}</span></span></div>
         </div>
     )
+}
+
+const copyId = (id:string)=>{
+    navigator.clipboard.writeText(id);
 }
 
 const formatDate=(d:Date)=>{
