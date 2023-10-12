@@ -86,3 +86,8 @@
     border-bottom: 0;
     background-color: white;
 }
+
+.loadingContainer{
+    position: absolute;
+    width: 100%;
+}

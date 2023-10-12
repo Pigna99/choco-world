@@ -8,15 +8,17 @@ import { useEffect, useState } from "react"
 const LoadingSpinner = ({visible}:{visible:boolean})=>{
     return(
         <div className={styles.loading}>
+            <div className={styles.loadingContainer}>
             {
                 visible ? <Loading/>: <div style={{height:10}}/>
             }
+            </div>
         </div>
     )
 }
 
 const Loading = () =>{
-    return <Sprite fps={18} framesArray={loading} color={''} width={"100%"} height={"10px"} loop/>
+    return <Sprite fps={18} framesArray={loading} color={'#000000'} width={"100%"} height={"10px"} loop/>
 }
 
 const LoadingScreen = ({ isLoading}: { isLoading:boolean}) => {

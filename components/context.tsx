@@ -161,7 +161,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         if(forceVisual) updateVisuals(creature.state)//update the visual state after fetching
     }
     const apiFetch = async (apiString:string, loading:boolean ,resetClicks?:boolean)=>{
-        console.log("Update API")
+        console.log("Update API - "+apiString)
         if(loading)setIsFetching(true);
         const res = await fetch(apiString, {method: 'POST'})
         const data = await res.json()
