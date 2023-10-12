@@ -43,7 +43,6 @@ function NewChoco({newChoco, clicks}:{clicks:number, newChoco:(name:string,color
           </div>
          */
       }
-      
     </div>
   )
 }

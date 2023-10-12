@@ -16,9 +16,13 @@ function ChocoList({selectedChocoId, changeChoco, chocoArray}:{selectedChocoId:s
           )
         })
       }
-      <ListElement active={selectedChocoId==='new'} onClick={()=>{if('new'!==selectedChocoId)changeChoco('new')}}>
-        <div className={styles.new}>new choco</div>
-      </ListElement>
+      {
+        chocoArray.length>=3 ? null:
+        <ListElement active={selectedChocoId==='new'} onClick={()=>{if('new'!==selectedChocoId)changeChoco('new')}}>
+          <div className={styles.new}>new choco</div>
+        </ListElement>
+      }
+      
     </div>
   )
 }
