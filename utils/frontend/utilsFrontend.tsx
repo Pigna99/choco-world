@@ -9,7 +9,8 @@ type spritesSettings = {
     name:spritesList,
     loop:boolean,
     numLoops?:number
-    onEnd?:()=>void
+    onEnd?:()=>void,
+    fps?:number
 }
 
 const updateVisualsLogic=(v: VisualState, setSprite:Dispatch<SetStateAction<spritesSettings>>, setInfoText:Dispatch<SetStateAction<string>>)=>{
@@ -17,32 +18,32 @@ const updateVisualsLogic=(v: VisualState, setSprite:Dispatch<SetStateAction<spri
         case 'walking':
             let r = Math.floor(Math.random() * 4)
             const walking_sprites: spritesList[] = ['walk-bottom', 'walk-right', 'walk-left', 'walk-top']
-            setSprite({name:walking_sprites[r], loop:true})//randomize walking better
+            setSprite({name:walking_sprites[r], loop:true, fps:16})//randomize walking better
             setInfoText('walking...')
             break;
         case 'sleeping':
-            setSprite({name:'sleep', loop:true})
+            setSprite({name:'sleep', loop:true, fps:8})
             setInfoText('sleeping...')
             break;
         case 'idle':
-            setSprite({name:'stand', loop:true})
+            setSprite({name:'stand', loop:true, fps:4})
             break;
         case 'idle-feed':
-            setSprite({name:'stand', loop:true})
+            setSprite({name:'stand', loop:true, fps:4})
             setInfoText('not hungry')
             console.log('You have to wait more before eating again')
             break;
         case 'idle-pet':
-            setSprite({name:'stand', loop:true})
+            setSprite({name:'stand', loop:true, fps:4})
             setInfoText('try pet later')
             console.log('You have to wait more before petting again')
             break;
         case 'eating':
-            setSprite({name:'eat', loop:true})
+            setSprite({name:'eat', loop:true, fps:8})
             setInfoText('eating!')
             break;
         case 'happy':
-            setSprite({name:'happy', loop:true})
+            setSprite({name:'happy', loop:true, fps:12})
             setInfoText('happy!')
             break;
         case 'egg':
@@ -54,7 +55,7 @@ const updateVisualsLogic=(v: VisualState, setSprite:Dispatch<SetStateAction<spri
             }})
             break;  
         case 'hatching':
-            setSprite({name:'hatching', loop:false})
+            setSprite({name:'hatching', loop:false, fps:6})
             break;  
         case 'loading':
             setSprite({name:'none', loop:false})
