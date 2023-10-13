@@ -277,8 +277,8 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         setIsFirstUpdate(false)
         setCreatureId(info.last_choco)//set last saved
         setCreatureList(info.list)
-        setAudioSettings({...audioSettings, isPlaying:info.settings.audio?info.settings.audio:false})
-        setMusicSettings({...musicSettings, isPlaying:info.settings.music?info.settings.music:false})
+        setAudioSettings({...audioSettings, isPlaying:info.settings?info.settings.audio:false})
+        setMusicSettings({...musicSettings, isPlaying:info.settings?info.settings.music:false})
         stopTimeout()
     }, [])
 
