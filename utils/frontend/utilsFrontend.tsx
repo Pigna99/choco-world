@@ -79,6 +79,10 @@ type API_string = 'update'|'pet'|'feed'
 type frontend_info = {
     list:savedChoco[],
     last_choco:string,
+    settings:{
+        music:boolean,
+        audio:boolean,
+    }
 }
 
 function getTicksFromDate(d:Date){//number of ticks from that Date to now

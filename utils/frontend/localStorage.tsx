@@ -1,6 +1,6 @@
 import { frontend_info } from "./utilsFrontend"
 
-const startingInfo = {list:[],last_choco:'new'}
+const startingInfo:frontend_info = {list:[],last_choco:'new',settings:{music:false,audio:false}}
 
 const save=(info:frontend_info)=>{
     localStorage.setItem('info', JSON.stringify(info));

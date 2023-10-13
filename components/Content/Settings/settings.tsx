@@ -4,13 +4,14 @@ import { MouseEventHandler, useState } from 'react'
 import useGlobalContext from '@/components/context'
 
 export const Settings = ()=>{
-    const {removeActualCreature, resetCreatureList, creatureId, toggleAudio} = useGlobalContext()
+    const {removeActualCreature, resetCreatureList, creatureId, toggleMusic, musicSettings,toggleAudio,audioSettings} = useGlobalContext()
     
     return(
         <div className={styles.container}>
             <SettingValidator name='delete all local data' clickEvent={resetCreatureList}/>
             {(creatureId!== '' && creatureId !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreature}/>:null}
-            <SettingValidator name='sound test' clickEvent={toggleAudio}/>
+            <SettingToggler name='music' clickEvent={toggleMusic} active={musicSettings.isPlaying}/>
+            <SettingToggler name='audio' clickEvent={toggleAudio} active={audioSettings.isPlaying}/>
         </div>
     )
 }
@@ -28,6 +29,21 @@ const SettingValidator = ({clickEvent,name}:{clickEvent:MouseEventHandler,name:s
                     <Button name='no' clickEvent={()=>setIsOpen(false)}/>
                 </div>
                 : <Button name={name} clickEvent={()=>{setIsOpen(true)}} style={styles.settingButton}/>
+            }
+        </div>
+    )
+}
+
+const SettingToggler = ({clickEvent,name, active}:{clickEvent:MouseEventHandler,name:string, active:boolean})=>{
+    return (
+        <div className={styles.toggler} onClick={clickEvent}>
+            
+            <div>{name+':'}</div>
+            {
+                active ? <span>{'<on>'}</span> : <span>{'on'}</span>
+            }
+            {
+                active ? <span>{'off'}</span> : <span>{'<off>'}</span>
             }
         </div>
     )

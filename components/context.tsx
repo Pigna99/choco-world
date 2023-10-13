@@ -5,7 +5,8 @@ import { Creature, Gender, VisualState, savedChoco } from "@/utils/interfaces";
 import { VisualCreatureClass } from "@/utils/frontend/VisualCreatureClass";
 import { shiftMenu } from "@/utils/frontend/menu";
 import { checkCreatureId, validateNewCreature, isUpdateTime } from "@/utils/frontend/fetchValidation";
-
+import { audiotrace, getMusic, musictrace } from "@/utils/frontend/audio";
+import {Howl, Howler} from 'howler'
 
 
 type GlobalPropsProvided = { 
@@ -15,7 +16,7 @@ type GlobalPropsProvided = {
     loadCreature:(id:string)=>void, newCreature:(name:string,color:string,gender:Gender)=>void, changeCreature:(id:string)=>void, //load, new, change
     cycleMenu:(left:boolean)=>(()=>void),//menu
     clickScreen:MouseEventHandler,//screen
-    isAudioPlaying:boolean, toggleAudio:()=>void//audio
+    audioSettings:{isPlaying:boolean, audio:audiotrace}, musicSettings:{isPlaying:boolean, music:musictrace},toggleMusic:()=>void, toggleAudio:()=>void, setMusic: (m:musictrace)=>void, setAudio: (a:audiotrace)=>void//audio, 
 }
 
 const GlobalContext = createContext<GlobalPropsProvided|null|any>(null);
@@ -27,10 +28,66 @@ let startUpdateTimeout: NodeJS.Timeout |null= null;
 
 export const GlobalProvider = (props: PropsWithChildren) => {
     //audio
-    const [isAudioPlaying, setAudioIsPlaying] = useState(false);
-    const toggleAudio=()=>{
-        setAudioIsPlaying(!isAudioPlaying)
+    const [musicSettings, setMusicSettings] = useState<{isPlaying:boolean, music:musictrace}>({isPlaying:false, music:'none'});
+    const [music, resetMusic] = useState<Howl|null>(null)
+    const [audioSettings, setAudioSettings] = useState<{isPlaying:boolean, audio:audiotrace}>({isPlaying:false, audio:'none'});
+    const [audio, resetAudio] = useState<Howl|null>(null)
+    const toggleMusic=()=>{
+        setMusicSettings({...musicSettings, isPlaying: !musicSettings.isPlaying})
     }
+    const toggleAudio=()=>{
+        setAudioSettings({...audioSettings, isPlaying: !audioSettings.isPlaying})
+    }
+    const setMusic= (m:musictrace)=>{
+        setMusicSettings({...musicSettings, music:m})
+    }
+    const setAudio= (a:audiotrace)=>{
+        setAudioSettings({...audioSettings, audio:a})
+    }
+
+    useEffect(() => {
+        if(music===null){//first setup howl
+            resetMusic(new Howl({
+                src:[getMusic('theme')]
+            }))
+            return;
+        }
+
+        if(musicSettings.isPlaying){
+            console.log('play')
+            music.play()
+        }else{
+            music.pause()
+        }
+        if(!isFirstUpdate)saveCreatureList()
+    }, [musicSettings.isPlaying])
+
+    useEffect(() => {
+      if(music===null)return;
+      if(!musicSettings.isPlaying){
+        resetMusic(new Howl({
+            src:[getMusic(musicSettings.music)],
+            loop:true
+        }))
+      }else{//fade, than change
+        let fading_time=700
+        music.fade(1,0,fading_time)
+        setTimeout(()=>{
+            music.stop()
+            resetMusic(new Howl({
+                src:[getMusic(musicSettings.music)],
+                loop:true
+            }))
+        },fading_time)
+      }
+    }, [musicSettings.music])
+
+    useEffect(() => {
+        if(musicSettings.isPlaying)music?.play()
+    }, [music])
+    
+    
+    
     //loading tools
     const [isFirstLoading, setIsFirstLoading] = useState(true); //first load 
     const [isFetching, setIsFetching] = useState(false); //fetching 
@@ -56,7 +113,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         setCreatureId(c.id)
     }
     const saveCreatureList = ()=>{
-        save({list:creatureList, last_choco:creatureId});
+        save({list:creatureList, last_choco:creatureId,settings:{audio:audioSettings.isPlaying,music:musicSettings.isPlaying}});
     }
     const resetCreatureList = ()=>{
         reset();
@@ -74,7 +131,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
                 let newId = newList.length!==0 ? newList[0].id : 'new'
                 setCreatureList(newList)
                 setCreatureId(newId)
-                save({list:newList,last_choco:newId})
+                save({list:newList,last_choco:newId,settings:{audio:audioSettings.isPlaying,music:musicSettings.isPlaying}})
                 return;
             }
         }
@@ -220,6 +277,8 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         setIsFirstUpdate(false)
         setCreatureId(info.last_choco)//set last saved
         setCreatureList(info.list)
+        setAudioSettings({...audioSettings, isPlaying:info.settings.audio})
+        setMusicSettings({...musicSettings, isPlaying:info.settings.music})
         stopTimeout()
     }, [])
 
@@ -228,7 +287,6 @@ export const GlobalProvider = (props: PropsWithChildren) => {
             updateVisuals('loading');
             stopTimeout();
             updateCommand(true, ()=>{
-                console.log('setting menu')
                 setSelectedMenu(startMenu);
                 saveCreatureList();
             });
@@ -239,6 +297,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
             setSelectedMenu(startMenuNew);
             stopTimeout();
             updateVisuals('egg')
+            setMusic('fight')
             return;
         }
 
@@ -264,11 +323,14 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         if(isUpdatedCreatureInfo && isUpdatedlastUpdate){
             newTimeout(async()=>{await updateCommand();setIsPlayingAnimation(false);},5000);
             setIsUpdatedCreatureInfo(false); setIsUpdatedlastUpdate(false);
+            if(creatureInfo.state==='walking')setMusic('theme')
+            if(creatureInfo.state==='sleeping')setMusic('sleep')
         }
+        
     }, [isUpdatedCreatureInfo,isUpdatedlastUpdate])
 
     return (
-      <GlobalContext.Provider value={{isAudioPlaying, toggleAudio, removeActualCreature,isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
+      <GlobalContext.Provider value={{setAudio, setMusic, audioSettings, musicSettings, toggleMusic, toggleAudio, removeActualCreature,isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
         {props.children}
       </GlobalContext.Provider>
     );

@@ -5,11 +5,11 @@ import { Menu } from './Menu/menu'
 import { LoadingScreen, LoadingSpinner } from './utilsComponents/loading'
 import { Content } from './Content/content'
 import useGlobalContext from './context'
-import ReactHowler from 'react-howler'
+
 
 
 export const Box = () => {
-    const {isFirstLoading, isFetching, isPlayingAnimation, isAudioPlaying} = useGlobalContext()
+    const {isFirstLoading, isFetching, isPlayingAnimation} = useGlobalContext()
 
     //window size
     const [windowSize, setWindowSize] = useState([
@@ -35,7 +35,6 @@ export const Box = () => {
             <Screen width={windowSize[0]+"px"} />
             <Content/>
             <Menu/>
-            <ReactHowler src={'/music/chocotheme.mp3'} playing={isAudioPlaying}/>
         </div>
     )
 }
