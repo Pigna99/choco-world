@@ -1,7 +1,8 @@
 type audiotrace = 'none'
 type musictrace = 'none' | 'theme' | 'fight' | 'sleep'
+const musicList:musictrace[] = ['theme','fight', 'sleep']
 
-const getMusic = (m:musictrace)=>{
+const getMusicPath = (m:musictrace)=>{
     let path='/music/'
     switch (m) {
         case 'theme':
@@ -19,7 +20,7 @@ const getMusic = (m:musictrace)=>{
     return path
 }
 
-const getAudio = (a:audiotrace)=>{
+const getAudioPath = (a:audiotrace)=>{
     let path='/audio/'
     switch (a) {
         case 'none':
@@ -32,4 +33,4 @@ const getAudio = (a:audiotrace)=>{
 }
 
 export type {audiotrace, musictrace}
-export {getMusic, getAudio}
+export {getMusicPath, getAudioPath, musicList}

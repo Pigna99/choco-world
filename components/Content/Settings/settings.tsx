@@ -4,12 +4,13 @@ import { MouseEventHandler, useState } from 'react'
 import useGlobalContext from '@/components/context'
 
 export const Settings = ()=>{
-    const {removeActualCreature, resetCreatureList, creatureId, toggleMusic, musicSettings,toggleAudio,audioSettings} = useGlobalContext()
+    const {removeActualCreature, resetCreatureList, creatureId, toggleMusic, musicSettings,toggleAudio,audioSettings, isPreload, togglePreload} = useGlobalContext()
     
     return(
         <div className={styles.container}>
             <SettingValidator name='delete all local data' clickEvent={resetCreatureList}/>
             {(creatureId!== '' && creatureId !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreature}/>:null}
+            <SettingToggler name='preload' clickEvent={togglePreload} active={isPreload}/>
             <SettingToggler name='music' clickEvent={toggleMusic} active={musicSettings.isPlaying}/>
             <SettingToggler name='audio' clickEvent={toggleAudio} active={audioSettings.isPlaying}/>
         </div>

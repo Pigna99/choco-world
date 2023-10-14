@@ -2,14 +2,15 @@ import styles from './box-content.module.css'
 import { Screen } from './Screen/screen-content'
 import { useState, useEffect } from 'react'
 import { Menu } from './Menu/menu'
-import { LoadingScreen, LoadingSpinner } from './utilsComponents/loading'
+import { LoadingSpinner } from './utilsComponents/loading'
 import { Content } from './Content/content'
 import useGlobalContext from './context'
+import LoadingScreen from './StartingMenu/starting-menu'
 
 
 
 export const Box = () => {
-    const {isFirstLoading, isFetching, isPlayingAnimation} = useGlobalContext()
+    const {isFetching, isPlayingAnimation} = useGlobalContext()
 
     //window size
     const [windowSize, setWindowSize] = useState([
@@ -31,7 +32,7 @@ export const Box = () => {
     return (
         <div className={styles.box}>
             <LoadingSpinner visible={isFetching || isPlayingAnimation}/>
-            <LoadingScreen isLoading={isFirstLoading}/>
+            <LoadingScreen/>
             <Screen width={windowSize[0]+"px"} />
             <Content/>
             <Menu/>

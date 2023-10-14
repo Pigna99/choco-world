@@ -82,6 +82,7 @@ type frontend_info = {
     settings:{
         music:boolean,
         audio:boolean,
+        preload:boolean
     }
 }
 

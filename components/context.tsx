@@ -5,9 +5,10 @@ import { Creature, Gender, VisualState, savedChoco } from "@/utils/interfaces";
 import { VisualCreatureClass } from "@/utils/frontend/VisualCreatureClass";
 import { shiftMenu } from "@/utils/frontend/menu";
 import { checkCreatureId, validateNewCreature, isUpdateTime } from "@/utils/frontend/fetchValidation";
-import { audiotrace, getMusic, musictrace } from "@/utils/frontend/audio";
-import {Howl, Howler} from 'howler'
-
+import { audiotrace, getMusicPath, musictrace } from "@/utils/frontend/audio";
+import {Howl, HowlOptions, Howler} from 'howler'
+import { clearPreloadedFiles, loadFiles, loadableLink, loadingInfoType } from "@/utils/frontend/idb";
+const DEBUG = false;
 
 type GlobalPropsProvided = { 
     isFirstLoading:boolean,  isFetching:boolean, isPlayingAnimation:boolean, sprite:spritesSettings, infoText:string, creatureInfo:Creature, creatureId:string, creatureList:savedChoco[], selectedMenu:{name:string, list:number[]},  clicks:number,
@@ -16,7 +17,8 @@ type GlobalPropsProvided = {
     loadCreature:(id:string)=>void, newCreature:(name:string,color:string,gender:Gender)=>void, changeCreature:(id:string)=>void, //load, new, change
     cycleMenu:(left:boolean)=>(()=>void),//menu
     clickScreen:MouseEventHandler,//screen
-    audioSettings:{isPlaying:boolean, audio:audiotrace}, musicSettings:{isPlaying:boolean, music:musictrace},toggleMusic:()=>void, toggleAudio:()=>void, setMusic: (m:musictrace)=>void, setAudio: (a:audiotrace)=>void//audio, 
+    audioSettings:{isPlaying:boolean, audio:audiotrace}, musicSettings:{isPlaying:boolean, music:musictrace},toggleMusic:()=>void, toggleAudio:()=>void, setMusic: (m:musictrace)=>void, setAudio: (a:audiotrace)=>void,//audio
+    loadingInfo:loadingInfoType,playButton:MouseEventHandler,isPreload:boolean,togglePreload:()=>void
 }
 
 const GlobalContext = createContext<GlobalPropsProvided|null|any>(null);
@@ -26,12 +28,54 @@ const startMenu = {name:'creature', list: [creatureMenuList.length-1,0,1]};
 const startMenuNew = {name:'new',list:[newMenuList.length-1,0,1]}
 let startUpdateTimeout: NodeJS.Timeout |null= null;
 
+
 export const GlobalProvider = (props: PropsWithChildren) => {
+    //preloading content
+    const [isPreload, setIsPreload] = useState<boolean>(false)
+    const togglePreload= ()=>{
+        setIsPreload(!isPreload);
+    }
+    const [linkLoader, setLinkLoader] = useState<loadableLink[]>([])//for loading the urls of musics, images etc
+    const [loadingInfo, setLoadingInfo] = useState<loadingInfoType>({percentage:0,name:'starting'});
+    const [isFirstLoading, setIsFirstLoading] = useState(true); //first load 
+    const loadFileLink= (files:loadableLink[])=>{
+        setLinkLoader(files)
+    }
+    const changeLoadingInfo = (info:loadingInfoType)=>{
+        setLoadingInfo(info);
+    }
+    const getMusicLink=(name:musictrace)=>{//get preloaded music link
+        for(let i=0; i<linkLoader.length; ++i){
+            if(linkLoader[i].name==='music-'+name){
+                return linkLoader[i].url
+            }
+        }
+        return ''
+    }
+
+    const getAudioLink=(name:audiotrace)=>{//get preloaded audio link
+        for(let i=0; i<linkLoader.length; ++i){
+            if(linkLoader[i].name==='audio-'+name){
+                return linkLoader[i].url
+            }
+        }
+        return ''
+    }
+
+    const playButton = ()=>{
+        setIsFirstLoading(false);
+    }
+
+    useEffect(() => {
+        if(DEBUG)console.log(linkLoader)
+      }, [linkLoader])
+    //preloading
     //audio
     const [musicSettings, setMusicSettings] = useState<{isPlaying:boolean, music:musictrace}>({isPlaying:false, music:'none'});
     const [music, resetMusic] = useState<Howl|null>(null)
     const [audioSettings, setAudioSettings] = useState<{isPlaying:boolean, audio:audiotrace}>({isPlaying:false, audio:'none'});
     const [audio, resetAudio] = useState<Howl|null>(null)
+
     const toggleMusic=()=>{
         setMusicSettings({...musicSettings, isPlaying: !musicSettings.isPlaying})
     }
@@ -45,39 +89,44 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         setAudioSettings({...audioSettings, audio:a})
     }
 
+    const changeMusic=(s:musictrace)=>{
+        let path = isPreload ? getMusicLink(s): getMusicPath(s)//check if is preloaded or not
+        console.log(path)
+        resetMusic(new Howl(setHowlSettings(path)))
+    }
+    const setHowlSettings=(url:string):HowlOptions=>{
+        return {
+            src:[url],
+            loop:true,
+            preload:true,
+            format:'mp3'
+        }
+    }
+
     useEffect(() => {
         if(music===null){//first setup howl
-            resetMusic(new Howl({
-                src:[getMusic('theme')]
-            }))
+            changeMusic('theme')
             return;
         }
 
         if(musicSettings.isPlaying){
-            console.log('play')
             music.play()
         }else{
             music.pause()
         }
-        if(!isFirstUpdate)saveCreatureList()
+        
     }, [musicSettings.isPlaying])
 
     useEffect(() => {
       if(music===null)return;
       if(!musicSettings.isPlaying){
-        resetMusic(new Howl({
-            src:[getMusic(musicSettings.music)],
-            loop:true
-        }))
+        changeMusic(musicSettings.music)
       }else{//fade, than change
         let fading_time=700
         music.fade(1,0,fading_time)
         setTimeout(()=>{
             music.stop()
-            resetMusic(new Howl({
-                src:[getMusic(musicSettings.music)],
-                loop:true
-            }))
+            changeMusic(musicSettings.music)
         },fading_time)
       }
     }, [musicSettings.music])
@@ -86,10 +135,23 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         if(musicSettings.isPlaying)music?.play()
     }, [music])
     
+    useEffect(() => {//change Preload Settings
+        if(!isFirstUpdate){
+            if(isPreload){
+                setIsFirstLoading(true)
+                loadFiles(loadFileLink,changeLoadingInfo)
+            }else{
+                clearPreloadedFiles()
+            }
+        }
+    }, [isPreload])
+
+    useEffect(() => {//save settings updates
+        if(!isFirstUpdate)saveCreatureList()    
+    }, [isPreload, musicSettings.isPlaying, audioSettings.isPlaying])
     
     
     //loading tools
-    const [isFirstLoading, setIsFirstLoading] = useState(true); //first load 
     const [isFetching, setIsFetching] = useState(false); //fetching 
     const [isFirstUpdate, setIsFirstUpdate] = useState(true)//only for prevent the first rendering useEffect!
 
@@ -113,7 +175,10 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         setCreatureId(c.id)
     }
     const saveCreatureList = ()=>{
-        save({list:creatureList, last_choco:creatureId,settings:{audio:audioSettings.isPlaying,music:musicSettings.isPlaying}});
+        save({list:creatureList, last_choco:creatureId,settings:{audio:audioSettings.isPlaying,music:musicSettings.isPlaying, preload:isPreload}});
+    }
+    const updateCreatureList = (list:savedChoco[], id:string)=>{
+        save({list:list, last_choco:id,settings:{audio:audioSettings.isPlaying,music:musicSettings.isPlaying, preload:isPreload}});
     }
     const resetCreatureList = ()=>{
         reset();
@@ -131,7 +196,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
                 let newId = newList.length!==0 ? newList[0].id : 'new'
                 setCreatureList(newList)
                 setCreatureId(newId)
-                save({list:newList,last_choco:newId,settings:{audio:audioSettings.isPlaying,music:musicSettings.isPlaying}})
+                updateCreatureList(newList,newId)
                 return;
             }
         }
@@ -229,19 +294,19 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         if(forceVisual) updateVisuals(creature.state)//update the visual state after fetching
     }
     const apiFetch = async (apiString:string, loading:boolean ,resetClicks?:boolean)=>{
-        console.log("Update API - "+apiString)
+        if(DEBUG)console.log("Update API - "+apiString)
         if(loading)setIsFetching(true);
         const res = await fetch(apiString, {method: 'POST'})
         const data = await res.json()
         if (!data) {
             console.log("ERROR! FETCH DATA NOT RECEIVED");
-            if(isFirstLoading)setIsFirstLoading(false)//for loading screen
+            //for loading screen
             if(resetClicks)setClicks(clicks-10)
             return[false, null];
         }
         if (!data.creature && !data.savedCreature) { 
             console.log("ERROR! API DATA NOT RECEIVED");
-            if(isFirstLoading)setIsFirstLoading(false)//for loading screen
+            //for loading screen
             if(resetClicks)setClicks(clicks-10)
             if(data.error === 'noiddb'){
                 removeActualCreature();
@@ -249,7 +314,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
             return[false,null]; 
         }
         if(loading)setIsFetching(false);
-        if(isFirstLoading)setIsFirstLoading(false)//first fetching for loading screen
+        //first fetching for loading screen
         setLastUpdate(new Date());
         return [true,data]
     }
@@ -279,7 +344,13 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         setCreatureList(info.list)
         setAudioSettings({...audioSettings, isPlaying:info.settings?info.settings.audio:false})
         setMusicSettings({...musicSettings, isPlaying:info.settings?info.settings.music:false})
+        setIsPreload(info.settings?info.settings.preload:false)
         stopTimeout()
+        if(info.settings.preload){
+            loadFiles(loadFileLink,changeLoadingInfo)
+        }else{
+            setLoadingInfo({percentage:100,name:'complete'})
+        }
     }, [])
 
     useEffect(() => {//first update+menu change
@@ -293,7 +364,6 @@ export const GlobalProvider = (props: PropsWithChildren) => {
             return;
         }
         if(creatureId==='new'){//new creature setting screen
-            if(isFirstLoading)setIsFirstLoading(false)
             setSelectedMenu(startMenuNew);
             stopTimeout();
             updateVisuals('egg')
@@ -330,7 +400,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     }, [isUpdatedCreatureInfo,isUpdatedlastUpdate])
 
     return (
-      <GlobalContext.Provider value={{setAudio, setMusic, audioSettings, musicSettings, toggleMusic, toggleAudio, removeActualCreature,isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
+      <GlobalContext.Provider value={{isPreload,togglePreload,playButton,loadingInfo,setAudio, setMusic, audioSettings, musicSettings, toggleMusic, toggleAudio, removeActualCreature,isFirstLoading, sprite, creatureInfo, clickScreen, isFetching, isPlayingAnimation, clicks, creatureList, creatureId, selectedMenu, infoText ,feedCommand,petCommand, loadCreature, newCreature, resetCreatureList, cycleMenu, changeCreature}}>
         {props.children}
       </GlobalContext.Provider>
     );
