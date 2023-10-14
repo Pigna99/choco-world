@@ -11,11 +11,11 @@ export const Settings = ()=>{
     const {isPreload, togglePreload, resetLocalStorageInfo}= useGlobalContext()
     return(
         <div className={styles.container}>
-            <SettingValidator name='delete all local data' clickEvent={resetLocalStorageInfo}/>
-            {(creatureId!== '' && creatureId !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreature}/>:null}
-            <SettingToggler name='preload' clickEvent={togglePreload} active={isPreload}/>
             <SettingToggler name='music' clickEvent={toggleMusic} active={musicSettings.isPlaying}/>
             <SettingToggler name='audio' clickEvent={toggleAudio} active={audioSettings.isPlaying}/>
+            <SettingToggler name='preload' clickEvent={togglePreload} active={isPreload}/>
+            {(creatureId!== '' && creatureId !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreature}/>:null}
+            <SettingValidator name='delete all local data' clickEvent={resetLocalStorageInfo}/>
         </div>
     )
 }

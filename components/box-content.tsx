@@ -6,12 +6,13 @@ import { LoadingSpinner } from './utilsComponents/loading'
 import { Content } from './Content/content'
 import { useAppContext } from './context/appcontext'
 import LoadingScreen from './StartingMenu/starting-menu'
+import { useScreenContext } from './context/screencontext'
 
 
 
 export const Box = () => {
-    const {isFetching, isPlayingAnimation} = useAppContext()
-
+    const {isFetching} = useAppContext()
+    const {isPlayingAnimation} = useScreenContext()
     //window size
     const [windowSize, setWindowSize] = useState([
         500,
