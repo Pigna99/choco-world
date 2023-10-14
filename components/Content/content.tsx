@@ -8,11 +8,13 @@ import { Settings } from './Settings/settings'
 import ChocoList from './ChocoList/chocoList'
 import NewChoco from './NewChoco/newChoco'
 import LoadChoco from './LoadChoco/loadChoco'
-import useGlobalContext from '../context'
+import { useAppContext } from '../context/appcontext'
+import { useScreenContext } from '../context/screencontext'
 
 export const Content = ()=>{
-    const {clicks,creatureId,changeCreature,selectedMenu, creatureInfo, infoText, isPlayingAnimation, cycleMenu, creatureList} = useGlobalContext()
-    const {feedCommand,petCommand,loadCreature,newCreature} = useGlobalContext()
+    const {creatureId,changeCreature,selectedMenu, creatureInfo, cycleMenu, creatureList} = useAppContext()
+    const {isPlayingAnimation, infoText, clicks} = useScreenContext()
+    const {feedCommand,petCommand,loadCreature,newCreature} = useAppContext()
     const sMenu:any[] = selectedMenu.list;
 
     //touch

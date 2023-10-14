@@ -40,7 +40,7 @@ const preloadFiles= async (setLoadingInfo:(info:loadingInfoType)=>void)=>{
         let blob = await stream.blob();//transform in blob
         if(LOCALDEBUG)console.log(`${filename} loading in db ...`)
         try{
-            setLoadingInfo({name:'music-'+filename, percentage:getPercentage(index,musicList.length)})
+            setLoadingInfo({name:'downloading music-'+filename, percentage:getPercentage(index,musicList.length)})
             await set(filename, blob)//load in db
             if(LOCALDEBUG)console.log(`${filename} loaded in db`)
         }catch(err){
@@ -60,7 +60,7 @@ const getPreloadedFiles= async (loadFiles:(f:loadableLink[])=>void,setLoadingInf
         if(LOCALDEBUG)console.log(`getting ${filename} from db`)
         let res;
         try{
-            setLoadingInfo({name:'music-'+filename, percentage:getPercentage(index,musicList.length)})
+            setLoadingInfo({name:'loading music-'+filename, percentage:getPercentage(index,musicList.length)})
             res = await get(filename)
             if(LOCALDEBUG)console.log(`got ${filename} from db`)
             const url = URL.createObjectURL(res);

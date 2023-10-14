@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
 import styles from './startingmenu.module.css'
-import useGlobalContext from "../context";
 import { Button } from "../utilsComponents/buttons";
+import { useGlobalContext } from "../context/globalcontext";
 
 const LoadingScreen = () => {
     const {isFirstLoading} = useGlobalContext()
@@ -14,7 +13,7 @@ const LoadingScreen = () => {
 }
 
 const LoadingMenu = () =>{
-    const {loadingInfo, playButton, isPreload, isFirstLoading} = useGlobalContext()
+    const {loadingInfo, playButton, isPreload} = useGlobalContext();
     return(
         <div className={styles.loadingMenu}>
             <h3>Choco World</h3>

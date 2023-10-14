@@ -13,60 +13,6 @@ type spritesSettings = {
     fps?:number
 }
 
-const updateVisualsLogic=(v: VisualState, setSprite:Dispatch<SetStateAction<spritesSettings>>, setInfoText:Dispatch<SetStateAction<string>>)=>{
-    switch (v) {
-        case 'walking':
-            let r = Math.floor(Math.random() * 4)
-            const walking_sprites: spritesList[] = ['walk-bottom', 'walk-right', 'walk-left', 'walk-top']
-            setSprite({name:walking_sprites[r], loop:true, fps:16})//randomize walking better
-            setInfoText('walking...')
-            break;
-        case 'sleeping':
-            setSprite({name:'sleep', loop:true, fps:8})
-            setInfoText('sleeping...')
-            break;
-        case 'idle':
-            setSprite({name:'stand', loop:true, fps:4})
-            break;
-        case 'idle-feed':
-            setSprite({name:'stand', loop:true, fps:4})
-            setInfoText('not hungry')
-            console.log('You have to wait more before eating again')
-            break;
-        case 'idle-pet':
-            setSprite({name:'stand', loop:true, fps:4})
-            setInfoText('try pet later')
-            console.log('You have to wait more before petting again')
-            break;
-        case 'eating':
-            setSprite({name:'eat', loop:true, fps:8})
-            setInfoText('eating!')
-            break;
-        case 'happy':
-            setSprite({name:'happy', loop:true, fps:12})
-            setInfoText('happy!')
-            break;
-        case 'egg':
-            setSprite({name:'egg', loop:false})
-            break;
-        case 'eggshake':
-            setSprite({name:'eggshake',loop:false, numLoops:0, onEnd:()=>{
-                updateVisualsLogic('egg', setSprite, setInfoText)
-            }})
-            break;  
-        case 'hatching':
-            setSprite({name:'hatching', loop:false, fps:6})
-            break;  
-        case 'loading':
-            setSprite({name:'none', loop:false})
-            setInfoText('loading info...')
-            break;   
-        default:
-            console.log('error, no animation')
-            break;
-    }
-}
-
 type menu = 'stats' | 'actions' | 'info' | 'settings' | 'chocos' | 'new' | 'load'
 
 const creatureMenuList:menu[] = ['stats', 'actions', 'info', 'settings', 'chocos']    
@@ -115,4 +61,4 @@ const getRange=(start:number, end:number)=>{
 
 
 export type {spritesList, menu, API_string, menu_interface, frontend_info, spritesSettings}
-export{getTicksFromDate, precalcFeed, precalcPet,creatureMenuList,newMenuList,generateArrayFrame, getRange, updateVisualsLogic}
+export{getTicksFromDate, precalcFeed, precalcPet,creatureMenuList,newMenuList,generateArrayFrame, getRange}

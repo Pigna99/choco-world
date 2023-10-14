@@ -2,11 +2,12 @@ import styles from './screen-content.module.css'
 
 import Sprite from "@/components/Screen/Sprite/Sprite";
 import getSprite from './Sprite/spriteUtils';
-import useGlobalContext from '../context';
+import { useAppContext } from '../context/appcontext';
+import { useScreenContext } from '../context/screencontext';
 
 export const Screen = ({ width}:{width:string})=>{
-    const {creatureInfo, clickScreen} = useGlobalContext()
-    let {sprite} = useGlobalContext()
+    const {creatureInfo} = useAppContext()
+    let {sprite, clickScreen} = useScreenContext()
     let reverse = false;
     if(sprite.name === 'walk-left'){
         sprite.name = 'walk-right';

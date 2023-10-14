@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react'
 import { Menu } from './Menu/menu'
 import { LoadingSpinner } from './utilsComponents/loading'
 import { Content } from './Content/content'
-import useGlobalContext from './context'
+import { useAppContext } from './context/appcontext'
 import LoadingScreen from './StartingMenu/starting-menu'
 
 
 
 export const Box = () => {
-    const {isFetching, isPlayingAnimation} = useGlobalContext()
+    const {isFetching, isPlayingAnimation} = useAppContext()
 
     //window size
     const [windowSize, setWindowSize] = useState([
