@@ -95,6 +95,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
         if (loading) setIsFetching(true);
         const res = await fetch(apiString, { method: 'POST' })
         const data = await res.json()
+        if (loading) setIsFetching(false);
         if (!data) {
             console.log("ERROR! FETCH DATA NOT RECEIVED");
             //for loading screen
@@ -110,7 +111,6 @@ export const FetchProvider = (props: PropsWithChildren) => {
             }
             return [false, null];
         }
-        if (loading) setIsFetching(false);
         //first fetching for loading screen
         setLastUpdate(new Date());
         return [true, data]
