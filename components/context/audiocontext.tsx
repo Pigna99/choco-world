@@ -56,10 +56,10 @@ export const AudioProvider = (props: PropsWithChildren) => {
     }
 
     useEffect(() => {
-      if(isBackground){
+      if(isMusicOn()&&isBackground){
         pauseMusic()
       }
-      if(!isBackground){
+      if(isMusicOn()&&!isBackground){
         startMusic()
       }
     }, [isBackground])
