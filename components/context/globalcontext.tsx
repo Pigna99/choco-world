@@ -7,7 +7,7 @@ import { DEBUG } from "@/utils/settings";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
 type GlobalContextProps = {
-    isFirstRendering:boolean,isFirstLoading:boolean,startFetch:boolean,
+    isFirstRendering:boolean,isFirstLoading:boolean,startFetch:boolean, isBackground:boolean,
     localInfo:frontend_info, resetLocalInfo:()=>void, updateLocalInfo:()=>void,
     loadingInfo:loadingInfoType,setLoadingInfo:(l:loadingInfoType)=>void, 
     changeCreature:(id:string)=>void, addCreatureToList:(c:savedChoco)=>void, removeActualCreature:()=>void,
@@ -39,6 +39,8 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [startFetch, setStartFetch] = useState(false);//
 
     const [localInfo, setLocalInfo] = useState<frontend_info>(startingInfo)//data from localstorage
+    const [isBackground, setIsBackground] = useState<boolean>(false)//incorporate in settings if you want to use background things
+
     //handling local info
     const toggleSetting = (setting:settings)=>{
         let newInfo:frontend_info;
@@ -123,6 +125,13 @@ export const GlobalProvider = (props: PropsWithChildren) => {
             setStartFetch(true)
             //setLoadingInfo({percentage:100,name:'complete'})//and the fetch?
         }
+        window.addEventListener("visibilitychange", ()=>{//check if the app is in backgound
+            if (document.visibilityState === "visible") {
+                setIsBackground(false);
+            }else{
+                setIsBackground(true);
+            }
+        })
     }, [])
 
     useEffect(() => {//When isPreload is loaded, load local files with indexeddb
@@ -136,8 +145,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
                         setLoadingInfo({name:'starting fetching', percentage:100})
                         setStartFetch(true)
                         return;
-                    }
-                    setLoadingInfo({name:'loading complete', percentage:100})
+                        }
                     }
                 )
             }else{
@@ -149,7 +157,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     
     
     return(
-        <GlobalContext.Provider value={{startFetch,setLoadingInfo,openLoadingScreen, closeLoadingScreen, toggleSetting,addCreatureToList,removeActualCreature,changeCreature,resetLocalInfo, updateLocalInfo, loadingInfo,isFirstLoading, localInfo, getAudioLink, getMusicLink, isFirstRendering}}>
+        <GlobalContext.Provider value={{isBackground,startFetch,setLoadingInfo,openLoadingScreen, closeLoadingScreen, toggleSetting,addCreatureToList,removeActualCreature,changeCreature,resetLocalInfo, updateLocalInfo, loadingInfo,isFirstLoading, localInfo, getAudioLink, getMusicLink, isFirstRendering}}>
             {props.children}
         </GlobalContext.Provider>
     )

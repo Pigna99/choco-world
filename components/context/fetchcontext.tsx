@@ -119,6 +119,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
 
     useEffect(() => {//first update+menu change
         if(!startFetch)return;
+        console.log(localInfo)
         if (localInfo.last_choco !== '' && localInfo.last_choco !== 'new') {//first update and set a creature throgh id
             updateVisuals('loading');
             stopTimeout();
@@ -135,6 +136,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
             stopTimeout();
             updateVisuals('egg')
             setMusicTrace('fight')
+            setLoadingInfo({name:'loading complete', percentage:100})
             return;
         }
 

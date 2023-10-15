@@ -13,7 +13,7 @@ const AudioContext = createContext<AudioContextProps|null>(null);
 
 
 export const AudioProvider = (props: PropsWithChildren) => {
-    const {getMusicLink, getAudioLink, localInfo, isFirstLoading} = useGlobalContext()
+    const {getMusicLink, getAudioLink, localInfo, isFirstLoading, isBackground} = useGlobalContext()
 
     //audio
     
@@ -41,16 +41,39 @@ export const AudioProvider = (props: PropsWithChildren) => {
             format:'mp3'
         }
     }
+
+    const startMusic = ()=>{
+        if(!music)return
+        music.play()
+    }
+    const pauseMusic= ()=>{
+        if(!music)return
+        music.pause()
+    }
+    const stopMusic= ()=>{
+        if(!music)return
+        music.stop()
+    }
+
+    useEffect(() => {
+      if(isBackground){
+        pauseMusic()
+      }
+      if(!isBackground){
+        startMusic()
+      }
+    }, [isBackground])
+    
     
     useEffect(() => {
-        if(musicTrace==='none')return
         if(music===null)return;
+        if(musicTrace==='none')return
         if(isMusicOn()){
-            music.play()
+            startMusic()
         }else{
-            music.pause()
+            console.log('pause music')
+            pauseMusic()
         }
-        
     }, [localInfo.settings.music])
 
     useEffect(() => {
@@ -61,20 +84,21 @@ export const AudioProvider = (props: PropsWithChildren) => {
         let fading_time=700
         music.fade(1,0,fading_time)
         setTimeout(()=>{
-            music.stop()
+            stopMusic()
             changeMusic(musicTrace)
         },fading_time)
       }
     }, [musicTrace])
 
     useEffect(() => {
-        if(isMusicOn())music?.play()
+        if(isMusicOn()&&!isBackground)startMusic()
     }, [music])
 
     useEffect(() => {//activate music after exiting loading screen
         if(!isFirstLoading)changeMusic(musicTrace)
-        if(isFirstLoading)music?.stop();
+        if(isFirstLoading)stopMusic()
     }, [isFirstLoading])
+
 
     return(
         <AudioContext.Provider value={{musicTrace, audioTrace,setMusicTrace,setAudioTrace}}>
