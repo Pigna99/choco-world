@@ -7,13 +7,14 @@ import { DEBUG } from "@/utils/settings";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
 type GlobalContextProps = {
-    isFirstRendering:boolean,isFirstLoading:boolean,
+    isFirstRendering:boolean,isFirstLoading:boolean,startFetch:boolean,
     localInfo:frontend_info, resetLocalInfo:()=>void, updateLocalInfo:()=>void,
-    loadingInfo:loadingInfoType,
+    loadingInfo:loadingInfoType,setLoadingInfo:(l:loadingInfoType)=>void, 
     changeCreature:(id:string)=>void, addCreatureToList:(c:savedChoco)=>void, removeActualCreature:()=>void,
     toggleSetting:(setting:settings)=>void,
     getMusicLink:(name:musictrace)=>string, getAudioLink:(name:audiotrace)=>string, 
-    openLoadingScreen:()=>void, closeLoadingScreen:()=>void
+    openLoadingScreen:()=>void, closeLoadingScreen:()=>void,
+    
 }
 
 const GlobalContext = createContext<GlobalContextProps|null>(null);
@@ -33,8 +34,9 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const [isFirstRendering, setIsFirstRendering] = useState(true)//only for prevent the first rendering useEffect!
     //preloading content
     const [linkLoader, setLinkLoader] = useState<loadableLink[]>([])//data drom indexedDB - for loading the urls of musics, images etc
-    const [loadingInfo, setLoadingInfo] = useState<loadingInfoType>({percentage:0,name:'starting'});//info for the loading bar
+    const [loadingInfo, setLoadingInfo] = useState<loadingInfoType>({percentage:0,name:'loading files'});//info for the loading bar
     const [isFirstLoading, setIsFirstLoading] = useState(true); //first load before starting app
+    const [startFetch, setStartFetch] = useState(false);//
 
     const [localInfo, setLocalInfo] = useState<frontend_info>(startingInfo)//data from localstorage
     //handling local info
@@ -118,19 +120,26 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         const info:frontend_info = load()//get localstorage content
         setLocalInfo(info);
         if(!info.settings.preload){
-            setLoadingInfo({percentage:100,name:'complete'})//and the fetch?
+            setStartFetch(true)
+            //setLoadingInfo({percentage:100,name:'complete'})//and the fetch?
         }
     }, [])
-
-    useEffect(() => {//then set isPreload (in a useEffect for setting Change)
-        //now local info is populated
-    }, [localInfo])
 
     useEffect(() => {//When isPreload is loaded, load local files with indexeddb
         if(!isFirstRendering){
             if(localInfo.settings.preload){
                 openLoadingScreen()
                 loadFiles(loadFileLink,changeLoadingInfo)
+                .then(()=>{
+                    console.log('local files loaded');
+                    if(startFetch===false){
+                        setLoadingInfo({name:'starting fetching', percentage:100})
+                        setStartFetch(true)
+                        return;
+                    }
+                    setLoadingInfo({name:'loading complete', percentage:100})
+                    }
+                )
             }else{
                 clearPreloadedFiles()
                 console.log('clear preloading')
@@ -140,7 +149,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     
     
     return(
-        <GlobalContext.Provider value={{openLoadingScreen, closeLoadingScreen, toggleSetting,addCreatureToList,removeActualCreature,changeCreature,resetLocalInfo, updateLocalInfo, loadingInfo,isFirstLoading, localInfo, getAudioLink, getMusicLink, isFirstRendering}}>
+        <GlobalContext.Provider value={{startFetch,setLoadingInfo,openLoadingScreen, closeLoadingScreen, toggleSetting,addCreatureToList,removeActualCreature,changeCreature,resetLocalInfo, updateLocalInfo, loadingInfo,isFirstLoading, localInfo, getAudioLink, getMusicLink, isFirstRendering}}>
             {props.children}
         </GlobalContext.Provider>
     )

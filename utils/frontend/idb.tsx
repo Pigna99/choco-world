@@ -72,7 +72,6 @@ const getPreloadedFiles= async (loadFiles:(f:loadableLink[])=>void,setLoadingInf
         }catch(err){
             console.log(`ERROR in getting ${filename} ${err}`)
         }
-        setLoadingInfo({name:'complete', percentage:100})
     }
 
     //at the end, load the links
@@ -84,7 +83,6 @@ const loadFiles= async(loadFiles:(f:loadableLink[])=>void, setLoadingInfo:(info:
         await preloadFiles(setLoadingInfo);
     }
     await getPreloadedFiles(loadFiles, setLoadingInfo);
-    console.log('local files loaded')
 }
 const isNewVersion= async ()=>{
     const val = await get('version')

@@ -19,12 +19,12 @@ const LoadingMenu = () =>{
     return(
         <div className={styles.loadingMenu}>
             <h3>Choco World</h3>
-            <div className={styles.loadingContent}>
+            <div className={styles.loadingContainer}>
                 <div className={styles.loadingInfo}>{loadingInfo.name}</div>
                 <LoadingBar percentage={loadingInfo.percentage}/>
                 <div className={styles.confirmButton}>
-                    <Button name='play' clickEvent={(e)=>{if(loadingInfo.name==='complete')playACTION(e)}}
-                        blocked={loadingInfo.name!=='complete'}
+                    <Button name='play' clickEvent={(e)=>{if(loadingInfo.name==='loading complete')playACTION(e)}}
+                        blocked={loadingInfo.name!=='loading  complete'}
                     />
                 </div>
             </div>
@@ -41,7 +41,7 @@ const LoadingMenu = () =>{
 const LoadingBar = ({percentage}:{percentage:number})=>{
     return(
         <div className={styles.loadingborder}>
-            <div className={styles.loadingcontent} style={{width:percentage+"%"}}/>
+            <div className={styles.loadingcontent} style={{width:percentage+"%", transition: percentage===0?'':'all 0.2s'}}/>
         </div>
     )
 }

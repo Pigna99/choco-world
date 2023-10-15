@@ -22,7 +22,7 @@ let startUpdateTimeout: NodeJS.Timeout | null = null;
 
 export const FetchProvider = (props: PropsWithChildren) => {
     const { startImportantAnimation, stopImportantAnimation, updateVisuals, isPlayingAnimation, removeClicks } = useScreenContext()
-    const { isFirstRendering, localInfo, updateLocalInfo, addCreatureToList, removeActualCreature } = useGlobalContext()
+    const { isFirstRendering, localInfo, updateLocalInfo, addCreatureToList, removeActualCreature, startFetch, setLoadingInfo } = useGlobalContext()
     const { setMusicTrace, setAudioTrace } = useAudioContext()
     const {resetToStartMenu, resetToNewMenu} = useMenuContext();
 
@@ -118,12 +118,15 @@ export const FetchProvider = (props: PropsWithChildren) => {
 
 
     useEffect(() => {//first update+menu change
+        if(!startFetch)return;
         if (localInfo.last_choco !== '' && localInfo.last_choco !== 'new') {//first update and set a creature throgh id
             updateVisuals('loading');
             stopTimeout();
+            setLoadingInfo({name:'loading choco', percentage:0})
             updateCommand(true, () => {
                 resetToStartMenu();
                 updateLocalInfo();
+                setLoadingInfo({name:'loading complete', percentage:100})
             });
             return;
         }
@@ -135,7 +138,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
             return;
         }
 
-    }, [localInfo.last_choco])
+    }, [localInfo.last_choco, startFetch])
 
     useEffect(() => {//if creature is saved
         if (!isFirstRendering) setIsUpdatedCreatureInfo(true);
