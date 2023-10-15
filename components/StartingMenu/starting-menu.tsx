@@ -1,6 +1,7 @@
 import styles from './startingmenu.module.css'
 import { Button } from "../utilsComponents/buttons";
 import { useGlobalContext } from "../context/globalcontext";
+import { useAppContext } from '../context/appcontext';
 
 const LoadingScreen = () => {
     const {isFirstLoading} = useGlobalContext()
@@ -13,7 +14,8 @@ const LoadingScreen = () => {
 }
 
 const LoadingMenu = () =>{
-    const {loadingInfo, playButton, localInfo} = useGlobalContext();
+    const {loadingInfo,localInfo} = useGlobalContext();
+    const {playACTION} = useAppContext()
     return(
         <div className={styles.loadingMenu}>
             <h3>Choco World</h3>
@@ -21,7 +23,7 @@ const LoadingMenu = () =>{
                 <div className={styles.loadingInfo}>{loadingInfo.name}</div>
                 <LoadingBar percentage={loadingInfo.percentage}/>
                 <div className={styles.confirmButton}>
-                    <Button name='play' clickEvent={(e)=>{if(loadingInfo.name==='complete')playButton(e)}}
+                    <Button name='play' clickEvent={(e)=>{if(loadingInfo.name==='complete')playACTION(e)}}
                         blocked={loadingInfo.name!=='complete'}
                     />
                 </div>

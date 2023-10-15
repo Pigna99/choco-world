@@ -11,8 +11,8 @@ import { useMenuContext } from "./menucontext";
 
 type FetchPropsProvided = {
     isFetching: boolean, creatureInfo: Creature,
-    feedCommand: MouseEventHandler, petCommand: MouseEventHandler,//actions
-    loadCreature: (id: string) => void, newCreature: (name: string, color: string, gender: Gender) => void, //load, new
+    feedFetch: ()=>Promise<void>, petFetch: ()=>Promise<void>,//actions
+    loadCreatureFetch: (id: string) => Promise<boolean>, newCreatureFetch: (name: string, color: string, gender: Gender) => Promise<boolean>, //load, new
 }
 
 const FetchContext = createContext<FetchPropsProvided | null>(null);
@@ -49,44 +49,28 @@ export const FetchProvider = (props: PropsWithChildren) => {
     const [isUpdatedCreatureInfo, setIsUpdatedCreatureInfo] = useState(false);//wait for the end of saving (useEffect)
 
     //fetching commands
-    const loadCreature = async (id: string) => {
-        if (!checkCreatureId(id, localInfo.list)) return;
+    const loadCreatureFetch = async (id: string) => {
         const response = await apiFetch(`/api/check?id=${id}`, true);
-        if (!response[0]) return;
+        if (!response[0]) return false;
         const c: savedChoco = response[1].savedCreature;
         addCreatureToList(c);
+        return true;
     }
-    const newCreature = async (name: string, color: string, gender: Gender) => {
-        if (!validateNewCreature(name, color)) return;
+    const newCreatureFetch = async (name: string, color: string, gender: Gender) => {
         stopTimeout()
-        console.log("Creating a new Creature");
-        if (name === 'test') {
-            console.log('setting hatching')
-            updateVisuals("hatching")
-            return;
-        }
         const response = await apiFetch(`/api/new?name=${name}&color=${color.split('#')[1]}&gender=${gender}`, false, true);
-        if (!response[0]) return;
+        if (!response[0]) return false;
         const c: savedChoco = response[1].savedCreature;
         setCreatureInfo({ ...creatureInfo, color: c.color });
-        //console.log('setting hatching')
-        updateVisuals("hatching")//change to setAnimation
         setTimeout(() => { addCreatureToList(c) }, 8000)//not always working (or working double!)
+        return true;
     }
-    const feedCommand = async () => {
-        if (isPlayingAnimation) return;//make animation not interruptable!
-        stopTimeout()//stop autoupdate timeout
-        startImportantAnimation()
-        precalcFeed(creatureInfo) ? updateVisuals('eating') : updateVisuals('idle-feed')//precalc if you can feed or not for fast update
-
+    const feedFetch = async () => {
+        stopTimeout()
         await apiCore('feed', false);
     }
-    const petCommand = async () => {
-        if (isPlayingAnimation) return;//make animation not interruptable!
+    const petFetch = async () => {
         stopTimeout()
-        startImportantAnimation()
-        precalcPet(creatureInfo) ? updateVisuals('happy') : updateVisuals('idle-pet')//precalc if you can pet or not for fast update
-
         await apiCore('pet', false);
     }
     const updateCommand = async (force?: boolean, then?: () => void) => {
@@ -96,7 +80,6 @@ export const FetchProvider = (props: PropsWithChildren) => {
             newTimeout(updateCommand, 5000);
             return;
         };
-
         await apiCore('update', true);
         if (then) then()
     }
@@ -173,7 +156,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
     }, [isUpdatedCreatureInfo, isUpdatedlastUpdate])
 
     return (
-        <FetchContext.Provider value={{ creatureInfo, isFetching, feedCommand, petCommand, loadCreature, newCreature }}>
+        <FetchContext.Provider value={{ creatureInfo, isFetching, feedFetch, petFetch, loadCreatureFetch, newCreatureFetch }}>
             {props.children}
         </FetchContext.Provider>
     );

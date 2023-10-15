@@ -12,12 +12,14 @@ import { useFetchContext } from '../context/fetchcontext'
 import { useScreenContext } from '../context/screencontext'
 import { useMenuContext } from '../context/menucontext'
 import { useGlobalContext } from '../context/globalcontext'
+import { useAppContext } from '../context/appcontext'
 
 export const Content = ()=>{
-    const {changeCreature, localInfo} = useGlobalContext()
+    const {localInfo} = useGlobalContext()
     const {isPlayingAnimation, infoText, clicks} = useScreenContext()
-    const {creatureInfo, feedCommand,petCommand,loadCreature,newCreature} = useFetchContext()
-    const {cycleMenu, selectedMenu} = useMenuContext()
+    const {creatureInfo} = useFetchContext()
+    const {selectedMenu} = useMenuContext()
+    const {petACTION, feedACTION, rightSwipeACTION, leftSwipeACTION, loadACTION, newACTION, changeCreatureACTION} = useAppContext()
     const sMenu:any[] = selectedMenu.list;
 
     //touch
@@ -34,15 +36,15 @@ export const Content = ()=>{
 
     const onTouchMove:TouchEventHandler<HTMLDivElement> = (e) => setTouchEnd(e.targetTouches[0].clientX)
 
-    const onTouchEnd:TouchEventHandler<HTMLDivElement> = () => {
+    const onTouchEnd:TouchEventHandler<HTMLDivElement> = (e) => {
         if (!touchStart || !touchEnd) return
         setTouchEnd(0);setTouchStart(0)
         const distance = touchStart - touchEnd
         const isLeftSwipe = distance > minSwipeDistance
         const isRightSwipe = distance < -minSwipeDistance
         //if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
-        if(isLeftSwipe)cycleMenu(false)()
-        if(isRightSwipe)cycleMenu(true)()
+        if(isLeftSwipe)rightSwipeACTION(e)
+        if(isRightSwipe)leftSwipeACTION(e)
     }
 
     const setTranslateSwipe=()=>{
@@ -56,16 +58,16 @@ export const Content = ()=>{
         if(selectedMenu.name!=='new'){
             return (
                 creatureMenuList[id] === 'stats' ? <Stats info={creatureInfo} /> :
-                creatureMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={infoText} /> :
+                creatureMenuList[id] === 'actions' ? <Commands feedCommand={feedACTION} petCommand={petACTION} block={isPlayingAnimation} info={infoText} /> :
                 creatureMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={localInfo.last_choco}/> :
-                creatureMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={localInfo.last_choco} changeChoco={changeCreature} chocoArray={localInfo.list}/> :
+                creatureMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={localInfo.last_choco} changeChoco={changeCreatureACTION} chocoArray={localInfo.list}/> :
                 creatureMenuList[id] === 'settings' ? <Settings/> :
             <div></div> ) 
         }
         return(
-            newMenuList[id] === 'new' ? <NewChoco newChoco={newCreature} clicks={clicks}/>:
-            newMenuList[id] === 'load' ? <LoadChoco loadChoco={loadCreature}/>:
-            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={localInfo.last_choco} changeChoco={changeCreature} chocoArray={localInfo.list}/> :
+            newMenuList[id] === 'new' ? <NewChoco newChoco={newACTION} clicks={clicks}/>:
+            newMenuList[id] === 'load' ? <LoadChoco loadChoco={loadACTION}/>:
+            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={localInfo.last_choco} changeChoco={changeCreatureACTION} chocoArray={localInfo.list}/> :
             newMenuList[id] === 'settings' ? <Settings/> :
             <div></div>
         )

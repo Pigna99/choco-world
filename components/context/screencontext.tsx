@@ -6,7 +6,7 @@ type ScreenContextProps = {
     startImportantAnimation:()=>void, stopImportantAnimation:()=>void, 
     updateVisuals:(v:VisualState)=>void,
     isPlayingAnimation:boolean,
-    removeClicks:()=>void, clickScreen:MouseEventHandler,
+    removeClicks:()=>void, incrementClicks:()=>void,
     sprite:spritesSettings, clicks:number, infoText:string
 }
 
@@ -84,14 +84,8 @@ export const ScreenProvider = (props: PropsWithChildren) => {
     }
     //clicks on main screen
     const [clicks, setClicks] = useState(0);//save the number of clicks on the screen sprite
-    const clickScreen = () => {
-        //console.log(clicks)
-        if (sprite.name !== 'hatching') {
-            setClicks(clicks + 1)
-        }
-        if (sprite.name === 'egg') {
-            updateVisuals('eggshake');
-        }
+    const incrementClicks = () => {
+        setClicks(clicks+1)
     }
     const removeClicks=()=>{
         setClicks(clicks-10)
@@ -99,7 +93,7 @@ export const ScreenProvider = (props: PropsWithChildren) => {
     //clicks on main screen
 
     return (
-        <ScreenContext.Provider value={{clicks, infoText, clickScreen, sprite, removeClicks,isPlayingAnimation, updateVisuals, startImportantAnimation, stopImportantAnimation}}>
+        <ScreenContext.Provider value={{clicks, infoText, incrementClicks, sprite, removeClicks,isPlayingAnimation, updateVisuals, startImportantAnimation, stopImportantAnimation}}>
             {props.children}
         </ScreenContext.Provider>
     )

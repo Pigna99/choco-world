@@ -5,7 +5,7 @@ import { GenderIcon } from '@/components/utilsComponents/icons'
 import { Gender } from '@/utils/interfaces'
 
 
-function NewChoco({newChoco, clicks}:{clicks:number, newChoco:(name:string,color:string,gender:Gender)=>void}) {
+function NewChoco({newChoco, clicks}:{clicks:number, newChoco:(name:string,color:string,gender:Gender)=>any}) {
   const [text, setText] = useState('')
   const [color, setColor] = useState('#000000')
   const [gender, setGender] = useState<Gender>('male')
@@ -14,7 +14,7 @@ function NewChoco({newChoco, clicks}:{clicks:number, newChoco:(name:string,color
   useEffect(() => {
     //console.log(clicks, clicksNeeded)
     if(clicksNeeded===clicks){
-      newChoco(text,color,gender)
+      newChoco(text,color,gender)()
       setClicksNeeded(clicksNeeded+10)
     }
   }, [clicksNeeded, clicks])

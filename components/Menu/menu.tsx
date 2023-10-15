@@ -2,14 +2,16 @@ import { creatureMenuList, newMenuList } from '@/utils/frontend/utilsFrontend'
 import styles from './menu.module.css'
 import { MouseEventHandler } from 'react'
 import { useMenuContext } from '../context/menucontext'
+import { useAppContext } from '../context/appcontext'
 
 export const Menu = ()=>{
-    const {selectedMenu, cycleMenu} = useMenuContext()
+    const {selectedMenu} = useMenuContext()
+    const {rightMenuACTION, leftMenuACTION} = useAppContext()
     return(
         <div className={styles.menu}>
-            <MenuArrow reverse cycleMenu={cycleMenu(true)}/>
+            <MenuArrow reverse cycleMenu={leftMenuACTION}/>
             <MenuElement selectedMenu={selectedMenu.list[1]} menuName={selectedMenu.name}/>
-            <MenuArrow isRight cycleMenu={cycleMenu(false)}/>
+            <MenuArrow isRight cycleMenu={rightMenuACTION}/>
         </div>
     )
 }

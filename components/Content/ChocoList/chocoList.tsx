@@ -4,13 +4,13 @@ import { savedChoco } from '@/utils/interfaces'
 import { Gender } from '@/utils/interfaces'
 import { ChocoImage, GenderIcon } from '../../utilsComponents/icons'
 
-function ChocoList({selectedChocoId, changeChoco, chocoArray}:{selectedChocoId:string|null, changeChoco:(id:string)=>void ,chocoArray:savedChoco[]}) {
+function ChocoList({selectedChocoId, changeChoco, chocoArray}:{selectedChocoId:string|null, changeChoco:(id:string)=>MouseEventHandler ,chocoArray:savedChoco[]}) {
   return (
     <div className={styles.container}>
       {
         chocoArray.map((el)=>{
           return(
-            <ListElement active={el.id===selectedChocoId} key={el.id} onClick={()=>{if(el.id!==selectedChocoId)changeChoco(el.id)}}>
+            <ListElement active={el.id===selectedChocoId} key={el.id} onClick={(e)=>{if(el.id!==selectedChocoId)changeChoco(el.id)(e)}}>
               <ChocoEntry info={el}/>
             </ListElement>
           )
@@ -18,7 +18,7 @@ function ChocoList({selectedChocoId, changeChoco, chocoArray}:{selectedChocoId:s
       }
       {
         chocoArray.length>=3 ? null:
-        <ListElement active={selectedChocoId==='new'} onClick={()=>{if('new'!==selectedChocoId)changeChoco('new')}}>
+        <ListElement active={selectedChocoId==='new'} onClick={(e)=>{if('new'!==selectedChocoId)changeChoco('new')(e)}}>
           <div className={styles.new}>new choco</div>
         </ListElement>
       }

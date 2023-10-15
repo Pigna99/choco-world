@@ -4,7 +4,7 @@ import { load, reset, save } from "@/utils/frontend/localStorage";
 import { frontend_info, settings } from "@/utils/frontend/utilsFrontend";
 import { savedChoco } from "@/utils/interfaces";
 import { DEBUG } from "@/utils/settings";
-import { MouseEventHandler, PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
 type GlobalContextProps = {
     isFirstRendering:boolean,isFirstLoading:boolean,
@@ -13,7 +13,7 @@ type GlobalContextProps = {
     changeCreature:(id:string)=>void, addCreatureToList:(c:savedChoco)=>void, removeActualCreature:()=>void,
     toggleSetting:(setting:settings)=>void,
     getMusicLink:(name:musictrace)=>string, getAudioLink:(name:audiotrace)=>string, 
-    playButton:MouseEventHandler,
+    openLoadingScreen:()=>void, closeLoadingScreen:()=>void
 }
 
 const GlobalContext = createContext<GlobalContextProps|null>(null);
@@ -51,7 +51,6 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     const changeCreature= (id: string) =>{
         if (id !== localInfo.last_choco) {
             setLocalInfo({...localInfo, last_choco:id});
-            //stopImportantAnimation()
         }
     }
     const addCreatureToList = (c: savedChoco) => {//add new creature to list, and set new actual creature id
@@ -79,7 +78,6 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         reset();
         setLocalInfo(load())
     }
-
     const loadFileLink= (files:loadableLink[])=>{
         setLinkLoader(files)
     }
@@ -103,9 +101,11 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         }
         return ''
     }
-
-    const playButton = ()=>{
-        setIsFirstLoading(false);
+    const openLoadingScreen=()=>{
+        setIsFirstLoading(true)
+    }
+    const closeLoadingScreen=()=>{
+        setIsFirstLoading(false)
     }
 
     useEffect(() => {
@@ -129,7 +129,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     useEffect(() => {//When isPreload is loaded, load local files with indexeddb
         if(!isFirstRendering){
             if(localInfo.settings.preload){
-                setIsFirstLoading(true)
+                openLoadingScreen()
                 loadFiles(loadFileLink,changeLoadingInfo)
             }else{
                 clearPreloadedFiles()
@@ -140,7 +140,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     
     
     return(
-        <GlobalContext.Provider value={{toggleSetting,addCreatureToList,removeActualCreature,changeCreature,resetLocalInfo, updateLocalInfo, loadingInfo,playButton,isFirstLoading, localInfo, getAudioLink, getMusicLink, isFirstRendering}}>
+        <GlobalContext.Provider value={{openLoadingScreen, closeLoadingScreen, toggleSetting,addCreatureToList,removeActualCreature,changeCreature,resetLocalInfo, updateLocalInfo, loadingInfo,isFirstLoading, localInfo, getAudioLink, getMusicLink, isFirstRendering}}>
             {props.children}
         </GlobalContext.Provider>
     )

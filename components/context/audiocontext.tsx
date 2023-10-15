@@ -7,7 +7,6 @@ import { useGlobalContext } from "./globalcontext";
 type AudioContextProps = {
     musicTrace:musictrace,setMusicTrace:(m:musictrace)=>void,
     audioTrace:audiotrace,setAudioTrace:(a:audiotrace)=>void,
-     
 }
 
 const AudioContext = createContext<AudioContextProps|null>(null);

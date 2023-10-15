@@ -1,9 +1,9 @@
 import { shiftMenu } from "@/utils/frontend/menu";
 import { creatureMenuList, newMenuList } from "@/utils/frontend/utilsFrontend";
-import {MouseEventHandler, PropsWithChildren, createContext, useContext, useState } from "react";
+import {PropsWithChildren, createContext, useContext, useState } from "react";
 
 type MenuContextProps = {
-    cycleMenu:(left:boolean)=>(()=>void),
+    cycleMenu:(left:boolean)=>void,
     resetToStartMenu:()=>void,
     resetToNewMenu:()=>void,
     selectedMenu:{name:string, list:number[]}
@@ -18,7 +18,7 @@ export const MenuProvider = (props: PropsWithChildren) => {
     //menu
     const [selectedMenu, setSelectedMenu] = useState(startMenu) //actual selected menu
 
-    const cycleMenu = (left: boolean) => (): void => {//cycle left/right throw menu elements
+    const cycleMenu = (left: boolean) => {//cycle left/right throw menu elements
         const length_menu = (selectedMenu.name === 'new' ? newMenuList.length : creatureMenuList.length);
         let newMenu = shiftMenu(selectedMenu.list, left);
         left ?
