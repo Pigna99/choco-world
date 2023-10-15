@@ -1,10 +1,10 @@
 import { get, set, clear } from 'idb-keyval';
-import { getMusicPath, musicList } from './audio';
+import { audioList, getAudioPath, getMusicPath, musicList } from './audio';
 
 type loadableLink = {name:string, url:string}
 type loadingInfoType = {percentage:number,name:string}
 
-const dbVersion = 2;
+const dbVersion = 3;
 const LOCALDEBUG=false;
 
 const getPercentage= (index:number, lenght:number)=>{
@@ -32,8 +32,7 @@ const preloadFiles= async (setLoadingInfo:(info:loadingInfoType)=>void)=>{
     
     //set version
 
-    //load all mp3s in db
-    
+    //load all mp3s musics in db
     for(let index=0; index<musicList.length; index++){
         const filename= musicList[index]
         let stream = await fetch(getMusicPath(filename))//fetch file
@@ -47,14 +46,31 @@ const preloadFiles= async (setLoadingInfo:(info:loadingInfoType)=>void)=>{
             console.log(`ERROR in loading ${filename} ${err}`)
         }
     }
-    setLoadingInfo({name:'complete', percentage:100})
-    //load all mp3s in db
+    setLoadingInfo({name:'music-complete', percentage:100})
+    //load all mp3s musics in db
     
+    //load all mp3s audio in db
+    for(let index=0; index<audioList.length; index++){
+        const filename= audioList[index]
+        let stream = await fetch(getAudioPath(filename))//fetch file
+        let blob = await stream.blob();//transform in blob
+        if(LOCALDEBUG)console.log(`${filename} loading in db ...`)
+        try{
+            setLoadingInfo({name:'downloading audio-'+filename, percentage:getPercentage(index,audioList.length)})
+            await set(filename, blob)//load in db
+            if(LOCALDEBUG)console.log(`${filename} loaded in db`)
+        }catch(err){
+            console.log(`ERROR in loading ${filename} ${err}`)
+        }
+    }
+    setLoadingInfo({name:'complete', percentage:100})
+    //load all mp3s audio in db
 }
 
 const getPreloadedFiles= async (loadFiles:(f:loadableLink[])=>void,setLoadingInfo:(info:loadingInfoType)=>void)=>{
     const URL = window.URL
     let loadbleFiles:loadableLink[] = [];
+    //loading musics from fb
     for(let index=0; index<musicList.length; index++){
         const filename= musicList[index]
         if(LOCALDEBUG)console.log(`getting ${filename} from db`)
@@ -73,6 +89,28 @@ const getPreloadedFiles= async (loadFiles:(f:loadableLink[])=>void,setLoadingInf
             console.log(`ERROR in getting ${filename} ${err}`)
         }
     }
+    setLoadingInfo({name:'music loaded', percentage:100})
+    //loading musics from fb
+    //loading audios from fb
+    for(let index=0; index<audioList.length; index++){
+        const filename= audioList[index]
+        if(LOCALDEBUG)console.log(`getting ${filename} from db`)
+        let res;
+        try{
+            setLoadingInfo({name:'loading audio-'+filename, percentage:getPercentage(index,audioList.length)})
+            res = await get(filename)
+            if(LOCALDEBUG)console.log(`got ${filename} from db`)
+            const url = URL.createObjectURL(res);
+            const f:loadableLink={
+                name:'audio-'+filename,
+                url:url
+            }
+            loadbleFiles.push(f)
+        }catch(err){
+            console.log(`ERROR in getting ${filename} ${err}`)
+        }
+    }
+    //loading audios from fb
     //at the end, load the links
     loadFiles(loadbleFiles)
 }

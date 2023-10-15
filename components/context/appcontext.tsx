@@ -6,6 +6,7 @@ import { precalcFeed, precalcPet } from "@/utils/frontend/utilsFrontend";
 import { Gender } from "@/utils/interfaces";
 import { checkCreatureId, validateNewCreature } from "@/utils/frontend/fetchValidation";
 import { useGlobalContext } from "./globalcontext";
+import { useAudioContext } from "./audiocontext";
 
 type AppContextProps = {
     playACTION:MouseEventHandler//loading screen
@@ -26,6 +27,7 @@ export const AppProvider = (props: PropsWithChildren) => {
     const {feedFetch, petFetch, loadCreatureFetch, newCreatureFetch, creatureInfo} = useFetchContext();
     const {startImportantAnimation, updateVisuals, isPlayingAnimation, sprite, clicks, incrementClicks, stopImportantAnimation} = useScreenContext()
     const {localInfo, changeCreature, closeLoadingScreen, toggleSetting, removeActualCreature, resetLocalInfo} = useGlobalContext()
+    const {setAudioTrace} = useAudioContext()
     //loading screen
     const playACTION:MouseEventHandler = ()=>{
         closeLoadingScreen()
@@ -55,20 +57,37 @@ export const AppProvider = (props: PropsWithChildren) => {
     const feedACTION:MouseEventHandler = async ()=>{
         if(isPlayingAnimation) return;//make animation not interruptable!
         startImportantAnimation()
-        precalcFeed(creatureInfo) ? updateVisuals('eating') : updateVisuals('idle-feed')//precalc if you can feed or not for fast update
+        let res = precalcFeed(creatureInfo)//precalc if you can feed or not for fast update
+        if(res){
+            updateVisuals('eating')
+            setAudioTrace('jingle2')
+        }else{
+            updateVisuals('idle-feed')
+            setAudioTrace('fail')
+        }
         await feedFetch()//effectivly fetch
     }
 
     const petACTION:MouseEventHandler = async ()=>{
         if(isPlayingAnimation) return;//make animation not interruptable!
         startImportantAnimation()
-        precalcPet(creatureInfo) ? updateVisuals('happy') : updateVisuals('idle-pet')//precalc if you can pet or not for fast update
+        let res = precalcPet(creatureInfo)//precalc if you can pet or not for fast update
+        if(res){
+            updateVisuals('happy')
+            setAudioTrace('jingle3')
+        }else{
+            updateVisuals('idle')
+            setAudioTrace('fail')
+        }
         await petFetch()//effectivly fetch
     }
 
     const loadACTION = (id:string)=>async ()=>{
         if (!checkCreatureId(id, localInfo.list)) return;
         const res = await loadCreatureFetch(id)
+        if(res){
+            setAudioTrace('jingle1');
+        }
     }
 
     const newACTION = (name:string,color:string,gender:Gender)=>async ()=>{
@@ -76,10 +95,14 @@ export const AppProvider = (props: PropsWithChildren) => {
         console.log("Creating a new Creature");
         if (name === 'test') {
             updateVisuals("hatching")
+            setAudioTrace('hatching')
             return;
         }
         const response = await newCreatureFetch(name,color,gender)
-        if(response)updateVisuals("hatching")//change to setAnimation
+        if(response){
+            updateVisuals("hatching")
+            setAudioTrace('hatching')
+        }//change to setAnimation
         if(!response)console.log('ERROR! Hatching not worked')
     }
 
