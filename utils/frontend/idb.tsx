@@ -22,9 +22,9 @@ const preloadFiles= async (setLoadingInfo:(info:loadingInfoType)=>void)=>{
 
     //set version
     try{
-        setLoadingInfo({name:'version', percentage:0})
+        setLoadingInfo({name:'setting version', percentage:0})
         await set('version', dbVersion)
-        setLoadingInfo({name:'version', percentage:100})
+        setLoadingInfo({name:'setting version', percentage:100})
         console.log(`Version setted: ${dbVersion}`)
     }catch(err){
         console.log('It failed!', err)
@@ -79,7 +79,9 @@ const getPreloadedFiles= async (loadFiles:(f:loadableLink[])=>void,setLoadingInf
 
 const loadFiles= async(loadFiles:(f:loadableLink[])=>void, setLoadingInfo:(info:loadingInfoType)=>void)=>{ 
     if(await isNewVersion()){
+        setLoadingInfo({name:'saving new version', percentage:0})
         await preloadFiles(setLoadingInfo);
+        setLoadingInfo({name:'loading new version', percentage:0})
     }
     await getPreloadedFiles(loadFiles, setLoadingInfo);
 }
