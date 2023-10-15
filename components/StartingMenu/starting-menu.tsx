@@ -13,7 +13,7 @@ const LoadingScreen = () => {
 }
 
 const LoadingMenu = () =>{
-    const {loadingInfo, playButton, isPreload} = useGlobalContext();
+    const {loadingInfo, playButton, localInfo} = useGlobalContext();
     return(
         <div className={styles.loadingMenu}>
             <h3>Choco World</h3>
@@ -28,7 +28,7 @@ const LoadingMenu = () =>{
             </div>
             
             {
-                !isPreload&&loadingInfo.name==='complete'  ? <div className={styles.loadingAdvice}> 
+                !localInfo.settings.preload&&loadingInfo.name==='complete'  ? <div className={styles.loadingAdvice}> 
                     enable preloading local files in the settings menu for better performance
                 </div> : <div className={styles.loadingAdvice}/>
             }

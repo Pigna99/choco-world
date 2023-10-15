@@ -1,21 +1,17 @@
 import { Button } from '@/components/utilsComponents/buttons'
 import styles from './settings.module.css'
 import { MouseEventHandler, useState } from 'react'
-import { useAppContext } from '@/components/context/appcontext'
-import { useAudioContext } from '@/components/context/audiocontext'
 import { useGlobalContext } from '@/components/context/globalcontext'
 
 export const Settings = ()=>{
-    const {removeActualCreature, creatureId} = useAppContext()
-    const {toggleAudio, toggleMusic, musicSettings,audioSettings} = useAudioContext()
-    const {isPreload, togglePreload, resetLocalStorageInfo}= useGlobalContext()
+    const {localInfo, toggleSetting, resetLocalInfo, removeActualCreature}= useGlobalContext()
     return(
         <div className={styles.container}>
-            <SettingToggler name='music' clickEvent={toggleMusic} active={musicSettings.isPlaying}/>
-            <SettingToggler name='audio' clickEvent={toggleAudio} active={audioSettings.isPlaying}/>
-            <SettingToggler name='preload' clickEvent={togglePreload} active={isPreload}/>
-            {(creatureId!== '' && creatureId !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreature}/>:null}
-            <SettingValidator name='delete all local data' clickEvent={resetLocalStorageInfo}/>
+            <SettingToggler name='music' clickEvent={()=>toggleSetting('music')} active={localInfo.settings.music}/>
+            <SettingToggler name='audio' clickEvent={()=>toggleSetting('audio')} active={localInfo.settings.audio}/>
+            <SettingToggler name='preload' clickEvent={()=>toggleSetting('preload')} active={localInfo.settings.preload}/>
+            {(localInfo.last_choco!== '' && localInfo.last_choco !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreature}/>:null}
+            <SettingValidator name='delete all local data' clickEvent={resetLocalInfo}/>
         </div>
     )
 }

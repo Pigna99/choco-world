@@ -8,13 +8,16 @@ import { Settings } from './Settings/settings'
 import ChocoList from './ChocoList/chocoList'
 import NewChoco from './NewChoco/newChoco'
 import LoadChoco from './LoadChoco/loadChoco'
-import { useAppContext } from '../context/appcontext'
+import { useFetchContext } from '../context/fetchcontext'
 import { useScreenContext } from '../context/screencontext'
+import { useMenuContext } from '../context/menucontext'
+import { useGlobalContext } from '../context/globalcontext'
 
 export const Content = ()=>{
-    const {creatureId,changeCreature,selectedMenu, creatureInfo, cycleMenu, creatureList} = useAppContext()
+    const {changeCreature, localInfo} = useGlobalContext()
     const {isPlayingAnimation, infoText, clicks} = useScreenContext()
-    const {feedCommand,petCommand,loadCreature,newCreature} = useAppContext()
+    const {creatureInfo, feedCommand,petCommand,loadCreature,newCreature} = useFetchContext()
+    const {cycleMenu, selectedMenu} = useMenuContext()
     const sMenu:any[] = selectedMenu.list;
 
     //touch
@@ -54,15 +57,15 @@ export const Content = ()=>{
             return (
                 creatureMenuList[id] === 'stats' ? <Stats info={creatureInfo} /> :
                 creatureMenuList[id] === 'actions' ? <Commands feedCommand={feedCommand} petCommand={petCommand} block={isPlayingAnimation} info={infoText} /> :
-                creatureMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={creatureId}/> :
-                creatureMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
+                creatureMenuList[id] === 'info' ?<Info infoBox={creatureInfo} creatureId={localInfo.last_choco}/> :
+                creatureMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={localInfo.last_choco} changeChoco={changeCreature} chocoArray={localInfo.list}/> :
                 creatureMenuList[id] === 'settings' ? <Settings/> :
             <div></div> ) 
         }
         return(
             newMenuList[id] === 'new' ? <NewChoco newChoco={newCreature} clicks={clicks}/>:
             newMenuList[id] === 'load' ? <LoadChoco loadChoco={loadCreature}/>:
-            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={creatureId} changeChoco={changeCreature} chocoArray={creatureList}/> :
+            newMenuList[id] === 'chocos' ? <ChocoList selectedChocoId={localInfo.last_choco} changeChoco={changeCreature} chocoArray={localInfo.list}/> :
             newMenuList[id] === 'settings' ? <Settings/> :
             <div></div>
         )

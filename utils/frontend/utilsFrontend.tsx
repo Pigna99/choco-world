@@ -21,6 +21,7 @@ const newMenuList:menu[] = ['new','load', 'settings','chocos']
 type menu_interface ={left:number,actual:number,right:number}
 
 type API_string = 'update'|'pet'|'feed'
+type settings = 'music'|'audio' |'preload'
 
 type frontend_info = {
     list:savedChoco[],
@@ -60,5 +61,5 @@ const getRange=(start:number, end:number)=>{
 }
 
 
-export type {spritesList, menu, API_string, menu_interface, frontend_info, spritesSettings}
+export type {spritesList, menu, API_string, menu_interface, frontend_info, spritesSettings, settings}
 export{getTicksFromDate, precalcFeed, precalcPet,creatureMenuList,newMenuList,generateArrayFrame, getRange}
