@@ -1,8 +1,8 @@
-import { MouseEventHandler, PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
-import { API_string, creatureMenuList, newMenuList, precalcFeed, precalcPet } from "@/utils/frontend/utilsFrontend";
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { API_string } from "@/utils/frontend/utilsFrontend";
 import { Creature, Gender, savedChoco } from "@/utils/interfaces";
 import { VisualCreatureClass } from "@/utils/frontend/VisualCreatureClass";
-import { checkCreatureId, validateNewCreature, isUpdateTime } from "@/utils/frontend/fetchValidation";
+import { isUpdateTime } from "@/utils/frontend/fetchValidation";
 import { useGlobalContext } from "./globalcontext";
 import { useAudioContext } from "./audiocontext";
 import { DEBUG } from "@/utils/settings";
@@ -21,8 +21,8 @@ const FetchContext = createContext<FetchPropsProvided | null>(null);
 let startUpdateTimeout: NodeJS.Timeout | null = null;
 
 export const FetchProvider = (props: PropsWithChildren) => {
-    const { startImportantAnimation, stopImportantAnimation, updateVisuals, isPlayingAnimation, removeClicks } = useScreenContext()
-    const { isFirstRendering, localInfo, updateLocalInfo, addCreatureToList, removeActualCreature, startFetch, setLoadingInfo } = useGlobalContext()
+    const { startImportantAnimation, stopImportantAnimation, updateVisuals, isPlayingAnimation, removeClicks} = useScreenContext()
+    const { isFirstRendering, localInfo, updateLocalInfo, addCreatureToList, removeActualCreature, startFetch, setLoadingInfo, isFirstLoading} = useGlobalContext()
     const { setMusicTrace, setAudioTrace } = useAudioContext()
     const {resetToStartMenu, resetToNewMenu} = useMenuContext();
 
@@ -119,7 +119,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
 
     useEffect(() => {//first update+menu change
         if(!startFetch)return;
-        console.log(localInfo)
+        if(DEBUG)console.log(localInfo)
         if (localInfo.last_choco !== '' && localInfo.last_choco !== 'new') {//first update and set a creature throgh id
             updateVisuals('loading');
             stopTimeout();
@@ -129,6 +129,11 @@ export const FetchProvider = (props: PropsWithChildren) => {
                 updateLocalInfo();
                 setLoadingInfo({name:'loading complete', percentage:100})
             });
+            if(!isFirstLoading){
+                console.log('changing local info')
+                if (creatureInfo.state === 'walking') setMusicTrace('theme')
+                if (creatureInfo.state === 'sleeping') setMusicTrace('sleep')
+            }
             return;
         }
         if (localInfo.last_choco === 'new') {//new creature setting screen
@@ -155,6 +160,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
             newTimeout(async () => { await updateCommand(); stopImportantAnimation(); }, 5000);
             setIsUpdatedCreatureInfo(false); setIsUpdatedlastUpdate(false);
             //set music based on the new state
+            if(localInfo.last_choco==='new')return;
             if (creatureInfo.state === 'walking') setMusicTrace('theme')
             if (creatureInfo.state === 'sleeping') setMusicTrace('sleep')
         }

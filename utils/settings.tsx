@@ -16,7 +16,7 @@ const HAPPINESS_MODIFIER= [0,1,1,1,2,2,2,3,3,3,4];
 const HAPPINESS_NAMES=['depressed','sad','sad','sad','normal','normal','normal','happy','happy','happy','delighted']
 const LEVEL1_HAPPINESS= 5; //normal
 
-const DEBUG = true;
+const DEBUG = false;
 /**
  * Happiness values:
  * 

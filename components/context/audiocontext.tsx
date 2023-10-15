@@ -77,6 +77,13 @@ export const AudioProvider = (props: PropsWithChildren) => {
       if(!isMusicOn()){
         changeMusic(musicTrace)
       }else{//fade, than change
+        if(isAudioOn()){
+            music.stop();
+            audio?.once('end', ()=>{           
+                changeMusic('theme')//this is a temp fix, really is not the solution!
+            })
+            return
+        }
         let fading_time=700
         music.fade(1,0,fading_time)
         setTimeout(()=>{
@@ -96,10 +103,13 @@ export const AudioProvider = (props: PropsWithChildren) => {
     }, [isFirstLoading])
     //MUSIC
     //AUDIO
+    const isAudioOn=()=>{
+        if(!audio)return false;
+        return audio.playing()
+    }
     const setAudioTrace = (a:audiotrace)=>{//fade music if audio is playing
         if(!localInfo.settings.audio)return;
         let ad= new Howl(setHowlSettings(getAudioLink(a), false))
-        setAudio(ad)
         ad.play()
         if(music){
             if(music.playing()){
@@ -109,7 +119,7 @@ export const AudioProvider = (props: PropsWithChildren) => {
                 })
             }
         }
-        
+        setAudio(ad)
     }
     const stopAudio = ()=>{
         if(!audio)return;
