@@ -27,7 +27,7 @@ export const AppProvider = (props: PropsWithChildren) => {
     const {feedFetch, petFetch, loadCreatureFetch, newCreatureFetch, creatureInfo} = useFetchContext();
     const {startImportantAnimation, updateVisuals, isPlayingAnimation, sprite, clicks, incrementClicks, stopImportantAnimation} = useScreenContext()
     const {localInfo, changeCreature, closeLoadingScreen, toggleSetting, removeActualCreature, resetLocalInfo} = useGlobalContext()
-    const {setAudioTrace} = useAudioContext()
+    const {setAudioTrace,stopMusic} = useAudioContext()
     //loading screen
     const playACTION:MouseEventHandler = ()=>{
         closeLoadingScreen()
@@ -101,6 +101,7 @@ export const AppProvider = (props: PropsWithChildren) => {
         const response = await newCreatureFetch(name,color,gender)
         if(response){
             updateVisuals("hatching")
+            stopMusic()
             setAudioTrace('hatching')
         }//change to setAnimation
         if(!response)console.log('ERROR! Hatching not worked')

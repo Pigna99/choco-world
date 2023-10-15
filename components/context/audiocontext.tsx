@@ -6,7 +6,7 @@ import { useGlobalContext } from "./globalcontext";
 
 type AudioContextProps = {
     musicTrace:musictrace,setMusicTrace:(m:musictrace)=>void,
-    setAudioTrace:(a:audiotrace)=>void,
+    setAudioTrace:(a:audiotrace)=>void, stopMusic:()=>void
 }
 
 const AudioContext = createContext<AudioContextProps|null>(null);
@@ -127,7 +127,7 @@ export const AudioProvider = (props: PropsWithChildren) => {
     }
     //AUDIO
     return(
-        <AudioContext.Provider value={{musicTrace,setMusicTrace,setAudioTrace}}>
+        <AudioContext.Provider value={{stopMusic,musicTrace,setMusicTrace,setAudioTrace}}>
             {props.children}
         </AudioContext.Provider>
     )
