@@ -1,6 +1,6 @@
 type audiotrace = 'none'
-type musictrace = 'none' | 'theme' | 'fight' | 'sleep'
-const musicList:musictrace[] = ['theme','fight', 'sleep']
+type musictrace = 'none' | 'theme' | 'fight' | 'sleep' | 'egg'
+const musicList:musictrace[] = ['theme','fight', 'sleep', 'egg']
 
 const getMusicPath = (m:musictrace)=>{
     let path='/music/'
@@ -13,6 +13,9 @@ const getMusicPath = (m:musictrace)=>{
             break;
         case 'sleep':
             path+='chocosleep.mp3'
+            break;
+        case 'egg':
+            path+='chocoegg.mp3'
             break;
         default:
             break;

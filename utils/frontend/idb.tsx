@@ -4,7 +4,7 @@ import { getMusicPath, musicList } from './audio';
 type loadableLink = {name:string, url:string}
 type loadingInfoType = {percentage:number,name:string}
 
-const dbVersion = 1;
+const dbVersion = 2;
 const LOCALDEBUG=false;
 
 const getPercentage= (index:number, lenght:number)=>{
@@ -73,7 +73,6 @@ const getPreloadedFiles= async (loadFiles:(f:loadableLink[])=>void,setLoadingInf
             console.log(`ERROR in getting ${filename} ${err}`)
         }
     }
-
     //at the end, load the links
     loadFiles(loadbleFiles)
 }

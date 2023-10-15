@@ -135,7 +135,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
             resetToNewMenu();
             stopTimeout();
             updateVisuals('egg')
-            setMusicTrace('fight')
+            setMusicTrace('egg')
             setLoadingInfo({name:'loading complete', percentage:100})
             return;
         }

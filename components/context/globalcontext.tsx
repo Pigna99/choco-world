@@ -145,8 +145,10 @@ export const GlobalProvider = (props: PropsWithChildren) => {
                         setLoadingInfo({name:'starting fetching', percentage:100})
                         setStartFetch(true)
                         return;
-                        }
+                    }else{
+                        setLoadingInfo({name:'loading complete', percentage:100})
                     }
+                }
                 )
             }else{
                 clearPreloadedFiles()

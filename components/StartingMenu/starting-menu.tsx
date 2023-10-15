@@ -24,7 +24,7 @@ const LoadingMenu = () =>{
                 <LoadingBar percentage={loadingInfo.percentage}/>
                 <div className={styles.confirmButton}>
                     <Button name='play' clickEvent={(e)=>{if(loadingInfo.name==='loading complete')playACTION(e)}}
-                        blocked={loadingInfo.name!=='loading  complete'}
+                        blocked={loadingInfo.name!=='loading complete'}
                     />
                 </div>
             </div>
