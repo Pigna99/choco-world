@@ -9,7 +9,7 @@ export const Stats = ({info}:{info:Creature})=>{
     return(
         <div className={styles.container}>
             <div className={styles.nameContainer}>
-                <h4>{info.name}</h4>
+                <div>{info.name}</div>
                 <GenderIcon gender={info.gender} dim={45}/>
             </div>
             <div className={styles.statName}>

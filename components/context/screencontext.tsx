@@ -74,7 +74,7 @@ export const ScreenProvider = (props: PropsWithChildren) => {
                 setSprite({ name: 'hatching', loop: false, fps: 6 })
                 break;
             case 'loading':
-                setSprite({ name: 'none', loop: false })
+                //setSprite({ name: 'none', loop: false }) //removed blank when switching creature
                 setInfoText('loading info...')
                 break;
             default:
