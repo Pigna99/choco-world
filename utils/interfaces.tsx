@@ -19,20 +19,38 @@ interface Creature {
     last_time_feed: Date;
     statictics: {
         level: number;
+        hp:Stat;
         stamina: Stat;
         happiness: Stat;
         hunger: Stat;
         experience: Stat;
     },
-    /**
-    * Add more info like number of naps, pets, time feed etc
-    */
     informations: {
         steps: number;//equal to total experience!
         pets: number;
         feeds: number;
+        enemies: number;
         birthday: Date;
     }
+    combat: combatEntity
+    social: {
+        friends:socialInteraction[]
+    }
+}
+type enemies= 'none'|'normal' |'rare'| 'epic'| 'legendary'
+type combatEntity = {
+    enemyhp:Stat;
+    enemy_type:enemies;
+    enemy_color:string;
+    experience:number;
+    damage:number;
+}
+type socialInteraction = {
+    id:string,
+    name:string,
+    color:string,
+    gender:Gender,
+    affinity:Stat,
 }
 
 type savedChoco = {name:string, color:string, gender:Gender, id:string}
@@ -57,5 +75,5 @@ function tryRandom(n:number): boolean{
 
 
 
-export type {Creature, Stat, State, VisualState, Gender, savedChoco}
+export type {Creature, Stat, State, VisualState, Gender, savedChoco,socialInteraction, enemies, combatEntity}
 export{ checkMaxStat, checkMinStat, tryRandom, percentageStat}

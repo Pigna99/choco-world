@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-import { Creature } from "../interfaces"
+import { Creature, socialInteraction } from "../interfaces"
 
 const creatureScheme = new mongoose.Schema<Creature>(
     {
@@ -31,15 +31,30 @@ const creatureScheme = new mongoose.Schema<Creature>(
                 max: Number,
                 actual: Number,
             },
+            hp: {
+                max: Number,
+                actual: Number,
+            },
         },
-        /**
-        * Add more info like number of naps, pets, time feed etc
-        */
         informations: {
             steps: Number,//equal to total experience!
             pets: Number,
             feeds: Number,
             birthday: Date,
+            enemies: Number,
+        },
+        combat: {
+            enemyhp:{
+                max: Number,
+                actual: Number,
+            },
+            enemy_type:String,
+            enemy_color:String,
+            damage:Number,
+            experience:Number,
+        },
+        social: {
+            friends:Array<socialInteraction>,
         }
     }
 )

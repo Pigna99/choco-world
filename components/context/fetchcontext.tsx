@@ -111,6 +111,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
             }
             return [false, null];
         }
+        console.log(data)
         //first fetching for loading screen
         setLastUpdate(new Date());
         return [true, data]

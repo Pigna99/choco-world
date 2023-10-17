@@ -31,15 +31,32 @@ export class VisualCreatureClass{
                 experience: {
                     actual: 0,
                     max: 0,
+                },
+                hp: {
+                    actual: 0,
+                    max: 0,
                 }
             },
             informations: {
                 steps: 0,
                 pets: 0,
                 feeds: 0,
-                birthday: right_now
+                birthday: right_now,
+                enemies: 0
             },
-            
+            combat: {
+                enemyhp: {
+                    actual: 0,
+                    max: 0,
+                },
+                enemy_type: "none",
+                enemy_color: "",
+                experience: 0,
+                damage: 0
+            },
+            social: {
+                friends: []
+            }
         }
         return baseCreature;
     }

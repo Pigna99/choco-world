@@ -1,5 +1,6 @@
-import { Creature , Gender, State, checkMaxStat, checkMinStat, percentageStat, savedChoco, tryRandom} from "../interfaces";
-import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS } from '../settings';
+import { ST } from "next/dist/shared/lib/utils";
+import { Creature , Gender, Stat, State, checkMaxStat, checkMinStat, percentageStat, savedChoco, tryRandom} from "../interfaces";
+import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS, LEVEL1_HP, HP_SCALING } from '../settings';
 
 class CreatureClass {
     private info: Creature;
@@ -11,7 +12,7 @@ class CreatureClass {
         let baseCreature:Creature= {
             name: name,
             state: 'walking',
-            color:color,
+            color: color,
             gender: gender,
             last_update: right_now,
             last_time_pet: right_now,
@@ -20,6 +21,10 @@ class CreatureClass {
             last_time_feed: right_now,
             statictics: {
                 level: 1,
+                hp: {
+                    actual: LEVEL1_HP,
+                    max: LEVEL1_HP,
+                },
                 stamina: {
                     actual: LEVEL1_STAMINA,
                     max: LEVEL1_STAMINA,
@@ -29,7 +34,7 @@ class CreatureClass {
                     max: 10,
                 },
                 hunger: {
-                    actual: Math.floor(LEVEL1_HUNGER/2),
+                    actual: Math.floor(LEVEL1_HUNGER / 2),
                     max: LEVEL1_HUNGER,
                 },
                 experience: {
@@ -41,9 +46,22 @@ class CreatureClass {
                 steps: 0,
                 pets: 0,
                 feeds: 0,
+                enemies: 0,
                 birthday: right_now
             },
-            
+            combat: {
+                enemyhp: {
+                    actual: 0,
+                    max: 0,
+                },
+                enemy_type: "none",
+                enemy_color: "#000000",
+                damage:0,
+                experience:0,
+            },
+            social: {
+                friends: []
+            }
         }
 
         return new CreatureClass(baseCreature);
@@ -55,6 +73,26 @@ class CreatureClass {
             gender: this.info.gender,
             id: id
           }
+    }
+    update(){//insert missing proprieties, if the choco is at a previus version!
+        if(!this.info.statictics.hp.actual){
+            console.log('updating hp')
+            this.info.statictics.hp={
+                actual: LEVEL1_HP+HP_SCALING*(this.info.statictics.level-1),
+                max: LEVEL1_HP+HP_SCALING*(this.info.statictics.level-1),
+            }
+            this.info.informations.enemies=0;
+            this.info.combat= {
+                enemyhp: {
+                    actual: 0,
+                    max: 0,
+                },
+                enemy_type: "none",
+                enemy_color: "#000000",
+                damage:0,
+                experience:0,
+            }
+        }
     }
 
     simulate(){
@@ -128,9 +166,10 @@ class CreatureClass {
     private levelUp(){
         this.info.statictics.level++;
         this.info.statictics.experience.actual-= this.info.statictics.experience.max;//remove exp for the level
-        this.info.statictics.experience.max+= Math.floor(this.info.statictics.experience.max * EXPERIENCE_SCALING);//max_exp
-        this.info.statictics.stamina.max+= Math.floor(this.info.statictics.stamina.max * STAMINA_SCALING);//stamina
-        this.info.statictics.hunger.max+= Math.floor(this.info.statictics.hunger.max * HUNGER_SCALING);//hunger
+        this.info.statictics.experience.max= Math.round((Math.pow(this.info.statictics.level+6, EXPERIENCE_SCALING)/2)+LEVEL1_EXPERIENCE);//max_exp
+        this.info.statictics.stamina.max=Math.round((Math.pow(this.info.statictics.level+1, STAMINA_SCALING)/2)+LEVEL1_STAMINA);
+        this.info.statictics.hunger.max=Math.round((Math.pow(this.info.statictics.level+1, HUNGER_SCALING)/2)+LEVEL1_HUNGER);
+        this.info.statictics.hp.max+=HP_SCALING//hp
         console.log(`[${this.info.name}]: Level up! ${this.info.name} reached level ${this.info.statictics.level}!`);
     }
 
@@ -212,7 +251,5 @@ class CreatureClass {
         this.info.state = s;
     }
 }
-
-
 
 export {CreatureClass}

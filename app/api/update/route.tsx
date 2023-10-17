@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         status: 404,
       })
     }
-    
+    creature.update();//set missing proprieties
     creature.simulate();//simulate
     
     await updateCreature(creature.getInfo(), creatureId);//save creature info

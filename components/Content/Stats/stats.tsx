@@ -15,6 +15,7 @@ export const Stats = ({info}:{info:Creature})=>{
             <div className={styles.statName}>
                 {`Level ${info.statictics.level}`}
             </div>
+            <Stat s={info.statictics.hp} name='HP' colored/>
             <Stat s={info.statictics.stamina} name='Stamina' colored/>
             <Stat s={info.statictics.hunger} name='Hunger' colored/>
             <Stat s={info.statictics.happiness} name='Happiness' happiness colored/>
