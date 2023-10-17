@@ -90,9 +90,9 @@ class EnemyClass {
         }
         let number = Math.round(Math.random()*100);
         if(0<=number && number<normal)return 'normal'
-        if(normal<=number && number<rare)return 'rare'
-        if(rare<=number && number<epic)return 'epic'
-        if(epic<=number && number<legendary)return 'legendary'
+        if(normal<=number && number<rare+normal)return 'rare'
+        if(rare+normal<=number && number<rare+normal+epic)return 'epic'
+        if(rare+normal+epic<=number && number<=100)return 'legendary'
         return 'legendary'
     }
 }
