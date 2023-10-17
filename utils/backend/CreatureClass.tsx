@@ -235,7 +235,6 @@ class CreatureClass {
         const last_happiness_update = new Date(this.info.last_happiness_update)
         const simulated_update_time = new Date(Date.now()- remaining_ticks*60000*TICK_VALUE)
         const ticks = this.getTicksBetweenDates(last_happiness_update, simulated_update_time)
-        console.log(ticks,' ', remaining_ticks)
         if(ticks<TICK_DAY) return;
         if(!checkMinStat(this.info.statictics.happiness)){
             this.info.statictics.happiness.actual--;
