@@ -105,7 +105,7 @@ class CreatureClass {
         const new_update = new Date(last_update.getTime() + new_ticks*60000*TICK_VALUE);//updated timer
         console.log(`[${this.info.name}]: simulating ${new_ticks} tick(s)`);
         for(let i_ticks = new_ticks; i_ticks>0; --i_ticks){//foreach tick simulate!
-            this.nextTick();
+            this.nextTick(new_ticks);
         }
         this.setUpdateTime(new_update); //update timer to the next tick
     }
@@ -115,11 +115,21 @@ class CreatureClass {
         const new_ticks = Math.floor(new_ticks_float);
         return new_ticks;
     }
+
+    private getTicksBetweenDates(d1:Date, d2:Date){//number of ticks from that Date to now
+        const new_ticks_float1= ((new Date()).getTime()-d1.getTime()) / (60000*TICK_VALUE);
+        const new_ticks1 = Math.floor(new_ticks_float1);
+        const new_ticks_float2= ((new Date()).getTime()-d2.getTime()) / (60000*TICK_VALUE);
+        const new_ticks2 = Math.floor(new_ticks_float2);
+
+        return new_ticks1>new_ticks2 ? new_ticks1-new_ticks2 : new_ticks2-new_ticks1;
+    }
     private addTicksToDate(d:Date, t:number):Date{
         return new Date(d.getTime() + t*60000*TICK_VALUE)
     }
-    private nextTick(){//what happens after one tick
+    private nextTick(remaining_ticks: number){//what happens after one tick
         //check status first
+        this.checkHappiness(remaining_ticks);
         if (this.info.state === 'walking'){
             //hunger check
             if(!checkMinStat(this.info.statictics.hunger) && tryRandom(30)){
@@ -133,7 +143,7 @@ class CreatureClass {
             this.info.informations.steps+= exp;
             //set next state
             //happiness check
-            this.checkHappiness();
+            
             if(checkMaxStat(this.info.statictics.experience)){
                 this.levelUp();
             }
@@ -168,11 +178,8 @@ class CreatureClass {
             if(checkMaxStat(this.info.statictics.stamina) && checkMaxStat(this.info.statictics.hp)){
                 this.changeState('walking');
             }
-            //happiness check
-            this.checkHappiness();
             return;
         }
-
         if(this.info.state === 'fighting'){
             this.info.statictics.stamina.actual--;//lose 1 stamina to fight, check before starting
             //check if you need to start the fight
@@ -219,15 +226,15 @@ class CreatureClass {
         return(Math.round(damage_linear+ ((damage_linear*(Math.random()*0.5))-(damage_linear*0.25))))
     }
 
-    private checkHappiness(){
+    private checkHappiness(remaining_ticks:number){
         /*
             1)check that 24h has passed (288 ticks) from last happiness update
             2)if is passed, happiness--
             3)add 24h to last_happiness_update (for simulation)
         */
         const last_happiness_update = new Date(this.info.last_happiness_update)
-
-        const ticks = this.getTicksFromDate(last_happiness_update)
+        const simulated_update_time = new Date(Date.now()- remaining_ticks*60000*TICK_VALUE)
+        const ticks = this.getTicksBetweenDates(last_happiness_update, simulated_update_time)
         if(ticks<TICK_DAY) return;
         if(!checkMinStat(this.info.statictics.happiness)){
             this.info.statictics.happiness.actual--;
