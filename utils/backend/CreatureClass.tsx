@@ -269,7 +269,8 @@ class CreatureClass {
         console.log(`[${this.info.name}]: petted!`);
         this.info.last_time_pet = new Date();
         this.info.informations.pets++;
-        this.info.statictics.hp.actual= (this.info.statictics.hp.actual+10<=this.info.statictics.hp.max)? (this.info.statictics.hp.actual+10):this.info.statictics.hp.max;//restore 10 hp when petted
+        const increment = Math.floor(this.info.statictics.hp.max/5)
+        this.info.statictics.hp.actual= (this.info.statictics.hp.actual+increment<=this.info.statictics.hp.max)? this.info.statictics.hp.actual+increment:this.info.statictics.hp.max;//restore 1/5 hp when petted
         
         //if 1 tick passed, check if the pet is done after 12h after the last effettive pet, and can update happiness
         const last_time_pet_real = new Date(this.info.last_time_pet_real)
