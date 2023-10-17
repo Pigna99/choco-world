@@ -4,7 +4,7 @@ import { audioList, getAudioPath, getMusicPath, musicList } from './audio';
 type loadableLink = {name:string, url:string}
 type loadingInfoType = {percentage:number,name:string}
 
-const dbVersion = 3;
+const dbVersion = 4;
 const LOCALDEBUG=false;
 
 const getPercentage= (index:number, lenght:number)=>{
