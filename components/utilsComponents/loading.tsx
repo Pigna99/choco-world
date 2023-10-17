@@ -18,7 +18,7 @@ const LoadingSpinner = ({visible}:{visible:boolean})=>{
 }
 
 const Loading = () =>{
-    return <Sprite fps={18} framesArray={loading} color={'#000000'} width={"100%"} height={"10px"} loop/>
+    return <Sprite fps={18} framesArray={loading} color={'#000000'} color2={'#000000'} width={"100%"} height={"10px"} loop/>
 }
 
 
