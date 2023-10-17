@@ -84,6 +84,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
         if (then) then()
     }
     const apiCore = async (api: API_string, forceVisual?: boolean) => {
+        console.log('Update from server')
         const response = await apiFetch(`/api/${api}?id=${localInfo.last_choco}`, true);
         if (!response[0]) return;
         const creature: Creature = response[1].creature;
@@ -111,7 +112,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
             }
             return [false, null];
         }
-        console.log(data)
+        //console.log(data)
         //first fetching for loading screen
         setLastUpdate(new Date());
         return [true, data]
