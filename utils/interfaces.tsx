@@ -1,4 +1,4 @@
-type State = 'sleeping'|'walking'
+type State = 'sleeping'|'walking'|'fighting' |'chatting'
 type VisualState = State | 'idle'|'eating'|'happy'|'idle-feed'|'idle-pet' |'egg' |'hatching'|'loading'|'eggshake'
 
 type Gender = 'male' |'female'

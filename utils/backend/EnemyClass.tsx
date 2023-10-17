@@ -96,3 +96,5 @@ class EnemyClass {
         return 'legendary'
     }
 }
+
+export default EnemyClass

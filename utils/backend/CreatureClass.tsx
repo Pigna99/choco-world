@@ -1,6 +1,7 @@
 import { ST } from "next/dist/shared/lib/utils";
-import { Creature , Gender, Stat, State, checkMaxStat, checkMinStat, percentageStat, savedChoco, tryRandom} from "../interfaces";
+import { Creature , Gender, Stat, State, checkMaxStat, checkMinStat, combatEntity, percentageStat, savedChoco, tryRandom} from "../interfaces";
 import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS, LEVEL1_HP, HP_SCALING } from '../settings';
+import EnemyClass from "./EnemyClass";
 
 class CreatureClass {
     private info: Creature;
@@ -118,7 +119,6 @@ class CreatureClass {
     private addTicksToDate(d:Date, t:number):Date{
         return new Date(d.getTime() + t*60000*TICK_VALUE)
     }
-
     private nextTick(){//what happens after one tick
         //check status first
         if (this.info.state === 'walking'){
@@ -132,15 +132,21 @@ class CreatureClass {
             const exp = BASE_EXPERIENCE * HAPPINESS_MODIFIER[this.info.statictics.happiness.actual];
             this.info.statictics.experience.actual+= exp;
             this.info.informations.steps+= exp;
-            
-            if(checkMinStat(this.info.statictics.stamina)){
-                this.changeState('sleeping');
-            }
+            //set next state
+            //happiness check
+            this.checkHappiness();
             if(checkMaxStat(this.info.statictics.experience)){
                 this.levelUp();
             }
-            //happiness check
-            this.checkHappiness();
+            if(checkMinStat(this.info.statictics.stamina)){
+                this.changeState('sleeping');
+                return;
+            }
+            //start fight prompt
+            if(this.info.statictics.level>=10 && tryRandom(20) && false){
+                this.changeState('fighting')
+            }
+            //start fight prompt
             return;
         }
 
@@ -150,18 +156,50 @@ class CreatureClass {
                 this.info.statictics.hunger.actual--;
                 this.info.statictics.stamina.actual+=Math.ceil(this.info.statictics.stamina.max/10);
             }
+            if(!checkMinStat(this.info.statictics.hunger) && tryRandom(30)){
+                this.info.statictics.hunger.actual--;
+                this.info.statictics.hp.actual+=Math.ceil(this.info.statictics.hp.max/8);
+            }
             this.info.statictics.stamina.actual+=Math.ceil(this.info.statictics.stamina.max/10);
+            this.info.statictics.hp.actual+=Math.ceil(this.info.statictics.hp.max/16);
 
             if(this.info.statictics.stamina.actual>this.info.statictics.stamina.max) this.info.statictics.stamina.actual=this.info.statictics.stamina.max;
-            if(checkMaxStat(this.info.statictics.stamina)){
+            if(this.info.statictics.hp.actual>this.info.statictics.hp.max) this.info.statictics.hp.actual=this.info.statictics.hp.max;
+            //set next state
+            if(checkMaxStat(this.info.statictics.stamina) && checkMaxStat(this.info.statictics.hp)){
                 this.changeState('walking');
             }
             //happiness check
             this.checkHappiness();
             return;
         }
-        
-        
+
+        if(this.info.state === 'fighting'){
+            this.info.statictics.stamina.actual--;//lose 1 stamina to fight, check before starting
+            //check if you need to start the fight
+            let enemy:combatEntity = this.info.combat.enemyhp.actual<=0 ? EnemyClass.generateEnemy(this.info.statictics.level) : this.info.combat
+            //actual combat logic
+            const damage = EnemyClass.getDamage(enemy.damage);
+            this.info.statictics.hp.actual = this.info.statictics.hp.actual - damage <= 0 ? 0 : this.info.statictics.hp.actual - damage//choco receive damage
+            enemy.enemyhp.actual -= this.dealDamage()//enemy receive damage
+
+            if(enemy.enemyhp.actual<=0){//win
+                this.info.statictics.experience.actual+= enemy.experience;
+                this.info.informations.enemies++;
+                if(checkMaxStat(this.info.statictics.experience)){
+                    this.levelUp();
+                }
+            }
+            //change status
+            if(checkMinStat(this.info.statictics.hp) || checkMinStat(this.info.statictics.stamina)){
+                this.changeState('sleeping');
+                enemy.enemyhp.actual=0;//reset enemy hp
+            }
+            if(checkMinStat(enemy.enemyhp)){
+                this.changeState('walking');
+            }
+            this.info.combat = enemy;
+        }
     }
     private levelUp(){
         this.info.statictics.level++;
@@ -171,6 +209,14 @@ class CreatureClass {
         this.info.statictics.hunger.max=Math.round((Math.pow(this.info.statictics.level+1, HUNGER_SCALING)/2)+LEVEL1_HUNGER);
         this.info.statictics.hp.max+=HP_SCALING//hp
         console.log(`[${this.info.name}]: Level up! ${this.info.name} reached level ${this.info.statictics.level}!`);
+    }
+
+    private dealDamage(){
+        let hunger_bonus = (this.info.statictics.hunger.max/4)
+        if(hunger_bonus>this.info.statictics.hunger.actual)hunger_bonus = this.info.statictics.hunger.actual
+        this.info.statictics.hunger.actual-= hunger_bonus;
+        const damage_linear= (this.info.statictics.stamina.max * HAPPINESS_MODIFIER[this.info.statictics.happiness.actual]) + hunger_bonus
+        return(Math.round(damage_linear+ ((damage_linear*(Math.random()*0.5))-(damage_linear*0.25))))
     }
 
     private checkHappiness(){
@@ -190,6 +236,7 @@ class CreatureClass {
     }
 
     feed():boolean{
+        if(this.info.state==='fighting')return false
         this.tryWakeUp()
         if(this.info.statictics.hunger.actual===this.info.statictics.hunger.max) return false;//check if hunger bar is not full
         console.log(`[${this.info.name}]: eating!`);
@@ -200,6 +247,7 @@ class CreatureClass {
     }
 
     pet():boolean{
+        if(this.info.state==='fighting')return false
         /*
             1)check that 12h has passed (144 ticks) from last pet
             2)if is passed, happiness++
@@ -214,6 +262,7 @@ class CreatureClass {
         console.log(`[${this.info.name}]: petted!`);
         this.info.last_time_pet = new Date();
         this.info.informations.pets++;
+        this.info.statictics.hp.actual= this.info.statictics.hp.actual+10<=this.info.statictics.hp.max? this.info.statictics.hp.actual+10:this.info.statictics.hp.max;//restore 10 hp when petted
         
         //if 1 tick passed, check if the pet is done after 12h after the last effettive pet, and can update happiness
         const last_time_pet_real = new Date(this.info.last_time_pet_real)
