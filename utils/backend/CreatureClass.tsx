@@ -1,6 +1,5 @@
-import { ST } from "next/dist/shared/lib/utils";
 import { Creature , Gender, Stat, State, checkMaxStat, checkMinStat, combatEntity, percentageStat, savedChoco, tryRandom} from "../interfaces";
-import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS, LEVEL1_HP, HP_SCALING } from '../settings';
+import { BASE_EXPERIENCE, EXPERIENCE_SCALING, HUNGER_SCALING, STAMINA_SCALING, TICK_DAY, TICK_VALUE, HAPPINESS_MODIFIER, LEVEL1_STAMINA, LEVEL1_HUNGER, LEVEL1_EXPERIENCE, LEVEL1_HAPPINESS, LEVEL1_HP, HP_SCALING, ENCOUNTER_RATE } from '../settings';
 import EnemyClass from "./EnemyClass";
 
 class CreatureClass {
@@ -138,12 +137,12 @@ class CreatureClass {
             if(checkMaxStat(this.info.statictics.experience)){
                 this.levelUp();
             }
-            if(checkMinStat(this.info.statictics.stamina)){
+            if(checkMinStat(this.info.statictics.stamina) || checkMinStat(this.info.statictics.hp)){
                 this.changeState('sleeping');
                 return;
             }
             //start fight prompt
-            if(this.info.statictics.level>=10 && tryRandom(20) && false){
+            if(this.info.statictics.level>=10 && tryRandom(ENCOUNTER_RATE)){
                 this.changeState('fighting')
             }
             //start fight prompt
@@ -180,7 +179,7 @@ class CreatureClass {
             let enemy:combatEntity = this.info.combat.enemyhp.actual<=0 ? EnemyClass.generateEnemy(this.info.statictics.level) : this.info.combat
             //actual combat logic
             const damage = EnemyClass.getDamage(enemy.damage);
-            this.info.statictics.hp.actual = this.info.statictics.hp.actual - damage <= 0 ? 0 : this.info.statictics.hp.actual - damage//choco receive damage
+            this.info.statictics.hp.actual = ((this.info.statictics.hp.actual - damage) <= 0) ? 0 : (this.info.statictics.hp.actual - damage)//choco receive damage
             enemy.enemyhp.actual -= this.dealDamage()//enemy receive damage
 
             if(enemy.enemyhp.actual<=0){//win
@@ -190,15 +189,16 @@ class CreatureClass {
                     this.levelUp();
                 }
             }
+            this.info.combat = enemy;
             //change status
             if(checkMinStat(this.info.statictics.hp) || checkMinStat(this.info.statictics.stamina)){
                 this.changeState('sleeping');
                 enemy.enemyhp.actual=0;//reset enemy hp
+                return;
             }
             if(checkMinStat(enemy.enemyhp)){
                 this.changeState('walking');
             }
-            this.info.combat = enemy;
         }
     }
     private levelUp(){
@@ -212,7 +212,7 @@ class CreatureClass {
     }
 
     private dealDamage(){
-        let hunger_bonus = (this.info.statictics.hunger.max/4)
+        let hunger_bonus = Math.round(this.info.statictics.hunger.max/4)
         if(hunger_bonus>this.info.statictics.hunger.actual)hunger_bonus = this.info.statictics.hunger.actual
         this.info.statictics.hunger.actual-= hunger_bonus;
         const damage_linear= (this.info.statictics.stamina.max * HAPPINESS_MODIFIER[this.info.statictics.happiness.actual]) + hunger_bonus
@@ -262,7 +262,7 @@ class CreatureClass {
         console.log(`[${this.info.name}]: petted!`);
         this.info.last_time_pet = new Date();
         this.info.informations.pets++;
-        this.info.statictics.hp.actual= this.info.statictics.hp.actual+10<=this.info.statictics.hp.max? this.info.statictics.hp.actual+10:this.info.statictics.hp.max;//restore 10 hp when petted
+        this.info.statictics.hp.actual= (this.info.statictics.hp.actual+10<=this.info.statictics.hp.max)? (this.info.statictics.hp.actual+10):this.info.statictics.hp.max;//restore 10 hp when petted
         
         //if 1 tick passed, check if the pet is done after 12h after the last effettive pet, and can update happiness
         const last_time_pet_real = new Date(this.info.last_time_pet_real)
@@ -279,6 +279,7 @@ class CreatureClass {
     private tryWakeUp(){
         if(this.info.state!='sleeping')return;
         if(!percentageStat(this.info.statictics.stamina, 30))return;
+        if(!percentageStat(this.info.statictics.hp, 50))return;
         this.changeState('walking');
     }
 

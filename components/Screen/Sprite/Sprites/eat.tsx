@@ -36,7 +36,7 @@ const text2 = () => {
   )
 }
 
-function eat(color: string) {
+function eat(color: string, color2:string) {
   return pathFrames.map((el, index) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 200 200" shapeRendering="crispEdges" key={'eat-' + index}>

@@ -25,7 +25,7 @@ const AppContext = createContext<AppContextProps | null>(null);
 export const AppProvider = (props: PropsWithChildren) => {
     const {cycleMenu} = useMenuContext();
     const {feedFetch, petFetch, loadCreatureFetch, newCreatureFetch, creatureInfo} = useFetchContext();
-    const {startImportantAnimation, updateVisuals, isPlayingAnimation, sprite, clicks, incrementClicks, stopImportantAnimation} = useScreenContext()
+    const {startImportantAnimation, updateVisuals, isPlayingAnimation, sprite, clicks, incrementClicks, stopImportantAnimation, setInfoText} = useScreenContext()
     const {localInfo, changeCreature, closeLoadingScreen, toggleSetting, removeActualCreature, resetLocalInfo} = useGlobalContext()
     const {setAudioTrace,stopMusic} = useAudioContext()
     //loading screen
@@ -56,6 +56,11 @@ export const AppProvider = (props: PropsWithChildren) => {
     //actual game logic actions
     const feedACTION:MouseEventHandler = async ()=>{
         if(isPlayingAnimation) return;//make animation not interruptable!
+        if(creatureInfo.state==='fighting'){
+            setInfoText('you cannot feed while is fighting')
+            setAudioTrace('fail')
+            return;
+        }
         startImportantAnimation()
         let res = precalcFeed(creatureInfo)//precalc if you can feed or not for fast update
         if(res){
@@ -70,13 +75,18 @@ export const AppProvider = (props: PropsWithChildren) => {
 
     const petACTION:MouseEventHandler = async ()=>{
         if(isPlayingAnimation) return;//make animation not interruptable!
+        if(creatureInfo.state==='fighting'){
+            setInfoText('you cannot pet while is fighting')
+            setAudioTrace('fail')
+            return;
+        }
         startImportantAnimation()
         let res = precalcPet(creatureInfo)//precalc if you can pet or not for fast update
         if(res){
             updateVisuals('happy')
             setAudioTrace('jingle3')
         }else{
-            updateVisuals('idle')
+            updateVisuals('idle-pet')
             setAudioTrace('fail')
         }
         await petFetch()//effectivly fetch

@@ -7,7 +7,8 @@ type ScreenContextProps = {
     updateVisuals:(v:VisualState)=>void,
     isPlayingAnimation:boolean,
     removeClicks:()=>void, incrementClicks:()=>void,
-    sprite:spritesSettings, clicks:number, infoText:string
+    sprite:spritesSettings, clicks:number, infoText:string,
+    setInfoText:(t:string)=>void
 }
 
 const ScreenContext = createContext<ScreenContextProps | null>(null);
@@ -38,6 +39,10 @@ export const ScreenProvider = (props: PropsWithChildren) => {
             case 'sleeping':
                 setSprite({ name: 'sleep', loop: true, fps: 8 })
                 setInfoText('sleeping...')
+                break;
+            case 'fighting':
+                setSprite({ name: 'fighting', loop: true, fps: 12 })
+                setInfoText('fighting a monster!')
                 break;
             case 'idle':
                 setSprite({ name: 'stand', loop: true, fps: 4 })
@@ -93,7 +98,7 @@ export const ScreenProvider = (props: PropsWithChildren) => {
     //clicks on main screen
 
     return (
-        <ScreenContext.Provider value={{clicks, infoText, incrementClicks, sprite, removeClicks,isPlayingAnimation, updateVisuals, startImportantAnimation, stopImportantAnimation}}>
+        <ScreenContext.Provider value={{setInfoText, clicks, infoText, incrementClicks, sprite, removeClicks,isPlayingAnimation, updateVisuals, startImportantAnimation, stopImportantAnimation}}>
             {props.children}
         </ScreenContext.Provider>
     )

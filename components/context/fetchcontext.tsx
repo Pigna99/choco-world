@@ -21,9 +21,9 @@ const FetchContext = createContext<FetchPropsProvided | null>(null);
 let startUpdateTimeout: NodeJS.Timeout | null = null;
 
 export const FetchProvider = (props: PropsWithChildren) => {
-    const { startImportantAnimation, stopImportantAnimation, updateVisuals, isPlayingAnimation, removeClicks} = useScreenContext()
+    const { stopImportantAnimation, updateVisuals, removeClicks} = useScreenContext()
     const { isFirstRendering, localInfo, updateLocalInfo, addCreatureToList, removeActualCreature, startFetch, setLoadingInfo, isFirstLoading} = useGlobalContext()
-    const { setMusicTrace, setAudioTrace } = useAudioContext()
+    const { setMusicTrace } = useAudioContext()
     const {resetToStartMenu, resetToNewMenu} = useMenuContext();
 
     //loading tools
@@ -134,6 +134,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
                 console.log('changing local info')
                 if (creatureInfo.state === 'walking') setMusicTrace('theme')
                 if (creatureInfo.state === 'sleeping') setMusicTrace('sleep')
+                if (creatureInfo.state === 'fighting') setMusicTrace('fight')
             }
             return;
         }
@@ -164,6 +165,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
             if(localInfo.last_choco==='new')return;
             if (creatureInfo.state === 'walking') setMusicTrace('theme')
             if (creatureInfo.state === 'sleeping') setMusicTrace('sleep')
+            if (creatureInfo.state === 'fighting') setMusicTrace('fight')
         }
     }, [isUpdatedCreatureInfo, isUpdatedlastUpdate])
 

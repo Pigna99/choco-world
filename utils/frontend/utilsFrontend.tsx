@@ -3,7 +3,7 @@ import { Creature, VisualState, savedChoco } from "../interfaces";
 import { TICK_VALUE } from "../settings";
 
 type spritesList =
-    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'none';
+    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'fighting'|'none';
 
 type spritesSettings = {
     name:spritesList,

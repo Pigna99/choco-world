@@ -19,7 +19,7 @@ export const Screen = ({ width}:{width:string})=>{
     return(
         <div className={styles.screen} style={{width:width,height:width}} onClick={clickScreenACTION}>
             <div className={`${reverse ? styles.reverse : ''} ${styles.sprite}`}>
-                <Sprite onEnd={sprite.onEnd} loop={sprite.loop} numberLoops={sprite.numLoops} framesArray={getSprite(sprite.name).sprite} fps={sprite.fps? sprite.fps : baseFPS} color={creatureInfo.color} width={width} height={width}/>
+                <Sprite onEnd={sprite.onEnd} loop={sprite.loop} numberLoops={sprite.numLoops} framesArray={getSprite(sprite.name).sprite} fps={sprite.fps? sprite.fps : baseFPS} color={creatureInfo.color} color2={creatureInfo.combat.enemy_color} width={width} height={width}/>
             </div>
         </div>
     )

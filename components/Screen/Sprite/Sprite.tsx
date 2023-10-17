@@ -2,11 +2,11 @@ import React from 'react'
 
 import { useState, useEffect } from "react";
 
-function Sprite({fps, framesArray, color, width, height , loop, numberLoops, onEnd}
-    :{fps:number, framesArray:((color:string)=>React.JSX.Element[]), color:string,
+function Sprite({fps, framesArray, color,color2, width, height , loop, numberLoops, onEnd}
+    :{fps:number, framesArray:((color:string, color2:string)=>React.JSX.Element[]), color:string, color2:string
         width:string, height:string, loop?:boolean, numberLoops?:number, onEnd?:()=>void}) {
     //console.log(fps,color,loop, numberLoops)
-    const generatedFrames = framesArray(color);
+    const generatedFrames = framesArray(color, color2);
     const [frame, setFrame] = useState(generatedFrames[0]);
     const [frameNumber, setFrameNumber] = useState({n:0, loops: 0});
     const [isChangeFrame, setIsChangeFrame] = useState(false);

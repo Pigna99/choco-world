@@ -16,7 +16,7 @@ class EnemyClass {
                         actual: 100
                     },
                     enemy_type:enemy_type,
-                    enemy_color:'#ffffff',
+                    enemy_color:'#000000',
                     damage:100,
                     experience:100,
                 }

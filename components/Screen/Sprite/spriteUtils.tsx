@@ -10,10 +10,11 @@ import egg from "./Sprites/egg";
 import eggshake from "./Sprites/eggshake";
 import none from "./Sprites/none";
 import hatching from "./Sprites/hatching";
+import fight from "./Sprites/fight";
 
 const getSprite=(sprite:spritesList)=>{
     const baseFPS= 32;
-    let returnValues =
+    let returnValues:{sprite:(color:string, color2:string)=>React.JSX.Element[]} =
     {sprite:none,}
     switch (sprite) {
         case 'eat':  returnValues.sprite = eat;break;
@@ -26,6 +27,7 @@ const getSprite=(sprite:spritesList)=>{
         case 'egg': returnValues.sprite = egg;break;
         case 'eggshake': returnValues.sprite = eggshake;break;
         case 'hatching': returnValues.sprite = hatching;break;
+        case 'fighting': returnValues.sprite = fight;break;
         case 'none':
         default: returnValues.sprite = none;break;
     }
