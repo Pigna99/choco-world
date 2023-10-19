@@ -34,15 +34,15 @@ export const ScreenProvider = (props: PropsWithChildren) => {
                 let r = Math.floor(Math.random() * 4)
                 const walking_sprites: spritesList[] = ['walk-bottom', 'walk-right', 'walk-left', 'walk-top']
                 setSprite({ name: walking_sprites[r], loop: true, fps: 16 })//randomize walking better
-                setInfoText('walking...')
+                setInfoText('is walking...')
                 break;
             case 'sleeping':
                 setSprite({ name: 'sleep', loop: true, fps: 8 })
-                setInfoText('sleeping...')
+                setInfoText('is sleeping...')
                 break;
             case 'fighting':
                 setSprite({ name: 'fighting', loop: true, fps: 12 })
-                setInfoText('fighting a monster!')
+                setInfoText('is fighting a monster!')
                 break;
             case 'idle':
                 setSprite({ name: 'stand', loop: true, fps: 4 })
@@ -50,20 +50,20 @@ export const ScreenProvider = (props: PropsWithChildren) => {
             case 'idle-feed':
                 setSprite({ name: 'stand', loop: true, fps: 4 })
                 setInfoText('not hungry')
-                console.log('You have to wait more before eating again')
+                console.log('is not hungry.')
                 break;
             case 'idle-pet':
                 setSprite({ name: 'stand', loop: true, fps: 4 })
                 setInfoText('try pet later')
-                console.log('You have to wait more before petting again')
+                console.log("doesn't want to be petted")
                 break;
             case 'eating':
                 setSprite({ name: 'eat', loop: true, fps: 8 })
-                setInfoText('eating!')
+                setInfoText('is eating!')
                 break;
             case 'happy':
                 setSprite({ name: 'happy', loop: true, fps: 12 })
-                setInfoText('happy!')
+                setInfoText('is happy!')
                 break;
             case 'egg':
                 setSprite({ name: 'egg', loop: false })
