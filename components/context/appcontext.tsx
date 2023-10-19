@@ -57,7 +57,7 @@ export const AppProvider = (props: PropsWithChildren) => {
     const feedACTION:MouseEventHandler = async ()=>{
         if(isPlayingAnimation) return;//make animation not interruptable!
         if(creatureInfo.state==='fighting'){
-            setInfoText('you cannot feed while is fighting')
+            setInfoText("cannot eat while is fighting")
             setAudioTrace('fail')
             return;
         }
@@ -76,7 +76,7 @@ export const AppProvider = (props: PropsWithChildren) => {
     const petACTION:MouseEventHandler = async ()=>{
         if(isPlayingAnimation) return;//make animation not interruptable!
         if(creatureInfo.state==='fighting'){
-            setInfoText('you cannot pet while is fighting')
+            setInfoText('cannot be petted while is fighting')
             setAudioTrace('fail')
             return;
         }
