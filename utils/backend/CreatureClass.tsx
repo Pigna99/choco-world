@@ -81,7 +81,8 @@ class CreatureClass {
                 actual: LEVEL1_HP+HP_SCALING*(this.info.statictics.level-1),
                 max: LEVEL1_HP+HP_SCALING*(this.info.statictics.level-1),
             }
-            this.info.informations.enemies=0;
+        }
+        if(!this.info.combat){
             this.info.combat= {
                 enemyhp: {
                     actual: 0,
@@ -92,6 +93,9 @@ class CreatureClass {
                 damage:0,
                 experience:0,
             }
+        }
+        if(!this.info.informations.enemies){
+            this.info.informations.enemies=0;
         }
     }
 

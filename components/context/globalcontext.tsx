@@ -118,12 +118,12 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     //preloading
     
     useEffect(() => {//first rendering, load info from local storage
+        if(DEBUG)console.log('loading starting info')
         setIsFirstRendering(false)
         const info:frontend_info = load()//get localstorage content
         setLocalInfo(info);
         if(!info.settings.preload){
             setStartFetch(true)
-            //setLoadingInfo({percentage:100,name:'complete'})//and the fetch?
         }
         window.addEventListener("visibilitychange", ()=>{//check if the app is in backgound
             if (document.visibilityState === "visible") {
