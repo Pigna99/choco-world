@@ -46,12 +46,14 @@
     display: flex;
     width: 100%;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+    padding-right: 5px;
 }
 
 .name{
     font-size: 30px;
+    width: 100%;
 }
 
 .level{
