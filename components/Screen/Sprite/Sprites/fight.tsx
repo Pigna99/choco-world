@@ -1,5 +1,7 @@
 import { generateArrayFrame } from '@/utils/frontend/utilsFrontend'
 import React from 'react'
+import styles from '../sprite.module.css'
+
 const pathFrames = generateArrayFrame(36)
 
 const chocobo = (color: string) => {

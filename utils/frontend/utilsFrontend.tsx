@@ -60,6 +60,11 @@ const getRange=(start:number, end:number)=>{
     return start+Math.round(Math.random()*range)
 }
 
+const r=['#ff0000','#ffa500','#ffff00','#008000','#0000ff','#4b0082','#ee82ee']
+const getRainbow=(n:number)=>{
+    return r[n%r.length];
+}
+
 
 export type {spritesList, menu, API_string, menu_interface, frontend_info, spritesSettings, settings}
-export{getTicksFromDate, precalcFeed, precalcPet,creatureMenuList,newMenuList,generateArrayFrame, getRange}
+export{getRainbow, getTicksFromDate, precalcFeed, precalcPet,creatureMenuList,newMenuList,generateArrayFrame, getRange}

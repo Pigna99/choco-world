@@ -53,6 +53,11 @@ export const Commands = ({feedCommand, petCommand, block, info}:{feedCommand:Mou
     return(
         <div className={styles.container}>
             <div className={styles.infoText}>{`${creatureInfo.name} ${info}`}</div>
+            {
+                creatureInfo.state === 'fighting' ? 
+                <EnemyInfo/>
+                : null
+            }
             <div className={styles.interactionText}>last interaction: {lastInteractionTime}</div>
             <div className={styles.buttonContainer}>
                 <Button name={'Feed'} clickEvent={feedCommand} blocked={block}/>
@@ -63,3 +68,13 @@ export const Commands = ({feedCommand, petCommand, block, info}:{feedCommand:Mou
 }
 
 
+const EnemyInfo= ()=>{
+    const {creatureInfo} = useFetchContext()
+    return(
+        <div style={{color:creatureInfo.combat.enemy_color, textTransform:'uppercase'}} className={creatureInfo.combat.enemy_type==='legendary' ? styles.rainbow : ''}>
+            {
+                creatureInfo.combat.enemy_type
+            }
+        </div>
+    )
+}
