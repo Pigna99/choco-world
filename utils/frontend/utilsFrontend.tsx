@@ -3,7 +3,7 @@ import { Creature, VisualState, savedChoco } from "../interfaces";
 import { TICK_VALUE } from "../settings";
 
 type spritesList =
-    'eat'|'happy'|'sleep'|'stand'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'fighting'|'none';
+    'eat'|'happy'|'sleep'|'stand'|'walk-icon'|'walk-bottom'|'walk-right'|'walk-left'|'walk-top'|'egg'|'eggshake'|'hatching'|'fighting'|'none';
 
 type spritesSettings = {
     name:spritesList,
@@ -21,7 +21,7 @@ const newMenuList:menu[] = ['new','load', 'settings','chocos']
 type menu_interface ={left:number,actual:number,right:number}
 
 type API_string = 'update'|'pet'|'feed'
-type settings = 'music'|'audio' |'preload'
+type settings = 'music'|'audio' |'preload'|'first_time'
 
 type frontend_info = {
     list:savedChoco[],
@@ -29,8 +29,10 @@ type frontend_info = {
     settings:{
         music:boolean,
         audio:boolean,
-        preload:boolean
+        preload:boolean,
+        first_time:boolean
     }
+    
 }
 
 function getTicksFromDate(d:Date){//number of ticks from that Date to now

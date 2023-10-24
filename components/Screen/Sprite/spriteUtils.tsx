@@ -11,6 +11,7 @@ import eggshake from "./Sprites/eggshake";
 import none from "./Sprites/none";
 import hatching from "./Sprites/hatching";
 import fight from "./Sprites/fight";
+import walkchoco from "./Sprites/walkchoco";
 
 const getSprite=(sprite:spritesList)=>{
     const baseFPS= 32;
@@ -28,6 +29,7 @@ const getSprite=(sprite:spritesList)=>{
         case 'eggshake': returnValues.sprite = eggshake;break;
         case 'hatching': returnValues.sprite = hatching;break;
         case 'fighting': returnValues.sprite = fight;break;
+        case 'walk-icon': returnValues.sprite = walkchoco;break;
         case 'none':
         default: returnValues.sprite = none;break;
     }

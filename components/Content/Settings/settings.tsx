@@ -6,7 +6,7 @@ import { useAppContext } from '@/components/context/appcontext'
 
 export const Settings = ()=>{
     const {localInfo}= useGlobalContext()
-    const {toggleAudioACTION, toggleMusicACTION, togglePreloadACTION, clearDataACTION, removeActualCreatureACTION} = useAppContext()
+    const {toggleAudioACTION, toggleMusicACTION, togglePreloadACTION, clearDataACTION, removeActualCreatureACTION, toggleStartScreenACTION} = useAppContext()
     return(
         <div className={styles.container}>
             <SettingToggler name='music' clickEvent={toggleMusicACTION} active={localInfo.settings.music}/>
@@ -14,11 +14,12 @@ export const Settings = ()=>{
             <SettingToggler name='preload' clickEvent={togglePreloadACTION} active={localInfo.settings.preload}/>
             {(localInfo.last_choco!== '' && localInfo.last_choco !== 'new') ? <SettingValidator name='remove this choco' clickEvent={removeActualCreatureACTION}/>:null}
             <SettingValidator name='delete all local data' clickEvent={clearDataACTION}/>
+            <SettingValidator name='first start screen' clickEvent={toggleStartScreenACTION}/>
         </div>
     )
 }
 
-const SettingValidator = ({clickEvent,name}:{clickEvent:MouseEventHandler,name:string})=>{
+export const SettingValidator = ({clickEvent,name}:{clickEvent:MouseEventHandler,name:string})=>{
     const [isOpen, setIsOpen] = useState(false);
 
     return(
@@ -36,7 +37,7 @@ const SettingValidator = ({clickEvent,name}:{clickEvent:MouseEventHandler,name:s
     )
 }
 
-const SettingToggler = ({clickEvent,name, active}:{clickEvent:MouseEventHandler,name:string, active:boolean})=>{
+export const SettingToggler = ({clickEvent,name, active}:{clickEvent:MouseEventHandler,name:string, active:boolean})=>{
     return (
         <div className={styles.toggler} onClick={clickEvent}>
             

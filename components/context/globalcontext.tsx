@@ -27,7 +27,8 @@ const startingInfo:frontend_info={
     settings: {
         music: false,
         audio: false,
-        preload: false
+        preload: false,
+        first_time: true
     }
 }
 export const GlobalProvider = (props: PropsWithChildren) => {
@@ -48,6 +49,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
             case 'audio':newInfo= {...localInfo, settings:{...localInfo.settings, audio:!localInfo.settings.audio}};break;
             case 'music':newInfo= {...localInfo, settings:{...localInfo.settings, music:!localInfo.settings.music}};break;
             case 'preload':newInfo= {...localInfo, settings:{...localInfo.settings, preload:!localInfo.settings.preload}};break;
+            case 'first_time':newInfo= {...localInfo, settings:{...localInfo.settings, first_time:!localInfo.settings.first_time}};break;
         }//than save!
         setLocalInfo(newInfo);
         save(newInfo);
@@ -121,8 +123,9 @@ export const GlobalProvider = (props: PropsWithChildren) => {
         if(DEBUG)console.log('loading starting info')
         setIsFirstRendering(false)
         const info:frontend_info = load()//get localstorage content
-        setLocalInfo(info);
-        if(!info.settings.preload){
+        if(info.settings.first_time===undefined)info.settings.first_time=true;
+        setLocalInfo(info);        
+        if(!info.settings.preload && !info.settings.first_time){//do only if you are exiting from the first time loading!
             setStartFetch(true)
         }
         window.addEventListener("visibilitychange", ()=>{//check if the app is in backgound
@@ -135,6 +138,7 @@ export const GlobalProvider = (props: PropsWithChildren) => {
     }, [])
 
     useEffect(() => {//When isPreload is loaded, load local files with indexeddb
+        if(localInfo.settings.first_time)return;
         if(!isFirstRendering){
             if(localInfo.settings.preload){
                 openLoadingScreen()
@@ -155,8 +159,12 @@ export const GlobalProvider = (props: PropsWithChildren) => {
                 console.log('clear preloading')
             }
         }
-    }, [localInfo.settings.preload])
+    }, [localInfo.settings.preload,localInfo.settings.first_time])
     
+    useEffect(() => {
+        if(isFirstRendering)return;
+        if(localInfo.settings.first_time)openLoadingScreen()
+    }, [localInfo.settings.first_time])
     
     return(
         <GlobalContext.Provider value={{isBackground,startFetch,setLoadingInfo,openLoadingScreen, closeLoadingScreen, toggleSetting,addCreatureToList,removeActualCreature,changeCreature,resetLocalInfo, updateLocalInfo, loadingInfo,isFirstLoading, localInfo, getAudioLink, getMusicLink, isFirstRendering}}>
