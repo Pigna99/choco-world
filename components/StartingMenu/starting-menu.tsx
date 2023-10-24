@@ -2,13 +2,19 @@ import styles from './startingmenu.module.css'
 import { Button } from "../utilsComponents/buttons";
 import { useGlobalContext } from "../context/globalcontext";
 import { useAppContext } from '../context/appcontext';
+import FirstScreen from './FirstScreen/first-screen';
 
 const LoadingScreen = () => {
-    const {isFirstLoading} = useGlobalContext()
+    const {isFirstLoading, localInfo} = useGlobalContext()
     
     return (
         <div className={`${styles.loadingScreen} ${ isFirstLoading ? '': styles.loaded}` }>
-            <LoadingMenu/>
+            {
+                localInfo.settings.first_time ? 
+                <FirstScreen/>:
+                <LoadingMenu/>
+            }
+            
         </div>
     )
 }

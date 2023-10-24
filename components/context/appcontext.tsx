@@ -16,7 +16,7 @@ type AppContextProps = {
     petACTION:MouseEventHandler, feedACTION:MouseEventHandler,loadACTION:(id:string)=>MouseEventHandler, newACTION:(name:string, color:string, gender:Gender)=>MouseEventHandler,
     clickScreenACTION:MouseEventHandler
     //settings
-    toggleMusicACTION:MouseEventHandler, toggleAudioACTION:MouseEventHandler, togglePreloadACTION:MouseEventHandler, removeActualCreatureACTION:MouseEventHandler,clearDataACTION:MouseEventHandler
+    toggleMusicACTION:MouseEventHandler, toggleAudioACTION:MouseEventHandler, togglePreloadACTION:MouseEventHandler, removeActualCreatureACTION:MouseEventHandler,clearDataACTION:MouseEventHandler,toggleStartScreenACTION:MouseEventHandler
 }
 
 const AppContext = createContext<AppContextProps | null>(null);
@@ -138,6 +138,9 @@ export const AppProvider = (props: PropsWithChildren) => {
     const togglePreloadACTION:MouseEventHandler= ()=>{
         toggleSetting('preload')
     }
+    const toggleStartScreenACTION:MouseEventHandler= ()=>{
+        toggleSetting('first_time')
+    }
     const removeActualCreatureACTION:MouseEventHandler= ()=>{
         removeActualCreature()
     }
@@ -147,7 +150,7 @@ export const AppProvider = (props: PropsWithChildren) => {
 
     //settings
     return (
-        <AppContext.Provider value={{clearDataACTION,removeActualCreatureACTION,toggleMusicACTION,toggleAudioACTION,togglePreloadACTION,playACTION,changeCreatureACTION,clickScreenACTION,loadACTION,newACTION,rightSwipeACTION, leftSwipeACTION,rightMenuACTION,leftMenuACTION,petACTION,feedACTION}}>
+        <AppContext.Provider value={{toggleStartScreenACTION,clearDataACTION,removeActualCreatureACTION,toggleMusicACTION,toggleAudioACTION,togglePreloadACTION,playACTION,changeCreatureACTION,clickScreenACTION,loadACTION,newACTION,rightSwipeACTION, leftSwipeACTION,rightMenuACTION,leftMenuACTION,petACTION,feedACTION}}>
             {props.children}
         </AppContext.Provider>
     )
