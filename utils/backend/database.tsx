@@ -40,7 +40,8 @@ const newCreature = async (name:string, color:string, gender:Gender)=>{//create 
         name: name,
         color: color,
         gender: gender,
-        id: c._id.toString()
+        id: c._id.toString(),
+        state: 'walking'
     }
     return creature;
 }
