@@ -12,9 +12,10 @@ import none from "./Sprites/none";
 import hatching from "./Sprites/hatching";
 import fight from "./Sprites/fight";
 import walkchoco from "./Sprites/walkchoco";
+import standChoco from "./Sprites/standchoco";
+import sleepChoco from "./Sprites/sleepChoco";
 
 const getSprite=(sprite:spritesList)=>{
-    const baseFPS= 32;
     let returnValues:{sprite:(color:string, color2:string)=>React.JSX.Element[]} =
     {sprite:none,}
     switch (sprite) {
@@ -30,6 +31,8 @@ const getSprite=(sprite:spritesList)=>{
         case 'hatching': returnValues.sprite = hatching;break;
         case 'fighting': returnValues.sprite = fight;break;
         case 'walk-icon': returnValues.sprite = walkchoco;break;
+        case 'stand-icon': returnValues.sprite = standChoco;break;
+        case 'sleep-icon': returnValues.sprite = sleepChoco;break;
         case 'none':
         default: returnValues.sprite = none;break;
     }

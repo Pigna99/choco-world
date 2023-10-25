@@ -73,6 +73,12 @@
   }
 }
 
+@font-face {
+  font-family: "minecraft";
+  src: url('../public/fonts/Minecraft.ttf') format('truetype');
+}
+
+
 * {
   box-sizing: border-box;
   padding: 0;
