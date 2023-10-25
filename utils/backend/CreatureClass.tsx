@@ -71,6 +71,7 @@ class CreatureClass {
             name: this.info.name,
             color: this.info.color,
             gender: this.info.gender,
+            state: this.info.state,
             id: id
           }
     }

@@ -53,7 +53,7 @@ type socialInteraction = {
     affinity:Stat,
 }
 
-type savedChoco = {name:string, color:string, gender:Gender, id:string}
+type savedChoco = {name:string, color:string, gender:Gender, id:string, state:State}
 
 function percentageStat (s: Stat, percentage :number): boolean {//if actual value > percentage of max, true
     let value = s.max * percentage / 100;
