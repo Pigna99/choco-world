@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from 'react'
 import styles from './chocoList.module.css'
-import { savedChoco } from '@/utils/interfaces'
-import { Gender } from '@/utils/interfaces'
+import type { savedChoco } from '@/utils/interfaces'
+import type { Gender } from '@/utils/interfaces'
 import { ChocoImage, GenderIcon } from '../../utilsComponents/icons'
 
 function ChocoList({selectedChocoId, changeChoco, chocoArray}:{selectedChocoId:string|null, changeChoco:(id:string)=>MouseEventHandler ,chocoArray:savedChoco[]}) {

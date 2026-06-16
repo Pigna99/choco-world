@@ -1,4 +1,4 @@
-import { Creature , Stat} from '@/utils/interfaces'
+import type { Creature, Stat } from '@/utils/interfaces'
 import styles from './stats.module.css'
 import { HAPPINESS_NAMES } from '@/utils/settings';
 import { GenderIcon } from '../../utilsComponents/icons';

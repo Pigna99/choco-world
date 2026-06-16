@@ -1,4 +1,4 @@
-import { Creature } from '@/utils/interfaces'
+import type { Creature } from '@/utils/interfaces'
 import styles from './info.module.css'
 
 export const Info = ({infoBox,creatureId}:{infoBox:Creature,creatureId:string|null})=>{

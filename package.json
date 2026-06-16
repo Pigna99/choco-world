@@ -9,19 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@pigna-labs/ui": "github:Pigna-Labs/pigna-ui#v0.1.0",
     "@types/howler": "^2.2.9",
-    "@types/node": "20.6.2",
-    "@types/react": "18.2.21",
-    "@types/react-dom": "18.2.7",
-    "eslint": "8.49.0",
-    "eslint-config-next": "13.4.19",
+    "@types/node": "^20.11.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.0.0",
     "howler": "^2.2.4",
     "idb-keyval": "^6.2.1",
-    "next": "^13.5.4",
-    "next-pwa": "^5.6.0",
+    "next": "^15.0.0",
     "postgres": "^3.4.9",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.2.2"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.4.0"
   }
 }

@@ -30,7 +30,7 @@ export const FetchProvider = (props: PropsWithChildren) => {
     const [isFetching, setIsFetching] = useState(false); //fetching 
 
     //TIMEOUT LOGIC - used only for the fetches
-    const [updateTimeout, setUpdateTimeout] = useState(startUpdateTimeout);
+    const [updateTimeout, setUpdateTimeout] = useState<NodeJS.Timeout | null>(startUpdateTimeout);
     const stopTimeout = () => {
         //console.log(updateTimeout+ ' stopped')
         if (updateTimeout) clearTimeout(updateTimeout);

@@ -1,15 +1,13 @@
 /** @type {import('next').NextConfig} */
+const withPWA = require('@ducanh2912/next-pwa').default({
+  dest: 'public',
+  register: true,
+  // disabilita la PWA in dev (service worker solo in produzione)
+  disable: process.env.NODE_ENV !== 'production',
+});
 
-const prod = process.env.NODE_ENV === 'production'
-const withPWA = require('next-pwa')({
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-    disable: prod ? false : true,
-  });
-  
-  module.exports = withPWA({
-    reactStrictMode: false,
-    // Build standalone per il deploy PM2 sul VPS (convenzione ecosistema Pigna Labs).
-    output: 'standalone',
-  });
+module.exports = withPWA({
+  reactStrictMode: false,
+  // Build standalone per il deploy PM2 sul VPS (convenzione ecosistema Pigna Labs).
+  output: 'standalone',
+});

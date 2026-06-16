@@ -2,7 +2,7 @@ import React, { MouseEventHandler, useEffect, useState } from 'react'
 import styles from './newChoco.module.css'
 import {Input, ColorInput} from '@/components/utilsComponents/input'
 import { GenderIcon } from '@/components/utilsComponents/icons'
-import { Gender } from '@/utils/interfaces'
+import type { Gender } from '@/utils/interfaces'
 
 
 function NewChoco({newChoco, clicks}:{clicks:number, newChoco:(name:string,color:string,gender:Gender)=>any}) {

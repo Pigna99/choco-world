@@ -1,7 +1,7 @@
 'use client'
 import Sprite from '@/components/Screen/Sprite/Sprite';
 import getSprite from '@/components/Screen/Sprite/spriteUtils';
-import { State, savedChoco } from '@/utils/interfaces';
+import type { State, savedChoco } from '@/utils/interfaces';
 import React, { useEffect, useState } from 'react'
 import styles from './page.module.css'
 import { spritesList } from '@/utils/frontend/utilsFrontend';
