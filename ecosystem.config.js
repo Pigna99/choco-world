@@ -1,12 +1,12 @@
 // Carica le env da .env.local (presente solo sul VPS, gitignored).
 // Lo standalone Next.js non legge .env files autonomamente: serve passare le var via PM2.
-// Convenzione ecosistema Pigna Labs (cfr. ing-tracker). Porta 3012 (prima libera: 3000-3011 occupate).
+// Convenzione ecosistema Pigna Labs (cfr. ing-tracker). Porta 3013 (3000-3012 occupate sul VPS).
 const fs = require("fs");
 const path = require("path");
 
 function loadEnv() {
   const envPath = path.join(__dirname, ".env.local");
-  const env = { NODE_ENV: "production", PORT: 3012 };
+  const env = { NODE_ENV: "production", PORT: 3013 };
   if (!fs.existsSync(envPath)) return env;
   const text = fs.readFileSync(envPath, "utf8");
   for (const line of text.split(/\r?\n/)) {

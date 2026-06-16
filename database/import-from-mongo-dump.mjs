@@ -18,6 +18,12 @@ if (!dumpPath) { console.error('Uso: node import-from-mongo-dump.mjs <dump.json>
 const docs = JSON.parse(readFileSync(dumpPath, 'utf8'));
 const sql = postgres(url, { connect_timeout: 15 });
 
+// Default per i campi nestati che su Mongo potevano mancare: `combat` esiste solo
+// per le creature che hanno combattuto (32/53 ne erano prive). Coincide con lo stato
+// "nessun nemico" di CreatureClass.newCreature (che comunque auto-ripara a runtime).
+// postgres.js rifiuta `undefined`, quindi qui i default vanno messi prima dell'INSERT.
+const NO_COMBAT = { enemyhp: { actual: 0, max: 0 }, enemy_type: 'none', enemy_color: '#000000', damage: 0, experience: 0 };
+
 // Mongo doc → riga creatures. _id (hex) diventa la PK stringa; `statictics` (refuso
 // storico del modello) → colonna `statistics`; `__v` scartato.
 const toRow = (d) => ({
@@ -33,7 +39,7 @@ const toRow = (d) => ({
   last_time_feed: d.last_time_feed,
   statistics: d.statictics,
   informations: d.informations,
-  combat: d.combat,
+  combat: d.combat ?? NO_COMBAT,
   social: d.social ?? { friends: [] },
 });
 
