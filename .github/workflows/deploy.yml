@@ -1,0 +1,41 @@
+name: Deploy to VPS
+on:
+  push:
+    branches: [master]
+
+# Choco World non ha (ancora) una suite di test → niente gate test come ing-tracker.
+# Se in futuro si aggiungono test, replicare il job `test` + `needs: test`.
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: pigna
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 2222
+          script: |
+            set -e
+            cd /opt/choco-world
+            git fetch origin master
+            git reset --hard origin/master
+            sudo chown -R pigna:pigna node_modules .next 2>/dev/null || true
+            npm ci
+            # Migrazioni DB idempotenti (CREATE TABLE IF NOT EXISTS). Carica DATABASE_URL da .env.local.
+            export $(grep -E '^DATABASE_URL=' .env.local | xargs)
+            for f in $(ls database/migrations/*.sql | sort); do
+              echo "migration: $f"
+              psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"
+            done
+            npm run build
+            rm -rf .next/standalone/.next/static .next/standalone/public
+            cp -r .next/static .next/standalone/.next/static
+            mkdir -p public
+            cp -r public .next/standalone/public
+            mkdir -p logs
+            # restart pieno: lo standalone fork-mode resta stale con un semplice reload.
+            pm2 delete choco-world > /dev/null 2>&1 || true
+            pm2 start ecosystem.config.js
+            pm2 save

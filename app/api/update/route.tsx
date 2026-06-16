@@ -1,6 +1,8 @@
 import { CreatureClass } from '@/utils/backend/CreatureClass';
 import { getCreature, updateCreature } from '@/utils/backend/database';
 import { NextResponse } from 'next/server'
+// Route data-dipendente: niente prerender a build-time (apre il DB).
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   const { searchParams } = new URL(request.url)

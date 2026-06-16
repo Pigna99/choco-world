@@ -16,7 +16,12 @@ const getGender = (g:string):Gender=>{
     return 'female'
 }
 
-export {validateHexColor, validateGender,getGender}
+// Valida un id creatura: 24 char esadecimali (forma ObjectId Mongo, mantenuta su
+// Postgres per compatibilità con gli id già salvati lato client). Sostituisce
+// mongoose.isValidObjectId, eliminato con la migrazione a Postgres (INFRA-99).
+const isValidCreatureId = (id:string):boolean => /^[a-f\d]{24}$/i.test(id)
+
+export {validateHexColor, validateGender,getGender, isValidCreatureId}
 
 /**
  * Without transparent support: /^#[0-9A-F]{6}$/i.test('#AABBCC')

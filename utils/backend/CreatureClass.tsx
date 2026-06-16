@@ -4,8 +4,12 @@ import EnemyClass from "./EnemyClass";
 
 class CreatureClass {
     private info: Creature;
-    constructor(creature: Creature){
-        this.info = creature;
+    // Il costruttore accetta anche null: getCreature() può non trovare la creatura
+    // (su Postgres ritorna null esplicito; su Mongo era any). Contratto: dopo aver
+    // costruito, i chiamatori verificano `getInfo() === null` PRIMA di usare gli
+    // altri metodi (simulate/feed/pet/...). Le route rispettano già questo invariante.
+    constructor(creature: Creature | null){
+        this.info = creature as Creature;
     }
     static newCreature(name:string, color:string, gender:Gender): CreatureClass{//new creature generator
         let right_now = new Date;

@@ -1,7 +1,9 @@
 import { CreatureClass } from '@/utils/backend/CreatureClass';
 import { getCreature, updateCreature } from '@/utils/backend/database';
 import { NextResponse } from 'next/server'
-import { isValidObjectId } from 'mongoose';
+import { isValidCreatureId } from '@/utils/backend/utilsBackend';
+// Route data-dipendente: niente prerender a build-time (apre il DB).
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   
@@ -13,7 +15,7 @@ export async function POST(request: Request) {
       status: 404,
     })
   }
-    if(!isValidObjectId(creatureId)){
+    if(!isValidCreatureId(creatureId)){
       console.log('invalid id');
       return NextResponse.json({error:"invalid id from request"},{
       status: 404,
